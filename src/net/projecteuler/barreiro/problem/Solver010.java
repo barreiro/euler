@@ -2,7 +2,7 @@
 
 package net.projecteuler.barreiro.problem;
 
-import net.projecteuler.barreiro.algorithm.Primes;
+import static net.projecteuler.barreiro.algorithm.Primes.primesStream;
 
 /**
  * The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
@@ -23,14 +23,7 @@ public class Solver010 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        Primes.Generator generator = new Primes.Generator();
-        long sum = 0, prime;
-
-        while ((prime = generator.nextPrime()) < N) {
-            sum += prime;
-        }
-
-        return sum;
+        return primesStream(p -> p < N).sum();
     }
 
 }

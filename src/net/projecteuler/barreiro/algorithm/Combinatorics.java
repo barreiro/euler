@@ -2,6 +2,8 @@
 
 package net.projecteuler.barreiro.algorithm;
 
+import static java.lang.Math.min;
+
 /**
  * Static class with util methods for solving problems.
  *
@@ -21,23 +23,16 @@ public final class Combinatorics {
      * @return The number of combinations
      */
     public static long choose(long totalL, long chooseL) {
-        int total = (int) totalL, choose = (int) chooseL;
-        return choose(total, choose, new long[total + 1][choose + 1]);
+        int total = (int) totalL, choose = (int) min(chooseL, totalL - chooseL); // Take full advantage of symmetry
+        return choose < 0 ? 0 : choose == 0 ? 1 : choose(total, choose, new long[total + 1][choose + 1]);
     }
 
     private static long choose(int total, int choose, long[][] cache) {
-        if (total < choose) {
-            return 0;
-        }
-        if (choose == 0 || choose == total) {
-            return 1;
-        }
-        choose = Math.min(choose, total - choose); // Take full advantage of symmetry
+        if ((choose = min(choose, total - choose)) == 1) return total;
+        if (cache[total][choose] != 0) return cache[total][choose];
 
-        if (cache[total][choose] != 0) {
-            return cache[total][choose];
-        }
         long value = choose(total - 1, choose - 1, cache) + choose(total - 1, choose, cache);
+
         cache[total][choose] = value;
         return value;
     }

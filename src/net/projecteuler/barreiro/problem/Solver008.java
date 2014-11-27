@@ -2,6 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.util.stream.IntStream.rangeClosed;
+
 /**
  * The four adjacent digits in the 1000-digit number that have the greatest product are 9 × 9 × 8 × 9 = 5832.
  * Find the thirteen adjacent digits in the 1000-digit number that have the greatest product. What is the value of this product?
@@ -10,7 +12,8 @@ package net.projecteuler.barreiro.problem;
  */
 public class Solver008 extends ProjectEulerSolver {
 
-    private static final String NUMBER_STR = "73167176531330624919225119674426574742355349194934" +
+    private static final String NUMBER_STR =
+            "73167176531330624919225119674426574742355349194934" +
             "96983520312774506326239578318016984801869478851843" +
             "85861560789112949495459501737958331952853208805511" +
             "12540698747158523863050715693290963295227443043557" +
@@ -49,22 +52,9 @@ public class Solver008 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        long maxProduct = 0;
-        for (long i = 0; i < data.length(); i++) {
-            long product = 1;
-            for (long j = i; j < i + N; j++) {
-                if (data.charAt((int) j) == '0') {
-                    product = 0;
-                    i = j + 1;
-                    break;
-                }
-                product *= data.charAt((int) j) - '0';
-            }
-            if (product > maxProduct) {
-                maxProduct = product;
-            }
-        }
-        return maxProduct;
+        return rangeClosed(0, data.length() - (int) N).mapToObj(i -> data.subSequence(i, i + (int) N)).mapToLong(
+                cs -> cs.chars().mapToLong(c -> c - '0').reduce(1, (c1, c2) -> c1 * c2)
+        ).max().getAsLong();
     }
 
 }

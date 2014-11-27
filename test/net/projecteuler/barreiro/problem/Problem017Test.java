@@ -2,8 +2,10 @@
 
 package net.projecteuler.barreiro.problem;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * If the numbers 1 to 5 are written out in words: one, two, three, four, five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
@@ -60,37 +62,33 @@ public class Problem017Test extends ProjectEulerAbstractTest {
 
     @Test
     public void test() {
-        Assert.assertEquals(21124, new Solver017().solve());
+        assertEquals(21124, new Solver017().solve());
     }
 
     @Test
     public void example() {
-        Assert.assertEquals(19, new Solver017(5).solve());
+        assertEquals(19, new Solver017(5).solve());
     }
 
     /* --- */
 
     @Test
     public void natural1() {
-        String[] results = naturalLanguage(19, 21);
-        Assert.assertArrayEquals(new String[]{"nineteen", "twenty", "twenty one"}, results);
+        assertArrayEquals(new String[]{"nineteen", "twenty", "twenty one"}, naturalLanguage(19, 21));
     }
 
     @Test
     public void natural2() {
-        String[] results = naturalLanguage(99, 101);
-        Assert.assertArrayEquals(new String[]{"ninety nine", "one hundred", "one hundred and one"}, results);
+        assertArrayEquals(new String[]{"ninety nine", "one hundred", "one hundred and one"}, naturalLanguage(99, 101));
     }
 
     @Test
     public void natural3() {
-        String[] results = naturalLanguage(199, 201);
-        Assert.assertArrayEquals(new String[]{"one hundred and ninety nine", "two hundred", "two hundred and one"}, results);
+        assertArrayEquals(new String[]{"one hundred and ninety nine", "two hundred", "two hundred and one"}, naturalLanguage(199, 201));
     }
 
     @Test
     public void natural4() {
-        String[] results = naturalLanguage(999, 1001);
-        Assert.assertArrayEquals(new String[]{"nine hundred and ninety nine", "one thousand", "one thousand and one"}, results);
+        assertArrayEquals(new String[]{"nine hundred and ninety nine", "one thousand", "one thousand and one"}, naturalLanguage(999, 1001));
     }
 }

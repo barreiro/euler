@@ -2,8 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * The prime factors of 13195 are 5, 7, 13 and 29.
@@ -15,17 +16,17 @@ public class Problem003Test extends ProjectEulerAbstractTest {
 
     @Test
     public void test() {
-        Assert.assertEquals(6857, new Solver003().solve());
+        assertEquals(6857, new Solver003().solve());
     }
 
     @Test
     public void example() {
-        Assert.assertEquals(29, new Solver003(13195).solve());
+        assertEquals(29, new Solver003(13195).solve());
     }
 
     @Test
     public void minimal() {
-        Assert.assertEquals(3, new Solver003(12).solve());
+        assertEquals(3, new Solver003(12).solve());
     }
 
 }

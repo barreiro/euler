@@ -2,6 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.util.stream.LongStream.rangeClosed;
+
 /**
  * If the numbers 1 to 5 are written out in words: one, two, three, four, five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
  * If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?
@@ -31,34 +33,22 @@ public class Solver017 extends ProjectEulerSolver {
 
     /* --- */
 
-    public long solve() {
-        long sum = 0;
-        for (int l = 1, k = l; l <= N; k = ++l) {
-            if (k / 1000 > 0) {
-                sum += LOOKUP[k / 1000] + THOUSAND;
-                if ((k %= 1000) == 0) {
-                    sum -= AND;
-                    continue;
-                }
-            }
-            if (k / 100 > 0) {
-                sum += LOOKUP[k / 100] + HUNDRED;
-                if ((k %= 100) == 0) {
-                    sum -= AND;
-                    continue;
-                }
-            }
-            if (k / 10 <= 1) {
-                sum += LOOKUP[k];
-            } else {
-                if (k % 10 == 0) {
-                    sum += LOOKUP10[k / 10];
-                } else {
-                    sum += LOOKUP10[k / 10] + LOOKUP[k % 10];
-                }
-            }
+    private static long letters(final long number) {
+        int k = (int) number, sum = 0;
+        if (k / 1000 > 0) {
+            sum += LOOKUP[k / 1000] + THOUSAND;
+            if ((k %= 1000) == 0) return sum - AND;
         }
-        return sum;
+        if (k / 100 > 0) {
+            sum += LOOKUP[k / 100] + HUNDRED;
+            if ((k %= 100) == 0) return sum - AND;
+        }
+        if (k / 10 <= 1) return sum + LOOKUP[k];
+        return sum + LOOKUP10[k / 10] + ((k % 10 == 0) ? 0 : LOOKUP[k % 10]);
+    }
+
+    public long solve() {
+        return rangeClosed(1, N).map(Solver017::letters).sum();
     }
 
 }

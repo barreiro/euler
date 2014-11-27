@@ -2,8 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -15,17 +16,17 @@ public class Problem001Test extends ProjectEulerAbstractTest {
 
     @Test
     public void test() {
-        Assert.assertEquals(233168, new Solver001().solve());
+        assertEquals(233168, new Solver001().solve());
     }
 
     @Test
     public void example() {
-        Assert.assertEquals(23, new Solver001(10).solve());
+        assertEquals(23, new Solver001(10).solve());
     }
 
     @Test
     public void minimal() {
-        Assert.assertEquals(8, new Solver001(6).solve());
+        assertEquals(8, new Solver001(6).solve());
     }
 
 }

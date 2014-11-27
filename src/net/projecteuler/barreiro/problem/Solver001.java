@@ -2,6 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.LongStream.range;
+
 /**
  * If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
  * Find the sum of all the multiples of 3 or 5 below 1000.
@@ -24,16 +27,7 @@ public class Solver001 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        long sum = 0;
-        for (long i = 1; i < N; i++) {
-            for (long factor : FACTORS) {
-                if (i % factor == 0) {
-                    sum += i;
-                    break;
-                }
-            }
-        }
-        return sum;
+        return range(0, N).filter(l -> stream(FACTORS).anyMatch(f -> l % f == 0)).sum();
     }
 
 }

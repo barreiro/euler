@@ -2,7 +2,7 @@
 
 package net.projecteuler.barreiro.problem;
 
-import net.projecteuler.barreiro.algorithm.Primes;
+import static net.projecteuler.barreiro.algorithm.Primes.primesStream;
 
 /**
  * By listing the first six prime numbers: 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.
@@ -23,14 +23,7 @@ public class Solver007 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        Primes.Generator generator = new Primes.Generator();
-        long lastPrime = 0;
-
-        for (long l = 0; l < N; l++) {
-            lastPrime = generator.nextPrime();
-        }
-
-        return lastPrime;
+        return primesStream().limit(N).max().getAsLong();
     }
 
 }

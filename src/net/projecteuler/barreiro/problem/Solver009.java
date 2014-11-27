@@ -2,6 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.lang.Math.sqrt;
+import static java.util.stream.LongStream.range;
+
 /**
  * A Pythagorean triplet is a set of three natural numbers, a < b < c, for which, a^2 + b^2 = c^2
  * For example, 3^2 + 4^2 = 9 + 16 = 25 = 5^2.
@@ -21,25 +24,15 @@ public class Solver009 extends ProjectEulerSolver {
         super(n);
     }
 
-    // Solved with Euclides Formula --- a=m^2-n^2 --- b=2nm --- c=m^2+n^2 --- with m>n
-
     /* --- */
 
-    public long solve() {
-        for (long m = 2; m < Math.sqrt(N); m++) {
-            long mSquare = m * m;
-            for (long n = 1; n < m; n++) {
-                long nSquare = n * n;
-                long a = mSquare - nSquare;
-                long b = 2 * m * n;
-                long c = mSquare + nSquare;
+    // Solved with Euclides Formula --- a=m^2-n^2 --- b=2nm --- c=m^2+n^2 --- with m>n
 
-                if (a + b + c == N) {
-                    return a * b * c;
-                }
-            }
-        }
-        return 0;
+    public long solve() {
+        return range(2, (long) sqrt(N)).map(m -> range(1, m).map(n -> {
+            long mSquare = m * m, nSquare = n * n, a = mSquare - nSquare, b = 2 * m * n, c = mSquare + nSquare;
+            return a + b + c == N ? a * b * c : 0;
+        }).filter(x -> x != 0).findAny().orElse(0)).filter(x -> x != 0).findAny().getAsLong();
     }
 
 }

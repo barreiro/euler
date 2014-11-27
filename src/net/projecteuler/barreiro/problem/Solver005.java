@@ -4,8 +4,11 @@ package net.projecteuler.barreiro.problem;
 
 import net.projecteuler.barreiro.algorithm.Primes;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+
+import static java.lang.Math.pow;
+import static java.util.stream.LongStream.rangeClosed;
 
 /**
  * 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
@@ -26,27 +29,13 @@ public class Solver005 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        Primes.Generator generator = new Primes.Generator();
-        Map<Long, Long> factorMap = new TreeMap<>();
+        Map<Long, Long> factorMap = new HashMap<>();
 
-        for (long prime = 1; prime <= N; ) { // Pre-fill prime set up to N
-            prime = generator.nextPrime();
-            factorMap.put(prime, 0L);
-        }
+        // Populate the factorMap with the highest values of each of the factors
+        rangeClosed(1, N).mapToObj(Primes::primeFactors).forEach(fm -> fm.forEach((k, v) -> factorMap.merge(k, v, Long::max)));
 
-        for (long i = 2; i <= N; i++) { // Decompose all numbers in prime factors and collect the greatest
-            for (Map.Entry<Long, Long> primeEntry : Primes.primeFactors(i, factorMap.keySet()).entrySet()) {
-                if (factorMap.get(primeEntry.getKey()) < primeEntry.getValue()) {
-                    factorMap.put(primeEntry.getKey(), primeEntry.getValue());
-                }
-            }
-        }
-
-        long candidate = 1;
-        for (Map.Entry<Long, Long> factorEntry : factorMap.entrySet()) { // Compose from prime factors
-            candidate *= Math.pow(factorEntry.getKey(), factorEntry.getValue());
-        }
-        return candidate;
+        // Calculate the product of the factors
+        return factorMap.entrySet().stream().mapToLong(e -> (long) pow(e.getKey(), e.getValue())).reduce(1, (l1, l2) -> l1 * l2);
     }
 
 }

@@ -2,14 +2,16 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.lang.Long.decode;
+import static java.lang.Long.parseLong;
+import static java.util.Arrays.stream;
+
 /**
  * Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
  *
  * @author barreiro
  */
 public class Solver013 extends ProjectEulerSolver {
-
-    private static final int RADIX = 10;
 
     private static final String[] STRING_SET = new String[]{
             "37107287533902102798797998220837590246510135740250",
@@ -113,7 +115,7 @@ public class Solver013 extends ProjectEulerSolver {
             "20849603980134001723930671666823555245252804609722",
             "53503534226472524250874054075591789781264330331690"};
 
-    private String[] data;
+        private final String[] data;
 
     public Solver013() {
         this(10);
@@ -127,30 +129,7 @@ public class Solver013 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        long sum = 0;
-        for (String number : data) {
-            sum += parseFromString(number, (int) N + 1);
-        }
-        while (sum > Math.pow(RADIX, N)) {
-            sum /= RADIX;
-        }
-        return sum;
-
-        // Lazy version: return Long.decode(Long.toString(sum).substring(0, (int) N));
-    }
-
-    /* --- */
-
-    private long parseFromString(String number, int significant) {
-        long candidate = Long.parseLong(number.substring(0, significant));
-        if (number.charAt(significant) > '5') {
-            candidate++;
-        }
-        // round half to cancel round-off errors
-        if ((number.charAt(significant) == '5') && (number.charAt(significant + 1) % 2 == 0)) {
-            candidate++;
-        }
-        return candidate;
+            return decode(Long.toString(stream(data).mapToLong(s -> parseLong(s.substring(0, (int) N + 1))).sum()).substring(0, (int) N));
     }
 
 }

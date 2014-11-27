@@ -2,6 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.util.stream.LongStream.range;
+
 /**
  * The following iterative sequence is defined for the set of positive integers: n → n/2 (n is even) n → 3n + 1 (n is odd)
  * <p/>
@@ -28,19 +30,9 @@ public class Solver014 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        // We can save some memory by reducing the size of the cache. Running time may not be much affected.
-        long[] cache = new long[(int) N / 2];
+        final long[] cache = new long[(int) N];
         cache[1] = 1;
-
-        long candidate = 2, candidateLength = 2;
-        for (int i = 2; i < N; i++) {
-            long chainLength = collatzLength(i, cache);
-            if (chainLength > candidateLength) {
-                candidate = i;
-                candidateLength = chainLength;
-            }
-        }
-        return candidate;
+        return range(2, N).reduce(1, (l1, l2) -> collatzLength(l1, cache) > collatzLength(l2, cache) ? l1 : l2);
     }
 
     /* --- */
@@ -48,15 +40,11 @@ public class Solver014 extends ProjectEulerSolver {
     private long collatzLength(long number, long[] cache) {
         // Can't rely on the cache for everything but in many cases we can cut lots of recursion.
         int cIndex = (int) number;
-        if ((number < cache.length) && (cache[cIndex] != 0)) {
-            return cache[cIndex] + 1;
-        }
+        if ((number < cache.length) && (cache[cIndex] != 0)) return cache[cIndex] + 1;
 
-        long chainLength = 1 + ((number % 2 == 0) ? collatzLength(number / 2, cache) : collatzLength(3 * number + 1, cache));
+        long chainLength = (number % 2 == 0 ? collatzLength(number / 2, cache) : collatzLength(3 * number + 1, cache)) + 1;
 
-        if (number < cache.length) {
-            cache[cIndex] = chainLength;
-        }
+        if (number < cache.length) cache[cIndex] = chainLength;
         return chainLength;
     }
 

@@ -2,8 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * In the 20×20 grid below, four numbers along a diagonal line have been marked in red.
@@ -17,22 +18,22 @@ public class Problem011Test extends ProjectEulerAbstractTest {
 
     @Test
     public void test() {
-        Assert.assertEquals(70600674, new Solver011().solve());
+        assertEquals(70600674, new Solver011().solve());
     }
 
     @Test
     public void example() {
-        Assert.assertEquals(811502, new Solver011(3).solve());
+        assertEquals(811502, new Solver011(3).solve());
     }
 
     @Test
     public void minimal() {
-        Assert.assertEquals(99, new Solver011(1).solve());
+        assertEquals(99, new Solver011(1).solve());
     }
 
     @Test
     public void reduced() {
-        Assert.assertEquals(9603, new Solver011(2).solve());
+        assertEquals(9603, new Solver011(2).solve());
     }
 
 }

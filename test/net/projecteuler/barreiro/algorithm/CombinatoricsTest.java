@@ -2,8 +2,10 @@
 
 package net.projecteuler.barreiro.algorithm;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static net.projecteuler.barreiro.algorithm.Combinatorics.choose;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author barreiro
@@ -12,37 +14,47 @@ public class CombinatoricsTest {
 
     @Test
     public void minimal1() {
-        Assert.assertEquals(1, Combinatorics.choose(1, 1));
+        assertEquals(1, choose(1, 1));
     }
 
     @Test
     public void minimal2() {
-        Assert.assertEquals(2, Combinatorics.choose(2, 1));
+        assertEquals(2, choose(2, 1));
     }
 
     @Test
     public void minimal3() {
-        Assert.assertEquals(0, Combinatorics.choose(1, 2));
+        assertEquals(0, choose(1, 2));
     }
 
     @Test
     public void minimal4() {
-        Assert.assertEquals(10, Combinatorics.choose(5, 3));
+        assertEquals(10, choose(5, 3));
+    }
+
+    @Test
+    public void error1() {
+        assertEquals(0, choose(5, -3));
+    }
+
+    @Test
+    public void error2() {
+        assertEquals(0, choose(5, 13));
     }
 
     @Test
     public void test1() {
-        Assert.assertEquals(2598960, Combinatorics.choose(52, 5));
+        assertEquals(2598960, choose(52, 5));
     }
 
     @Test
     public void test2() {
-        Assert.assertEquals(Combinatorics.choose(52, 5), Combinatorics.choose(52, 52 - 5));
+        assertEquals(choose(52, 5), choose(52, 52 - 5));
     }
 
     @Test
     public void big() {
-        Assert.assertEquals(88004802264174740l, Combinatorics.choose(60, 27));
+        assertEquals(88004802264174740l, choose(60, 27));
     }
 
 }

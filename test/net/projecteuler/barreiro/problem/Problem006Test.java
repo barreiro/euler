@@ -2,8 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * The sum of the squares of the first ten natural numbers is, 1^2 + 2^2 + ... + 10^2 = 385
@@ -18,22 +19,22 @@ public class Problem006Test extends ProjectEulerAbstractTest {
 
     @Test
     public void test() {
-        Assert.assertEquals(25164150, new Solver006().solve());
+        assertEquals(25164150, new Solver006().solve());
     }
 
     @Test
     public void example() {
-        Assert.assertEquals(2640, new Solver006(10).solve());
+        assertEquals(2640, new Solver006(10).solve());
     }
 
     @Test
     public void minimal() {
-        Assert.assertEquals(170, new Solver006(5).solve());
+        assertEquals(170, new Solver006(5).solve());
     }
 
     @Test
     public void big() {
-        Assert.assertEquals(401323300, new Solver006(200).solve());
+        assertEquals(401323300, new Solver006(200).solve());
     }
 
 }

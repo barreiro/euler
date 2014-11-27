@@ -2,6 +2,10 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+import static java.util.stream.IntStream.rangeClosed;
+
 /**
  * Abstract class for a solver for a particular euler problem.
  *
@@ -9,44 +13,74 @@ package net.projecteuler.barreiro.problem;
  */
 public abstract class ProjectEulerSolver {
 
+    /**
+     * Scale of the problem.
+     */
     protected final long N;
 
     /**
      * It's very useful that for every problem solver we define some sort of dimension. Mostly for testing purposes.
      *
-     * @param N Scale of the problem
+     * @param n Scale of the problem
      */
-    protected ProjectEulerSolver(long N) {
-        this.N = N;
+    protected ProjectEulerSolver(long n) {
+        this.N = n;
     }
 
     /**
-     * Solves all problems! The euler ones.
+     * Method that is implemented by each solver
      *
-     * @param args not used
+     * @return Solution for the problem
+     */
+    protected abstract long solve();
+
+    /* --- */
+
+    /**
+     * Entry point. Solves problems.
+     *
+     * @param args Problem or problems to solve
      */
     public static void main(final String[] args) {
-        final int PROBLEMS = 20;
-        for (int problem = 1; problem <= PROBLEMS; problem++) {
-            try {
-                String solverClassName = String.format("%s%s%03d", ProjectEulerSolver.class.getPackage().getName(), ".Solver", problem);
-                ProjectEulerSolver solverInstance = ProjectEulerSolver.class.cast(Class.forName(solverClassName).newInstance());
-                if (solverInstance != null) {
-                    System.out.printf("Solution for problem %03d is %d%n", problem, solverInstance.solve());
-                }
-            } catch (ClassNotFoundException e) {
-                System.out.printf("ERROR: No implementation found for problem %d%n", problem);
-            } catch (Exception e) {
-                System.out.printf("ERROR: Exception during execution of problem %s: %s%n", problem, e.getMessage());
-            }
+        if (args.length == 0) {
+            solveAll();
+        } else {
+            stream(args).mapToInt(Integer::valueOf).forEachOrdered(ProjectEulerSolver::solve);
         }
     }
 
     /* --- */
 
     /**
-     * @return Solution for the problem.
+     * Solves all problems! The Euler ones.
+     *
      */
-    public abstract long solve();
+    private static void solveAll() {
+        rangeClosed(1, 20).forEachOrdered(ProjectEulerSolver::solve);
+    }
+
+    /**
+     * Solves a particular Euler problem.
+     *
+     * @param number The number of the problem to solve
+     */
+    private static void solve(int number) {
+        try {
+            String solverClassName = format("%s%s%03d", ProjectEulerSolver.class.getPackage().getName(), ".Solver", number);
+            ProjectEulerSolver solverInstance = ProjectEulerSolver.class.cast(Class.forName(solverClassName).newInstance());
+            if (solverInstance != null) {
+                if (Boolean.valueOf(System.getProperty("euler.traceExecutionTime", "false"))) {
+                    long start = System.currentTimeMillis();
+                    System.out.printf("Solution for problem %03d is %d --- Took %d ms%n", number, solverInstance.solve(), System.currentTimeMillis() - start);
+                } else {
+                    System.out.printf("Solution for problem %03d is %d%n", number, solverInstance.solve());
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            System.out.printf("ERROR: No implementation found for problem %d%n", number);
+        } catch (Exception e) {
+            System.out.printf("ERROR: Exception during execution of problem %s: %s%n", number, e.getMessage());
+        }
+    }
 
 }

@@ -2,7 +2,7 @@
 
 package net.projecteuler.barreiro.problem;
 
-import net.projecteuler.barreiro.algorithm.Combinatorics;
+import static net.projecteuler.barreiro.algorithm.Combinatorics.choose;
 
 /**
  * Starting in the top left corner of a 2x2 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner.
@@ -23,7 +23,7 @@ public class Solver015 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        return Combinatorics.choose(2 * N, N);
+        return choose(2 * N, N);
     }
 
 }

@@ -2,6 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.lang.Math.pow;
+
 /**
  * The sum of the squares of the first ten natural numbers is, 1^2 + 2^2 + ... + 10^2 = 385
  * The square of the sum of the first ten natural numbers is, (1 + 2 + ... + 10)^2 = 55^2 = 3025
@@ -24,11 +26,8 @@ public class Solver006 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        long squares = 0, sum = (N * (N + 1)) / 2;
-        for (long i = 1; i <= N; i++) {
-            squares += i * i;
-        }
-        return sum * sum - squares;
+        // Using Faulhaber's Formula for the square of the sum and Gauss's Formula for the sum of the squares
+        return (long) (pow(N, 4) + 2 * pow(N, 3) + pow(N, 2)) / 4 - N * (N + 1) * (2 * N + 1) / 6;
     }
 
 }

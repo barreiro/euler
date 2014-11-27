@@ -2,7 +2,7 @@
 
 package net.projecteuler.barreiro.problem;
 
-import net.projecteuler.barreiro.algorithm.Primes;
+import static net.projecteuler.barreiro.algorithm.Primes.primeFactors;
 
 /**
  * The prime factors of 13195 are 5, 7, 13 and 29.
@@ -21,18 +21,7 @@ public class Solver003 extends ProjectEulerSolver {
     }
 
     public long solve() {
-        Primes.Generator generator = new Primes.Generator();
-        long candidate, largestCandidate = 0;
-
-        // Go from prime to prime until sqrt(N). Return biggest prime that is a factor.
-        do {
-            candidate = generator.nextPrime();
-
-            if (N % candidate == 0) {
-                largestCandidate = candidate;
-            }
-        } while (candidate * candidate < N);
-        return largestCandidate;
+        return primeFactors(N).keySet().stream().max(Long::compare).get();
     }
 
 }

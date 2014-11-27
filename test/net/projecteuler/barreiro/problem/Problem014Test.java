@@ -2,8 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * The following iterative sequence is defined for the set of positive integers: n → n/2 (n is even) n → 3n + 1 (n is odd)
@@ -22,22 +23,22 @@ public class Problem014Test extends ProjectEulerAbstractTest {
 
     @Test
     public void test() {
-        Assert.assertEquals(837799, new Solver014().solve());
+        assertEquals(837799, new Solver014().solve());
     }
 
     @Test
     public void minimal1() {
-        Assert.assertEquals(3, new Solver014(5).solve());
+        assertEquals(3, new Solver014(5).solve());
     }
 
     @Test
     public void minimal2() {
-        Assert.assertEquals(97, new Solver014(100).solve());
+        assertEquals(97, new Solver014(100).solve());
     }
 
     @Test
     public void test_big() {
-        Assert.assertEquals(3732423, new Solver014(5000000).solve());
+        assertEquals(3732423, new Solver014(5000000).solve());
     }
 
 }
