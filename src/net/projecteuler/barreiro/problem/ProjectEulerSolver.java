@@ -56,7 +56,7 @@ public abstract class ProjectEulerSolver {
      *
      */
     private static void solveAll() {
-        rangeClosed(1, 20).forEachOrdered(ProjectEulerSolver::solve);
+        rangeClosed(1, 25).forEachOrdered(ProjectEulerSolver::solve);
     }
 
     /**
