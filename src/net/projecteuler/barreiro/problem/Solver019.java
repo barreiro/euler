@@ -45,6 +45,12 @@ public class Solver019 extends ProjectEulerSolver {
         return range(START_YEAR, START_YEAR + N).map(y -> isLeap(y) ? sundaysLeap(startDay(y)) : sundaysCommon(startDay(y))).sum();
     }
 
+    /**
+     * A leap year occurs on any year evenly divisible by 4, but not on a century unless it is divisible by 400.
+     *
+     * @param year Year to evaluate
+     * @return True if is a leap year
+     */
     public static boolean isLeap(final long year) {
         return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
     }
