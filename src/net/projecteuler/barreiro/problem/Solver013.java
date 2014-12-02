@@ -115,7 +115,7 @@ public class Solver013 extends ProjectEulerSolver {
             "20849603980134001723930671666823555245252804609722",
             "53503534226472524250874054075591789781264330331690"};
 
-        private final String[] data;
+    private final String[] data;
 
     public Solver013() {
         this(10);
@@ -129,7 +129,7 @@ public class Solver013 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-            return decode(Long.toString(stream(data).mapToLong(s -> parseLong(s.substring(0, (int) N + 1))).sum()).substring(0, (int) N));
+        return decode(Long.toString(stream(data).mapToLong(s -> parseLong(s.substring(0, (int) N + 1))).sum()).substring(0, (int) N));
     }
 
 }

@@ -2,6 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
+import java.util.function.ToLongFunction;
+
 import static java.util.stream.IntStream.rangeClosed;
 
 /**
@@ -52,9 +54,8 @@ public class Solver008 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        return rangeClosed(0, data.length() - (int) N).mapToObj(i -> data.subSequence(i, i + (int) N)).mapToLong(
-                cs -> cs.chars().mapToLong(c -> c - '0').reduce(1, (c1, c2) -> c1 * c2)
-        ).max().getAsLong();
+        ToLongFunction<CharSequence> charProduct = s -> s.chars().mapToLong(c -> c - '0').reduce(1, (c1, c2) -> c1 * c2);
+        return rangeClosed(0, data.length() - (int) N).mapToObj(i -> data.subSequence(i, i + (int) N)).mapToLong(charProduct).max().getAsLong();
     }
 
 }

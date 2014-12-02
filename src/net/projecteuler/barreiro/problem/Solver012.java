@@ -2,6 +2,7 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.lang.Math.sqrt;
 import static java.util.stream.LongStream.rangeClosed;
 import static java.util.stream.Stream.iterate;
 
@@ -38,7 +39,7 @@ public class Solver012 extends ProjectEulerSolver {
     public long solve() {
         return iterate(1L, l -> l + 1).parallel().map(l -> (l * (l + 1)) / 2).filter(t -> {
             // We need to adjust the number of divisors if the number is a perfect square
-            long ceiling = (long) Math.sqrt(t), divisors = (ceiling * ceiling == t) ? -1 : 0;
+            long ceiling = (long) sqrt(t), divisors = (ceiling * ceiling == t) ? -1 : 0;
             divisors += rangeClosed(1, ceiling).filter(f -> t % f == 0).count() * 2;
             return divisors >= N;
         }).findFirst().get();

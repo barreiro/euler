@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.function.Function;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 import static java.util.stream.IntStream.rangeClosed;
+import static java.util.stream.Stream.of;
 
 /**
  * In the 20×20 grid below, four numbers along a diagonal line have been marked in red.
@@ -45,7 +46,7 @@ public class Solver011 extends ProjectEulerSolver {
             "20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54",
             "01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"};
 
-    private final String[] data;
+    private final String[] rawData;
 
     public Solver011() {
         this(4);
@@ -53,26 +54,31 @@ public class Solver011 extends ProjectEulerSolver {
 
     public Solver011(long n) {
         super(n);
-        data = GRID;
+        rawData = GRID;
     }
 
     /* --- */
 
     public long solve() {
-        final List<List<Integer>> nList = stream(data).map(s -> stream(s.split(" ")).map(Integer::valueOf).collect(toList())).collect(toList());
+        final List<List<Integer>> data = stream(rawData).map(s -> stream(s.split(" ")).map(Integer::valueOf).collect(toList())).collect(toList());
         final Map<Integer, List<Integer>> row = new HashMap<>(), column = new HashMap<>(), diagonalA = new HashMap<>(), diagonalB = new HashMap<>();
+        final Function<Integer, List<Integer>> newList = list -> new ArrayList<>();
 
-        range(0, nList.size()).forEach(r -> range(0, nList.get(0).size()).forEach(c -> {
-            row.computeIfAbsent(r, list -> new ArrayList<>()).add(nList.get(r).get(c));
-            column.computeIfAbsent(c, list -> new ArrayList<>()).add(nList.get(r).get(c));
-            diagonalA.computeIfAbsent(r - c, list -> new ArrayList<>()).add(nList.get(r).get(c));
-            diagonalB.computeIfAbsent(r + c, list -> new ArrayList<>()).add(nList.get(r).get(c));
+        range(0, data.size()).forEach(r -> range(0, data.get(0).size()).forEach(c -> {
+            row.computeIfAbsent(r, newList).add(value(data, r, c));
+            column.computeIfAbsent(c, newList).add(value(data, r, c));
+            diagonalA.computeIfAbsent(r - c, newList).add(value(data, r, c));
+            diagonalB.computeIfAbsent(r + c, newList).add(value(data, r, c));
         }));
 
-        return Stream.of(row, column, diagonalA, diagonalB).mapToLong(m -> m.values().stream().mapToLong(this::solve).max().getAsLong()).max().getAsLong();
+        return of(row, column, diagonalA, diagonalB).mapToLong(m -> m.values().stream().mapToLong(this::solve).max().getAsLong()).max().getAsLong();
     }
 
     /* --- */
+
+    private static int value(List<List<Integer>> l, int r, int c) {
+        return l.get(r).get(c);
+    }
 
     private long solve(List<Integer> l) {
         if (l.size() < N) return 0;

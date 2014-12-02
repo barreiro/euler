@@ -35,9 +35,7 @@ public class Solver014 extends ProjectEulerSolver {
         return range(2, N).reduce(1, (l1, l2) -> collatzLength(l1, cache) > collatzLength(l2, cache) ? l1 : l2);
     }
 
-    /* --- */
-
-    private long collatzLength(long number, long[] cache) {
+    private static long collatzLength(long number, long[] cache) {
         // Can't rely on the cache for everything but in many cases we can cut lots of recursion.
         int cIndex = (int) number;
         if ((number < cache.length) && (cache[cIndex] != 0)) return cache[cIndex] + 1;
