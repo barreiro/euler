@@ -2,6 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
+import net.projecteuler.barreiro.algorithm.util.LongUtils;
+
 import static net.projecteuler.barreiro.algorithm.Fibonacci.fibonacciStream;
 
 /**
@@ -24,7 +26,7 @@ public class Solver002 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        return fibonacciStream(f -> f < N).filter(f -> f % 2 == 0).sum();
+        return fibonacciStream(f -> f < N).filter(LongUtils::isEven).sum();
     }
 
 }

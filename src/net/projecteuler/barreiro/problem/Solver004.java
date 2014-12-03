@@ -3,7 +3,8 @@
 package net.projecteuler.barreiro.problem;
 
 import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
+import static net.projecteuler.barreiro.algorithm.Factorization.hasFactorsBelow;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
 
 /**
@@ -25,9 +26,9 @@ public class Solver004 extends ProjectEulerSolver {
     /* --- */
 
     public static boolean isPalindromic(long number) {
-        final String candidate = Long.toString(number);
-        for (int i = 0; i * 2 < candidate.length(); i++) {
-            if (candidate.charAt(i) != candidate.charAt(candidate.length() - i - 1)) return false;
+        final long[] digits = toDigits(number);
+        for (int i = 0; i * 2 < digits.length; i++) {
+            if (digits[i] != digits[digits.length - i - 1]) return false;
         }
         return true;
     }
@@ -36,10 +37,7 @@ public class Solver004 extends ProjectEulerSolver {
 
     public long solve() {
         final long roof = (long) pow(10, N); // The max number with N digits
-        return rangeReverse(roof * roof, 1).filter(Solver004::isPalindromic).filter(
-                // Found a very biggest palindromic number. Try to factor such that the both factors are less than roof
-                pal -> rangeReverse(roof, (long) sqrt(pal)).anyMatch(f -> (pal % f == 0) && (pal / f < roof))
-        ).findFirst().getAsLong();
+        return rangeReverse(roof * roof, 1).filter(Solver004::isPalindromic).filter(pal -> hasFactorsBelow(pal, roof)).findFirst().getAsLong();
     }
 
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import static java.lang.Math.pow;
 import static java.util.stream.LongStream.rangeClosed;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.product;
 
 /**
  * 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
@@ -35,7 +36,7 @@ public class Solver005 extends ProjectEulerSolver {
         rangeClosed(1, N).mapToObj(Primes::primeFactors).forEach(fm -> fm.forEach((k, v) -> factorMap.merge(k, v, Long::max)));
 
         // Calculate the product of the factors
-        return factorMap.entrySet().stream().mapToLong(e -> (long) pow(e.getKey(), e.getValue())).reduce(1, (l1, l2) -> l1 * l2);
+        return factorMap.entrySet().stream().mapToLong(e -> (long) pow(e.getKey(), e.getValue())).reduce(1, product());
     }
 
 }

@@ -5,7 +5,7 @@ package net.projecteuler.barreiro.algorithm;
 import static java.lang.Math.min;
 
 /**
- * Static class with util methods for solving problems.
+ * Static class with util methods for solving problems related to combinatorial logic .
  *
  * @author barreiro
  */

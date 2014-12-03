@@ -2,9 +2,10 @@
 
 package net.projecteuler.barreiro.problem;
 
+import net.projecteuler.barreiro.algorithm.Factorization;
+
 import java.util.Set;
 
-import static java.lang.Math.sqrt;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.LongStream.rangeClosed;
 
@@ -35,14 +36,8 @@ public class Solver023 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        Set<Long> abundant = rangeClosed(1, N).parallel().filter(Solver023::isAbundant).mapToObj(Long::valueOf).collect(toSet());
+        Set<Long> abundant = rangeClosed(1, N).parallel().filter(Factorization::isAbundant).mapToObj(Long::valueOf).collect(toSet());
         return rangeClosed(1, N).parallel().filter(n -> abundant.stream().filter(a -> a <= n / 2).noneMatch(a -> abundant.contains(n - a))).sum();
-    }
-
-    private static boolean isAbundant(long number) {
-        // We need to adjust the number of divisors if the number is a perfect square
-        long ceiling = (long) sqrt(number), squareFactor = (ceiling * ceiling == number) ? -ceiling : 0;
-        return number < 1 + squareFactor + rangeClosed(2, ceiling).filter(f -> number % f == 0).map(f -> f + number / f).sum();
     }
 
 }

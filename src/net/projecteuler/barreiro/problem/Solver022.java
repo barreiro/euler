@@ -7,9 +7,9 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.ToLongFunction;
 
 import static java.util.regex.Pattern.compile;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.letterSum;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 
 /**
@@ -44,10 +44,9 @@ public class Solver022 extends ProjectEulerSolver {
     public long solve() {
         Set<String> sortedNames = new TreeSet<>();
         AtomicLong counter = new AtomicLong(1);
-        ToLongFunction<CharSequence> charSum = s -> s.chars().mapToLong(c -> c - 'A' + 1).reduce(0, Long::sum);
 
         lazyStream(scanner.useDelimiter(compile(",|\""))).filter(s -> !s.isEmpty()).forEach(sortedNames::add);
-        return sortedNames.stream().limit(N).mapToLong(charSum).reduce(0L, (l1, l2) -> l1 + l2 * counter.getAndIncrement());
+        return sortedNames.stream().limit(N).mapToLong(letterSum()).reduce(0L, (l1, l2) -> l1 + l2 * counter.getAndIncrement());
     }
 
 }

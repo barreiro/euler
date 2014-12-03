@@ -33,7 +33,7 @@ public class Solver017 extends ProjectEulerSolver {
 
     /* --- */
 
-    private static long letters(final long number) {
+    private static long letterCount(final long number) {
         int k = (int) number, sum = 0;
         if (k / 1000 > 0) {
             sum += LOOKUP[k / 1000] + THOUSAND;
@@ -48,7 +48,7 @@ public class Solver017 extends ProjectEulerSolver {
     }
 
     public long solve() {
-        return rangeClosed(1, N).map(Solver017::letters).sum();
+        return rangeClosed(1, N).map(Solver017::letterCount).sum();
     }
 
 }

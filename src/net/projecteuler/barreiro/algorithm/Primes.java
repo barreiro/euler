@@ -9,7 +9,7 @@ import java.util.stream.LongStream;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 
 /**
- * Static class with util methods for solving the problems.
+ * Static class with util methods for dealing with prime numbers.
  *
  * @author barreiro
  */

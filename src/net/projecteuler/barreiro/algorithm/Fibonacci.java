@@ -8,8 +8,8 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 
 /**
  * Utility class for Fibonacci numbers
- * <p>
- * Created by barreiro on 11/20/14.
+ *
+ * @author barreiro
  */
 public final class Fibonacci {
 

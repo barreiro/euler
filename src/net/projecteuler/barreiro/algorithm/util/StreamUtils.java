@@ -14,8 +14,8 @@ import static java.util.stream.StreamSupport.stream;
 
 /**
  * Util functions to work with streams.
- * <p>
- * Created by barreiro on 11/20/14.
+ *
+ * @author barreiro
  */
 public final class StreamUtils {
 
@@ -51,6 +51,15 @@ public final class StreamUtils {
      */
     public static LongStream rangeReverse(long startExclusive, long endInclusive) {
         return iterate(startExclusive - 1, l -> l - 1).limit(startExclusive - endInclusive);
+    }
+
+    /**
+     * Creates an infinite parallel long stream.
+     *
+     * @return An infinite stream
+     */
+    public static LongStream infiniteParallelStream() {
+        return Stream.iterate(1L, l -> l + 1).parallel().mapToLong(l -> l);
     }
 
 }
