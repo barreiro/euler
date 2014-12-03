@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.function.LongBinaryOperator;
 import java.util.function.ToLongFunction;
 
+import static java.lang.Math.pow;
 import static java.util.stream.IntStream.range;
 
 /**
@@ -39,6 +40,19 @@ public final class LongUtils {
     }
 
     /**
+     * Simple method to calculate the factorial of small values. No checks are performed. Use with caution.
+     *
+     * @param l Value to calculate the factorial
+     * @return The factorial of the argument
+     */
+    public static long factorial(long l) {
+        if (l <= 2) return l;
+        return l * factorial(l - 1);
+    }
+
+    /* --- */
+
+    /**
      * Decompose a long value into a sequence of digits.
      *
      * @param value Value to convert
@@ -51,6 +65,16 @@ public final class LongUtils {
         }
         digits.addFirst(value);
         return digits.stream().mapToLong(l -> l).toArray();
+    }
+
+    /**
+     * Decompose a long value into a sequence of digits. There is the risk of overflow. Use carefully.
+     *
+     * @param digits Array of digits to convert from
+     * @return A long composed of the digits in the array
+     */
+    public static long fromDigits(long[] digits) {
+        return range(0, digits.length).mapToLong(i -> digits[digits.length - i - 1] * (long) pow(10, i)).sum();
     }
 
     /**
