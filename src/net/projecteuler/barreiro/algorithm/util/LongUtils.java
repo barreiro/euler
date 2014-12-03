@@ -68,7 +68,7 @@ public final class LongUtils {
     }
 
     /**
-     * Decompose a long value into a sequence of digits. There is the risk of overflow. Use carefully.
+     * Compose a long value from a sequence of digits. There is the risk of overflow. Use carefully.
      *
      * @param digits Array of digits to convert from
      * @return A long composed of the digits in the array
@@ -94,6 +94,28 @@ public final class LongUtils {
             carry = (int) result[i] / RADIX;
             result[i] -= carry * RADIX;
         }
+        return result;
+    }
+
+    /**
+     * Add two long numbers represented as an array of digits, less significant first. All arrays must have the same size.
+     * If sum does not fit the result array an ArrayIndexOutOfBoundsException will be thrown.
+     *
+     * @param a      Addend one
+     * @param b      Addend two
+     * @param result The array where the result will be put
+     * @return Result of the sum of a and b
+     */
+    public static long[] addition(long[] a, long[] b, long[] result) {
+        range(0, result.length).forEach(i -> result[i] = a[i] + b[i]);
+
+        long carry = 0;
+        for (int i = 0; i < result.length; i++) {
+            result[i] += carry;
+            carry = (int) result[i] / RADIX;
+            result[i] -= carry * RADIX;
+        }
+        if (carry != 0) throw new ArrayIndexOutOfBoundsException();
         return result;
     }
 
