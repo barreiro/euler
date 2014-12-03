@@ -2,8 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.Math.sqrt;
 import static java.util.stream.LongStream.range;
@@ -32,7 +32,7 @@ public class Solver021 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        Map<Long, Long> factorSum = new HashMap<>();
+        Map<Long, Long> factorSum = new ConcurrentHashMap<>();
         range(2, N).parallel().forEach(l -> factorSum.put(l, sumFactors(l)));
         return range(2, N).filter(l -> {
             long s = factorSum.get(l);

@@ -2,7 +2,12 @@
 
 package net.projecteuler.barreiro.problem;
 
+import static java.lang.Boolean.valueOf;
+import static java.lang.Class.forName;
 import static java.lang.String.format;
+import static java.lang.System.currentTimeMillis;
+import static java.lang.System.getProperty;
+import static java.lang.System.out;
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.rangeClosed;
 
@@ -67,19 +72,19 @@ public abstract class ProjectEulerSolver {
     private static void solve(int number) {
         try {
             String solverClassName = format("%s%s%03d", ProjectEulerSolver.class.getPackage().getName(), ".Solver", number);
-            ProjectEulerSolver solverInstance = ProjectEulerSolver.class.cast(Class.forName(solverClassName).newInstance());
+            ProjectEulerSolver solverInstance = ProjectEulerSolver.class.cast(forName(solverClassName).newInstance());
             if (solverInstance != null) {
-                if (Boolean.valueOf(System.getProperty("euler.traceExecutionTime", "false"))) {
-                    long start = System.currentTimeMillis();
-                    System.out.printf("Solution for problem %03d is %d --- Took %d ms%n", number, solverInstance.solve(), System.currentTimeMillis() - start);
+                if (valueOf(getProperty("euler.traceExecutionTime", "false"))) {
+                    long start = currentTimeMillis();
+                    out.printf("Solution for problem %03d is %d --- Took %d ms%n", number, solverInstance.solve(), currentTimeMillis() - start);
                 } else {
-                    System.out.printf("Solution for problem %03d is %d%n", number, solverInstance.solve());
+                    out.printf("Solution for problem %03d is %d%n", number, solverInstance.solve());
                 }
             }
         } catch (ClassNotFoundException e) {
-            System.out.printf("ERROR: No implementation found for problem %d%n", number);
+            out.printf("ERROR: No implementation found for problem %d%n", number);
         } catch (Exception e) {
-            System.out.printf("ERROR: Exception during execution of problem %s: %s%n", number, e.getMessage());
+            out.printf("ERROR: Exception during execution of problem %s: %s%n", number, e.getMessage());
         }
     }
 
