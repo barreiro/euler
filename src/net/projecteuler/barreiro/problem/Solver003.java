@@ -21,7 +21,7 @@ public class Solver003 extends ProjectEulerSolver {
     }
 
     public long solve() {
-        return primeFactors(N).keySet().stream().max(Long::compare).get();
+        return primeFactors(N).keySet().stream().mapToLong(Long::valueOf).max().getAsLong();
     }
 
 }

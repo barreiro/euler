@@ -4,7 +4,8 @@ package net.projecteuler.barreiro.algorithm;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static net.projecteuler.barreiro.algorithm.Primes.*;
+import static org.junit.Assert.*;
 
 /**
  * @author barreiro
@@ -13,18 +14,28 @@ public class PrimesTest {
 
     @Test
     public void primeGenerator() {
-        Primes.Generator primeGenerator = new Primes.Generator();
-        assertEquals(2, primeGenerator.nextPrime());
-        assertEquals(3, primeGenerator.nextPrime());
-        assertEquals(5, primeGenerator.nextPrime());
-        assertEquals(7, primeGenerator.nextPrime());
-        assertEquals(11, primeGenerator.nextPrime());
-        assertEquals(13, primeGenerator.nextPrime());
-        assertEquals(17, primeGenerator.nextPrime());
-        assertEquals(19, primeGenerator.nextPrime());
-        assertEquals(23, primeGenerator.nextPrime());
-        assertEquals(29, primeGenerator.nextPrime());
-        assertEquals(31, primeGenerator.nextPrime());
+        assertArrayEquals(new long[]{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31}, primesStream().limit(11).toArray());
+    }
+
+    @Test
+    public void primeGeneratorReverse() {
+        assertArrayEquals(new long[]{31, 29, 23, 19, 17, 13, 11, 7, 5, 3, 2}, primesLessThan(36).toArray());
+    }
+
+    @Test
+    public void generatorEquivalence() {
+        assertArrayEquals(primesStreamMillerRabin().limit(10000).toArray(), primesStream().limit(10000).toArray());
+    }
+
+    @Test
+    public void millerRabinTest() {
+        assertTrue(millerRabin(2) && millerRabin(3) && millerRabin(5) && millerRabin(7) && millerRabin(11) && millerRabin(13));
+        assertFalse(millerRabin(4) && millerRabin(6) && millerRabin(8) && millerRabin(9) && millerRabin(10) && millerRabin(12));
+    }
+
+    @Test
+    public void millerRabinTestStream() {
+        assertTrue(primesStream().limit(10000).allMatch(Primes::millerRabin));
     }
 
 }

@@ -7,8 +7,8 @@ import net.projecteuler.barreiro.algorithm.Primes;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.Math.pow;
 import static java.util.stream.LongStream.rangeClosed;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.product;
 
 /**
@@ -36,7 +36,7 @@ public class Solver005 extends ProjectEulerSolver {
         rangeClosed(1, N).mapToObj(Primes::primeFactors).forEach(fm -> fm.forEach((k, v) -> factorMap.merge(k, v, Long::max)));
 
         // Calculate the product of the factors
-        return factorMap.entrySet().stream().mapToLong(e -> (long) pow(e.getKey(), e.getValue())).reduce(1, product());
+        return factorMap.entrySet().stream().mapToLong(e -> pow(e.getKey(), e.getValue())).reduce(1, product());
     }
 
 }

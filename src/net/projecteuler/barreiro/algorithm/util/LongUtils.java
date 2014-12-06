@@ -1,10 +1,11 @@
 package net.projecteuler.barreiro.algorithm.util;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.LongBinaryOperator;
 import java.util.function.ToLongFunction;
 
-import static java.lang.Math.pow;
+import static java.util.Arrays.copyOf;
 import static java.util.stream.IntStream.range;
 
 /**
@@ -25,7 +26,7 @@ public final class LongUtils {
      * @param l Value to test
      * @return true if value not equal to zero
      */
-    public static boolean isntZero(long l) {
+    public static boolean notZero(long l) {
         return l != 0;
     }
 
@@ -40,6 +41,22 @@ public final class LongUtils {
     }
 
     /**
+     * Greatest common divisor using Euclides algorithm.
+     *
+     * @param a One of the values
+     * @param b The other value
+     * @return The greatest common divisor
+     */
+    public static long gcd(long a, long b) {
+        while (b != 0) {
+            long n = a % b;
+            a = b;
+            b = n;
+        }
+        return a;
+    }
+
+    /**
      * Simple method to calculate the factorial of small values. No checks are performed. Use with caution.
      *
      * @param l Value to calculate the factorial
@@ -48,6 +65,17 @@ public final class LongUtils {
     public static long factorial(long l) {
         if (l <= 2) return l;
         return l * factorial(l - 1);
+    }
+
+    /**
+     * Convenience method to calculate the power.
+     *
+     * @param base Value to be used as base
+     * @param exp  Value to be used as exponent
+     * @return base^exp
+     */
+    public static long pow(long base, long exp) {
+        return (long) Math.pow(base, exp);
     }
 
     /* --- */
@@ -59,22 +87,22 @@ public final class LongUtils {
      * @return An array with the digits that form the number, less significant first
      */
     public static long[] toDigits(long value) {
-        LinkedList<Long> digits = new LinkedList<>();
+        List<Long> digits = new LinkedList<>();
         for (; value >= RADIX; value /= RADIX) {
-            digits.addFirst(value % RADIX);
+            digits.add(value % RADIX);
         }
-        digits.addFirst(value);
+        digits.add(value);
         return digits.stream().mapToLong(l -> l).toArray();
     }
 
     /**
      * Compose a long value from a sequence of digits. There is the risk of overflow. Use carefully.
      *
-     * @param digits Array of digits to convert from
+     * @param digits Array of digits to convert from, less significant first
      * @return A long composed of the digits in the array
      */
     public static long fromDigits(long[] digits) {
-        return range(0, digits.length).mapToLong(i -> digits[digits.length - i - 1] * (long) pow(10, i)).sum();
+        return range(0, digits.length).mapToLong(i -> digits[i] * pow(10, i)).sum();
     }
 
     /**
@@ -99,10 +127,10 @@ public final class LongUtils {
 
     /**
      * Add two long numbers represented as an array of digits, less significant first. All arrays must have the same size.
-     * If sum does not fit the result array an ArrayIndexOutOfBoundsException will be thrown.
+     * If sum does not fit the result array a new one will be created and returned..
      *
-     * @param a      Addend one
-     * @param b      Addend two
+     * @param a Addend one
+     * @param b Addend two
      * @param result The array where the result will be put
      * @return Result of the sum of a and b
      */
@@ -115,8 +143,33 @@ public final class LongUtils {
             carry = (int) result[i] / RADIX;
             result[i] -= carry * RADIX;
         }
-        if (carry != 0) throw new ArrayIndexOutOfBoundsException();
-        return result;
+        if (carry == 0) return result;
+
+        // Expand the result as needed
+        long[] r = copyOf(result, result.length + 1);
+        r[result.length] = carry;
+        return r;
+    }
+
+    /* --- */
+
+    /**
+     * Modular power.
+     *
+     * @param base Number to use as base
+     * @param exp  Number to use as exponent
+     * @param mod  Number to use as modulus
+     * @return The value of the operation (base^exp) mod modulus.
+     */
+    public static long powerMod(long base, long exp, long mod) {
+        long result = 1;
+        base %= mod;
+        while (exp > 0) {
+            if ((exp & 1) != 0) result = (result * base) % mod;
+            exp >>= 1;
+            base = base * base % mod;
+        }
+        return result < 0 ? result + mod : result;
     }
 
     /* --- */

@@ -5,9 +5,7 @@ package net.projecteuler.barreiro.problem;
 import static java.lang.Boolean.valueOf;
 import static java.lang.Class.forName;
 import static java.lang.String.format;
-import static java.lang.System.currentTimeMillis;
-import static java.lang.System.getProperty;
-import static java.lang.System.out;
+import static java.lang.System.*;
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.rangeClosed;
 
@@ -61,7 +59,7 @@ public abstract class ProjectEulerSolver {
      *
      */
     private static void solveAll() {
-        rangeClosed(1, 25).forEachOrdered(ProjectEulerSolver::solve);
+        rangeClosed(1, 30).forEachOrdered(ProjectEulerSolver::solve);
     }
 
     /**

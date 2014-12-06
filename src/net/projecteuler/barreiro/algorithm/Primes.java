@@ -6,7 +6,11 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.LongStream;
 
+import static java.lang.Long.numberOfTrailingZeros;
+import static java.util.Arrays.stream;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.powerMod;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
 
 /**
  * Static class with util methods for dealing with prime numbers.
@@ -26,7 +30,7 @@ public final class Primes {
      */
     public static Map<Long, Long> primeFactors(long subject) {
         final Map<Long, Long> factorMap = new HashMap<>();
-        final Generator generator = new Generator();
+        final PrimeGenerator generator = new GeneratorTrialDivision();
         long factor, ceiling = subject;
         do {
             factor = generator.nextPrime();
@@ -42,6 +46,8 @@ public final class Primes {
         return factorMap;
     }
 
+    /* --- */
+
     /**
      * Infinite stream of primes.
      *
@@ -52,14 +58,41 @@ public final class Primes {
     }
 
     /**
-     * Creates a stream of prime numbers, starting with 2, 3, ...
+     * Creates a stream of prime numbers, starting with 2, 3, ... up to N.
      *
-     * @param predicate Stop condition
+     * @param n Upper bound
      * @return A stream of prime numbers
      */
-    public static LongStream primesStream(final Predicate<Long> predicate) {
+    public static LongStream primesUpTo(final long n) {
+        return primesStream(p -> p < n);
+    }
+
+    /**
+     * Creates a stream of prime numbers, starting with the one below N.
+     *
+     * @param n Upper bound
+     * @return A stream of prime numbers
+     */
+    public static LongStream primesLessThan(final long n) {
+        return rangeReverse(n, 1).filter(Primes::millerRabin);
+    }
+
+    /**
+     * Infinite stream of primes, using Miller-Rabin prime test.
+     *
+     * @return A stream of prime numbers
+     */
+    public static LongStream primesStreamMillerRabin() {
+        return primesStream(p -> true, new GeneratorMillerRabin());
+    }
+
+    private static LongStream primesStream(final Predicate<Long> predicate) {
+        return primesStream(predicate, new GeneratorTrialDivision());
+    }
+
+    private static LongStream primesStream(final Predicate<Long> predicate, PrimeGenerator generator) {
         return lazyStream(new PrimitiveIterator.OfLong() {
-            private final Generator generator = new Generator();
+
             private long next = generator.nextPrime();
 
             public long nextLong() {
@@ -74,18 +107,46 @@ public final class Primes {
         });
     }
 
+    /* --- */
+
     /**
-     * Helper class to generate Prime numbers.
+     * Base of values to use in Miller-Rabin test. Accurate up to 2^64.
      */
-    public static class Generator {
+    private static long[] MILLER_RABIN_BASE = new long[]{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47};
+
+    /**
+     * Prime test using Miller-Rabin test.
+     *
+     * @param n Value to test
+     * @return true if the number is prime
+     */
+    public static boolean millerRabin(long n) {
+        return (n > 1) && ((n == 2) || stream(MILLER_RABIN_BASE).allMatch(b -> n <= b || millerRabinPass(b, n)));
+    }
+
+    private static boolean millerRabinPass(final long a, final long n) {
+        long y = powerMod(a, n - 1, n);
+        if ((y == 1) || (y == n - 1)) return true;
+        for (long l = 0; l < numberOfTrailingZeros(n - 1) - 1; l++) {
+            y = powerMod(y, 2, n);
+            if (y == n - 1) return true;
+        }
+        return y == n - 1;
+    }
+
+    /* --- */
+
+    private static interface PrimeGenerator {
+        public long nextPrime();
+    }
+
+    /**
+     * Helper class to generate Prime numbers using trial division.
+     */
+    private static class GeneratorTrialDivision implements PrimeGenerator {
 
         private Deque<Long> primeCache = null;
 
-        /**
-         * Get the next one.
-         *
-         * @return The next prime from this Prime generator.
-         */
         public long nextPrime() {
             // Avoid put 2 into the cache. It's easy to skip all even numbers
             if (primeCache == null) {
@@ -107,6 +168,23 @@ public final class Primes {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Helper class to generate Prime numbers using Miller-Rabin test. For small number it's slower than trial division.
+     */
+    private static class GeneratorMillerRabin implements PrimeGenerator {
+
+        private long last = 0;
+
+        public long nextPrime() {
+            if (last == 0) return ++last + 1;
+            last += 2;
+            while (!millerRabin(last)) {
+                last += 2;
+            }
+            return last;
         }
     }
 

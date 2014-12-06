@@ -34,7 +34,7 @@ public class Solver009 extends ProjectEulerSolver {
         return range(2, (long) sqrt(N)).map(m -> range(1, m).map(n -> {
             long mSquare = m * m, nSquare = n * n, a = mSquare - nSquare, b = 2 * m * n, c = mSquare + nSquare;
             return a + b + c == N ? a * b * c : 0;
-        }).filter(LongUtils::isntZero).findAny().orElse(0)).filter(LongUtils::isntZero).findAny().getAsLong();
+        }).filter(LongUtils::notZero).findAny().orElse(0)).filter(LongUtils::notZero).findAny().getAsLong();
     }
 
 }

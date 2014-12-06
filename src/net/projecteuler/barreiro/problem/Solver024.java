@@ -2,7 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
-import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -42,17 +43,17 @@ public class Solver024 extends ProjectEulerSolver {
 
     public long solve() {
         List<Long> unplaced = range(0, BASE).mapToObj(Long::valueOf).collect(toList());
-        List<Long> placed = new ArrayList<>();
+        Deque<Long> placed = new LinkedList<>();
         long value = N - 1;
 
         // Use a kind of factorization of N over the factorials. In the end convert the digits to a number.
         for (int i = 0; i < BASE - 1; i++) {
             long f = factorial(BASE - 1 - i), q = (value / f), digit = unplaced.get((int) q);
             unplaced.remove(digit);
-            placed.add(digit);
+            placed.addFirst(digit);
             value %= f;
         }
-        placed.add(unplaced.get(0));
+        placed.addFirst(unplaced.get(0));
 
         return fromDigits(placed.stream().mapToLong(Long::valueOf).toArray());
     }

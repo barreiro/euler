@@ -2,8 +2,8 @@
 
 package net.projecteuler.barreiro.problem;
 
-import static java.lang.Math.pow;
 import static net.projecteuler.barreiro.algorithm.Factorization.hasFactorsBelow;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
 
@@ -36,7 +36,7 @@ public class Solver004 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        final long roof = (long) pow(10, N); // The max number with N digits
+        final long roof = pow(10, N); // The max number with N digits
         return rangeReverse(roof * roof, 1).filter(Solver004::isPalindromic).filter(pal -> hasFactorsBelow(pal, roof)).findFirst().getAsLong();
     }
 
