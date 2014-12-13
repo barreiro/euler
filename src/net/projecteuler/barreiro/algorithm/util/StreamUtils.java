@@ -59,7 +59,7 @@ public final class StreamUtils {
      * @return An infinite stream
      */
     public static LongStream infiniteParallelStream() {
-        return Stream.iterate(1L, l -> l + 1).parallel().mapToLong(l -> l);
+        return iterate(1L, l -> l + 1).parallel();
     }
 
 }

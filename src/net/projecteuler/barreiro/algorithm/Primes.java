@@ -110,9 +110,10 @@ public final class Primes {
     /* --- */
 
     /**
-     * Base of values to use in Miller-Rabin test. Accurate up to 2^64.
+     * Base of values to use in Miller-Rabin test. Accurate up to 2^32 and 2^64.
      */
-    private static long[] MILLER_RABIN_BASE = new long[]{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47};
+    private static long[] MILLER_RABIN_FAST = new long[]{2, 7, 61};
+    private static long[] MILLER_RABIN_BASE = new long[]{2, 325, 9375, 28178, 450775, 9780504, 1795265022};
 
     /**
      * Prime test using Miller-Rabin test.
@@ -121,17 +122,19 @@ public final class Primes {
      * @return true if the number is prime
      */
     public static boolean millerRabin(long n) {
-        return (n > 1) && ((n == 2) || stream(MILLER_RABIN_BASE).allMatch(b -> n <= b || millerRabinPass(b, n)));
+        long[] effectiveBase = n < 4759123141L ? MILLER_RABIN_FAST : MILLER_RABIN_BASE;
+        return (n > 1) && ((n == 2) || stream(effectiveBase).allMatch(b -> n <= b || millerRabinPass(b, n)));
     }
 
-    private static boolean millerRabinPass(final long a, final long n) {
-        long y = powerMod(a, n - 1, n);
-        if ((y == 1) || (y == n - 1)) return true;
-        for (long l = 0; l < numberOfTrailingZeros(n - 1) - 1; l++) {
-            y = powerMod(y, 2, n);
-            if (y == n - 1) return true;
+    private static boolean millerRabinPass(final long b, final long n) {
+        long s = numberOfTrailingZeros(n - 1), d = (n - 1) >> s, a = powerMod(b, d, n);
+        if (a == 1) return true;
+        for (long i = 0; i < s - 1; i++) {
+            if (a == n - 1) return true;
+            if (a == 1) return false;
+            a = powerMod(a, 2, n);
         }
-        return y == n - 1;
+        return a == n - 1;
     }
 
     /* --- */

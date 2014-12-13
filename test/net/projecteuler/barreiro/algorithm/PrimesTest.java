@@ -24,18 +24,29 @@ public class PrimesTest {
 
     @Test
     public void generatorEquivalence() {
-        assertArrayEquals(primesStreamMillerRabin().limit(10000).toArray(), primesStream().limit(10000).toArray());
+        assertArrayEquals(primesStreamMillerRabin().limit(100000).toArray(), primesStream().limit(100000).toArray());
     }
 
     @Test
     public void millerRabinTest() {
         assertTrue(millerRabin(2) && millerRabin(3) && millerRabin(5) && millerRabin(7) && millerRabin(11) && millerRabin(13));
-        assertFalse(millerRabin(4) && millerRabin(6) && millerRabin(8) && millerRabin(9) && millerRabin(10) && millerRabin(12));
+        assertFalse(millerRabin(4) || millerRabin(6) || millerRabin(8) || millerRabin(9) || millerRabin(10) || millerRabin(12));
+    }
+
+    @Test
+    public void millerRabinCarmichael() {
+        assertFalse(millerRabin(561) || millerRabin(1105) || millerRabin(1729) || millerRabin(2465) || millerRabin(2821) || millerRabin(6601));
+        assertFalse(millerRabin(101101) || millerRabin(252601) || millerRabin(314821) || millerRabin(340561) || millerRabin(410041) || millerRabin(512461));
+    }
+
+    @Test
+    public void millerRabinLong() {
+        assertFalse(millerRabin(154639673381L) || millerRabin(585226005592931977L) || millerRabin(7999252175582851L) || millerRabin(55245642489451L));
     }
 
     @Test
     public void millerRabinTestStream() {
-        assertTrue(primesStream().limit(10000).allMatch(Primes::millerRabin));
+        assertTrue(primesStream().limit(100000).allMatch(Primes::millerRabin));
     }
 
 }
