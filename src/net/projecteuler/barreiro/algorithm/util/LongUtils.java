@@ -40,6 +40,17 @@ public final class LongUtils {
         return l % 2 == 0;
     }
 
+
+    /**
+     * Test if a long is odd.
+     *
+     * @param l Value to test
+     * @return true if value is not multiple of tow
+     */
+    public static boolean isOdd(long l) {
+        return !isEven(l);
+    }
+
     /**
      * Greatest common divisor using Euclides algorithm.
      *
