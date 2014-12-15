@@ -42,7 +42,7 @@ public final class Primes {
             if (count != 0) factorMap.put(factor, count);
             if (subject == 1) break;
         } while (factor * factor < ceiling);
-        if (factorMap.isEmpty()) factorMap.put(subject, 1L); // If number is prime add itself
+        if ((subject >= factor) || (factorMap.isEmpty())) factorMap.put(subject, 1L); // If number is prime add itself
         return factorMap;
     }
 

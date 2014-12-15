@@ -4,6 +4,9 @@ package net.projecteuler.barreiro.algorithm;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static net.projecteuler.barreiro.algorithm.Primes.*;
 import static org.junit.Assert.*;
 
@@ -47,6 +50,17 @@ public class PrimesTest {
     @Test
     public void millerRabinTestStream() {
         assertTrue(primesStream().limit(100000).allMatch(Primes::millerRabin));
+    }
+
+    @Test
+    public void primeFactorsTest() {
+        Map<Long, Long> realFactors = new HashMap<>();
+        realFactors.put(3L, 1L);
+        realFactors.put(7L, 1L);
+
+        Map<Long, Long> factors = primeFactors(21L);
+
+        assertTrue(factors.entrySet().size() == realFactors.entrySet().size() && factors.entrySet().containsAll(realFactors.entrySet()));
     }
 
 }
