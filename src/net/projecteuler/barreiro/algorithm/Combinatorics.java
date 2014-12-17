@@ -2,6 +2,8 @@
 
 package net.projecteuler.barreiro.algorithm;
 
+import java.util.Set;
+
 import static java.lang.Math.min;
 
 /**
@@ -36,5 +38,30 @@ public final class Combinatorics {
         cache[total][choose] = value;
         return value;
     }
+
+    /**
+     * Calculates the number of integer partition of a value, given a set of constrains.
+     *
+     * @param valueL     Number to partition
+     * @param constrains Set of values that are allowed on the partition
+     * @return The number of different partitions
+     */
+    public static long partition(long valueL, Set<Integer> constrains) {
+        int value = (int) valueL;
+        return partition(value, value, 0, constrains, new long[value + 1][value + 1]);
+    }
+
+    private static long partition(int remaining, int total, long sum, Set<Integer> constrains, long[][] cache) {
+        if (remaining == 0) return 1;
+        if (cache[remaining][total] != 0) return cache[remaining][total];
+
+        long l = 0;
+        for (int c = min(remaining, total); c > 0; c--) {
+            if (c <= remaining && constrains.contains(c)) l += partition(remaining - c, c, sum + c, constrains, cache);
+        }
+        cache[remaining][total] = l;
+        return l;
+    }
+
 
 }
