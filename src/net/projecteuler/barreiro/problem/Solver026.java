@@ -5,6 +5,7 @@ package net.projecteuler.barreiro.problem;
 import static net.projecteuler.barreiro.algorithm.Primes.primeFactors;
 import static net.projecteuler.barreiro.algorithm.Primes.primesLessThan;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.powerMod;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.firstLong;
 
 /**
  * A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10 are given:
@@ -39,7 +40,7 @@ public class Solver026 extends ProjectEulerSolver {
 
     public long solve() {
         // For primes: if 10 is a primitive root modulo p, the recurring cycle is equal to p − 1; if not is a factor of p − 1
-        return primesLessThan(N).filter(Solver026::isPrimitiveRootTen).findFirst().getAsLong();
+        return firstLong(primesLessThan(N).filter(Solver026::isPrimitiveRootTen));
     }
 
     private static boolean isPrimitiveRootTen(long p) {

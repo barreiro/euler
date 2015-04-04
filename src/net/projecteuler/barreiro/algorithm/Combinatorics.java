@@ -39,6 +39,8 @@ public final class Combinatorics {
         return value;
     }
 
+    /* --- */
+
     /**
      * Calculates the number of integer partition of a value, given a set of constrains.
      *

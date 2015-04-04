@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.valueOf;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.maxLong;
 
 /**
  * By starting at the top of the triangle below and moving to adjacent numbers on the row below, the maximum total from top to bottom is 23.
@@ -27,7 +28,8 @@ import static java.lang.Integer.valueOf;
  */
 public class Solver018 extends ProjectEulerSolver {
 
-    private static final String INPUT_STR = "75\n" +
+    private static final String INPUT_STR = "" +
+            "75\n" +
             "95 64\n" +
             "17 47 82\n" +
             "18 35 87 10\n" +
@@ -66,7 +68,7 @@ public class Solver018 extends ProjectEulerSolver {
 
     // Recursive call on a node that returns the value of the node, plus the highest of its children
     private long bestSum(Node<Integer> node) {
-        return node.element + (node.isLeaf() ? 0 : node.children.stream().mapToLong(this::bestSum).max().getAsLong());
+        return node.element + (node.isLeaf() ? 0 : maxLong(node.children.stream().mapToLong(this::bestSum)));
     }
 
     /* --- */

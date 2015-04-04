@@ -13,6 +13,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 import static java.util.stream.IntStream.rangeClosed;
 import static java.util.stream.Stream.of;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.maxLong;
 
 /**
  * In the 20×20 grid below, four numbers along a diagonal line have been marked in red.
@@ -71,7 +72,7 @@ public class Solver011 extends ProjectEulerSolver {
             diagonalB.computeIfAbsent(r + c, newList).add(value(data, r, c));
         }));
 
-        return of(row, column, diagonalA, diagonalB).mapToLong(m -> m.values().stream().mapToLong(this::solve).max().getAsLong()).max().getAsLong();
+        return maxLong(of(row, column, diagonalA, diagonalB).mapToLong(m -> maxLong(m.values().stream().mapToLong(this::solve))));
     }
 
     /* --- */
@@ -82,7 +83,7 @@ public class Solver011 extends ProjectEulerSolver {
 
     private long solve(List<Integer> l) {
         if (l.size() < N) return 0;
-        return rangeClosed(0, l.size() - (int) N).mapToLong(i -> l.subList(i, i + (int) N).stream().reduce(1, (a1, a2) -> a1 * a2)).max().getAsLong();
+        return maxLong(rangeClosed(0, l.size() - (int) N).mapToLong(i -> l.subList(i, i + (int) N).stream().reduce(1, (a1, a2) -> a1 * a2)));
     }
 
 }

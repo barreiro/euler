@@ -2,9 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
-import static java.util.stream.Collectors.toList;
 import static net.projecteuler.barreiro.algorithm.Primes.millerRabin;
 import static net.projecteuler.barreiro.algorithm.Primes.primesLessThan;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.longList;
 
 /**
  * Euler discovered the remarkable quadratic formula:
@@ -44,7 +44,7 @@ public class Solver027 extends ProjectEulerSolver {
         // The discriminant must be an Heegner number, in particular -163
         long candidate = 0, bestN = 0;
         for (long a = (N % 2 == 0) ? -N + 1 : -N; a < 0; a++) {
-            for (long b : primesLessThan(N).limit(N / 20).mapToObj(Long::valueOf).collect(toList())) {
+            for (long b : longList(primesLessThan(N).limit(N / 20))) {
                 if (a * a - 4 * b != -163) continue;
 
                 long n = 0;

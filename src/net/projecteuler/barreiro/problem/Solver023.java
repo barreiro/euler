@@ -6,8 +6,8 @@ import net.projecteuler.barreiro.algorithm.Factorization;
 
 import java.util.Set;
 
-import static java.util.stream.Collectors.toSet;
 import static java.util.stream.LongStream.rangeClosed;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.longSet;
 
 /**
  * A perfect number is a number for which the sum of its proper divisors is exactly equal to the number.
@@ -36,7 +36,7 @@ public class Solver023 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        Set<Long> abundant = rangeClosed(1, N).parallel().filter(Factorization::isAbundant).mapToObj(Long::valueOf).collect(toSet());
+        Set<Long> abundant = longSet(rangeClosed(1, N).parallel().filter(Factorization::isAbundant));
         return rangeClosed(1, N).parallel().filter(n -> abundant.stream().filter(a -> a <= n / 2).noneMatch(a -> abundant.contains(n - a))).sum();
     }
 

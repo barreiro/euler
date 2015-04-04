@@ -5,8 +5,8 @@ package net.projecteuler.barreiro.problem;
 import java.util.Set;
 
 import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toSet;
 import static net.projecteuler.barreiro.algorithm.Combinatorics.partition;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.intSet;
 
 /**
  * In England the currency is made up of pound, £, and pence, p, and there are eight coins in general circulation:
@@ -22,7 +22,7 @@ import static net.projecteuler.barreiro.algorithm.Combinatorics.partition;
  */
 public class Solver031 extends ProjectEulerSolver {
 
-    public static Set<Integer> CURRENCY = stream(new int[]{1, 2, 5, 10, 20, 50, 100, 200}).mapToObj(Integer::valueOf).collect(toSet());
+    public static Set<Integer> CURRENCY = intSet(stream(new int[]{1, 2, 5, 10, 20, 50, 100, 200}));
 
     public Solver031() {
         this(200);

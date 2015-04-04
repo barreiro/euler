@@ -6,10 +6,11 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.LongStream.range;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.factorial;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.fromDigits;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.longArray;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.longList;
 
 /**
  * A permutation is an ordered arrangement of objects. For example, 3124 is one possible permutation of the digits 1, 2, 3 and 4.
@@ -42,7 +43,7 @@ public class Solver024 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        List<Long> unplaced = range(0, BASE).mapToObj(Long::valueOf).collect(toList());
+        List<Long> unplaced = longList(range(0, BASE));
         Deque<Long> placed = new LinkedList<>();
         long value = N - 1;
 
@@ -55,7 +56,7 @@ public class Solver024 extends ProjectEulerSolver {
         }
         placed.addFirst(unplaced.get(0));
 
-        return fromDigits(placed.stream().mapToLong(Long::valueOf).toArray());
+        return fromDigits(longArray(placed.stream()));
     }
 
 }

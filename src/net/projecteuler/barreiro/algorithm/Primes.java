@@ -139,8 +139,8 @@ public final class Primes {
 
     /* --- */
 
-    private static interface PrimeGenerator {
-        public long nextPrime();
+    private interface PrimeGenerator {
+        long nextPrime();
     }
 
     /**

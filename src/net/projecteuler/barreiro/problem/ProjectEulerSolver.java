@@ -69,7 +69,7 @@ public abstract class ProjectEulerSolver {
      */
     private static void solve(int number) {
         try {
-            String solverClassName = format("%s%s%03d", ProjectEulerSolver.class.getPackage().getName(), ".Solver", number);
+            String solverClassName = format("%s.Solver%03d", ProjectEulerSolver.class.getPackage().getName(), number);
             ProjectEulerSolver solverInstance = ProjectEulerSolver.class.cast(forName(solverClassName).newInstance());
             if (solverInstance != null) {
                 if (valueOf(getProperty("euler.traceExecutionTime", "false"))) {

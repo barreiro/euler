@@ -5,6 +5,7 @@ package net.projecteuler.barreiro.problem;
 import static net.projecteuler.barreiro.algorithm.Factorization.hasFactorsBelow;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.firstLong;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
 
 /**
@@ -37,7 +38,7 @@ public class Solver004 extends ProjectEulerSolver {
 
     public long solve() {
         final long roof = pow(10, N); // The max number with N digits
-        return rangeReverse(roof * roof, 1).filter(Solver004::isPalindromic).filter(pal -> hasFactorsBelow(pal, roof)).findFirst().getAsLong();
+        return firstLong(rangeReverse(roof * roof, 1).filter(Solver004::isPalindromic).filter(pal -> hasFactorsBelow(pal, roof)));
     }
 
 }

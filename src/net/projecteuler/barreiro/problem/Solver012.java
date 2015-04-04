@@ -3,6 +3,7 @@
 package net.projecteuler.barreiro.problem;
 
 import static net.projecteuler.barreiro.algorithm.Factorization.numberOfFactors;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.firstLong;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.infiniteParallelStream;
 
 /**
@@ -36,7 +37,7 @@ public class Solver012 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        return infiniteParallelStream().map(l -> (l * (l + 1)) / 2).filter(t -> numberOfFactors(t) >= N).findFirst().getAsLong();
+        return firstLong(infiniteParallelStream().map(l -> (l * (l + 1)) / 2).filter(t -> numberOfFactors(t) >= N));
     }
 
 }

@@ -4,6 +4,7 @@ package net.projecteuler.barreiro.problem;
 
 import static java.util.stream.IntStream.rangeClosed;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.charProduct;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.maxLong;
 
 /**
  * The four adjacent digits in the 1000-digit number that have the greatest product are 9 × 9 × 8 × 9 = 5832.
@@ -53,7 +54,7 @@ public class Solver008 extends ProjectEulerSolver {
     /* --- */
 
     public long solve() {
-        return rangeClosed(0, data.length() - (int) N).mapToObj(i -> data.subSequence(i, (int) N + i)).mapToLong(charProduct()).max().getAsLong();
+        return maxLong(rangeClosed(0, data.length() - (int) N).mapToObj(i -> data.subSequence(i, (int) N + i)).mapToLong(charProduct()));
     }
 
 }
