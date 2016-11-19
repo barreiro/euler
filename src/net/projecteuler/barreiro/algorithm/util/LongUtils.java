@@ -113,7 +113,20 @@ public final class LongUtils {
      * @return A long composed of the digits in the array
      */
     public static long fromDigits(long[] digits) {
-        return range(0, digits.length).mapToLong(i -> digits[i] * pow(10, i)).sum();
+        return fromDigits(digits, 0, digits.length);
+    }
+
+
+    /**
+     * Compose a long value from a sequence of digits. There is the risk of overflow. Use carefully.
+     *
+     * @param digits Array of digits to convert from, less significant first
+     * @param from   Starting index on the array
+     * @param to     Last index on the array (not included on the result)
+     * @return  A long composed of the digits in the array
+     */
+    public static long fromDigits(long[] digits, int from, int to) {
+        return range(from, to).mapToLong(i -> digits[i - from] * pow(10, i)).sum();
     }
 
     /**
