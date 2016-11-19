@@ -1,0 +1,18 @@
+apply plugin: 'java'
+apply plugin: 'checkstyle'
+apply plugin: 'idea'
+
+ext {
+    libraries = [
+        junit: "junit:junit:4.12"
+    ]
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testCompile( libraries.junit )
+}
