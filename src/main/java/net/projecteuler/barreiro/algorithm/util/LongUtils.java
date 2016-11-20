@@ -2,7 +2,7 @@
 
 package net.projecteuler.barreiro.algorithm.util;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.LongBinaryOperator;
 import java.util.function.ToLongFunction;
@@ -118,7 +118,7 @@ public final class LongUtils {
      * @return An array with the digits that form the number, less significant first
      */
     public static long[] toDigits(long value, int radix) {
-        List<Long> digits = new LinkedList<>();
+        List<Long> digits = new ArrayList<>();
         for ( ; value >= radix; value /= radix ) {
             digits.add( value % radix );
         }
