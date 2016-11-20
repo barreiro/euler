@@ -14,8 +14,7 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
  */
 public final class Factorization {
 
-    private Factorization() {
-    }
+    private Factorization() {}
 
     /**
      * Finds if a value has two factors below a certain roof.

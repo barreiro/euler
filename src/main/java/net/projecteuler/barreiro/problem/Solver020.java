@@ -18,6 +18,8 @@ import static java.util.stream.LongStream.rangeClosed;
  */
 public class Solver020 extends ProjectEulerSolver {
 
+    private static final long[] EMPTY = new long[]{};
+
     public Solver020() {
         this( 100 );
     }
@@ -32,7 +34,7 @@ public class Solver020 extends ProjectEulerSolver {
         if ( N <= 2 ) {
             return N;
         }
-        return stream( rangeClosed( 2, N ).mapToObj( LongUtils::toDigits ).reduce( LongUtils::multiplication ).get() ).sum();
+        return stream( rangeClosed( 2, N ).mapToObj( LongUtils::toDigits ).reduce( LongUtils::multiplication ).orElse( EMPTY ) ).sum();
     }
 
 }

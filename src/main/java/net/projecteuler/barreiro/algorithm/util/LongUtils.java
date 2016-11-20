@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.LongBinaryOperator;
 import java.util.function.ToLongFunction;
+import java.util.stream.LongStream;
 
 import static java.util.Arrays.copyOf;
 import static java.util.stream.IntStream.range;
@@ -17,8 +18,7 @@ import static java.util.stream.IntStream.range;
  */
 public final class LongUtils {
 
-    private LongUtils() {
-    }
+    private LongUtils() {}
 
     /**
      * Default value used as base for the numeric system. Used in methods that make array-based calculations.
@@ -132,7 +132,7 @@ public final class LongUtils {
      * @param digits Array of digits to convert from, less significant first
      * @return A long composed of the digits in the array
      */
-    public static long fromDigits(long[] digits) {
+    public static long fromDigits(long... digits) {
         return fromDigits( digits, 0, digits.length );
     }
 
@@ -268,6 +268,15 @@ public final class LongUtils {
      */
     public static LongBinaryOperator product() {
         return (l1, l2) -> l1 * l2;
+    }
+
+    /**
+     * Reduces a long stream by applying the product reduction.
+     *
+     * @return A product operator
+     */
+    public static long product(LongStream stream) {
+        return stream.reduce( 1, product() );
     }
 
     /**

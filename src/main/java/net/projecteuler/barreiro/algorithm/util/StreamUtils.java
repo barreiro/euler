@@ -27,8 +27,7 @@ import static java.util.stream.StreamSupport.stream;
  */
 public final class StreamUtils {
 
-    private StreamUtils() {
-    }
+    private StreamUtils() {}
 
     /**
      * Utility Method to create a stream from an iterator. Elements are added lazily.
@@ -70,6 +69,16 @@ public final class StreamUtils {
         return iterate( 1L, l -> l + 1 ).parallel();
     }
 
+    /**
+     * Finds an non zero element on the stream. To be used as na alternative to filter.
+     *
+     * @param stream the LongStream to use
+     * @return An non zero element, or zero if no element is found
+     */
+    public static long notZero(LongStream stream) {
+        return stream.filter( LongUtils::notZero ).findAny().orElse( 0 );
+    }
+
     // --- //
 
     /**
@@ -79,7 +88,7 @@ public final class StreamUtils {
      * @return the highest value on the stream
      */
     public static long maxLong(Stream<Long> stream) {
-        return stream.mapToLong( Long::valueOf ).max().getAsLong();
+        return stream.mapToLong( Long::valueOf ).max().orElse( Long.MIN_VALUE );
     }
 
     /**
@@ -89,7 +98,7 @@ public final class StreamUtils {
      * @return the highest value on the stream
      */
     public static long maxLong(LongStream stream) {
-        return stream.max().getAsLong();
+        return stream.max().orElse( Long.MIN_VALUE );
     }
 
     /**
@@ -99,7 +108,7 @@ public final class StreamUtils {
      * @return the first value on the stream
      */
     public static long firstLong(LongStream stream) {
-        return stream.findFirst().getAsLong();
+        return stream.findFirst().orElseThrow( () -> new ArithmeticException( "A value was expected on a stream" ) );
     }
 
     // --- //
@@ -145,12 +154,12 @@ public final class StreamUtils {
     }
 
     /**
-     * Returns a IntStream from a String[]
+     * Returns a IntStream from numeric Strings
      *
-     * @param array A string array with numeric values
+     * @param array Strings with numeric values
      * @return a IntStream from the values in the array
      */
-    public static IntStream intStream(String[] array) {
+    public static IntStream intStream(String... array) {
         return stream( array ).mapToInt( Integer::valueOf );
     }
 

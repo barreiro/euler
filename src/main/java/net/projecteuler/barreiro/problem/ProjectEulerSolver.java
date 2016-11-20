@@ -39,7 +39,7 @@ public abstract class ProjectEulerSolver {
      *
      * @param args Problem or problems to solve
      */
-    public static void main(String[] args) {
+    public static void main(String... args) {
         if ( args.length == 0 ) {
             solveAll();
         }

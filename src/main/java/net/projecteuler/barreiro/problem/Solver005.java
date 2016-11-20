@@ -36,7 +36,7 @@ public class Solver005 extends ProjectEulerSolver {
         rangeClosed( 1, N ).mapToObj( Primes::primeFactors ).forEach( fm -> fm.forEach( (k, v) -> factorMap.merge( k, v, Long::max ) ) );
 
         // Calculate the product of the factors
-        return factorMap.entrySet().stream().mapToLong( e -> pow( e.getKey(), e.getValue() ) ).reduce( 1, product() );
+        return product( factorMap.entrySet().stream().mapToLong( e -> pow( e.getKey(), e.getValue() ) ) );
     }
 
 }

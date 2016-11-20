@@ -56,7 +56,7 @@ public class Problem019Test extends ProjectEulerAbstractTest {
         assertEquals( 17200, new Solver019( 10000 ).solve() );
     }
 
-    /* --- */
+    // --- //
 
     @Test
     public void leap1() {

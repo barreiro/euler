@@ -23,7 +23,7 @@ public final class Fibonacci {
      * @param predicate Stop condition
      * @return A stream of fibonacci numbers
      */
-    public static LongStream fibonacciStream(final Predicate<Long> predicate) {
+    public static LongStream fibonacciStream(Predicate<Long> predicate) {
         return lazyStream( new PrimitiveIterator.OfLong() {
             private long previous = 0, last = 1;
 

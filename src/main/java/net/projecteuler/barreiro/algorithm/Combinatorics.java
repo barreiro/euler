@@ -18,8 +18,7 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
  */
 public final class Combinatorics {
 
-    private Combinatorics() {
-    }
+    private Combinatorics() {}
 
     /**
      * Method for calculation the combinations of a certain number of elements in a total number of places.

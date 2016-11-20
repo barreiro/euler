@@ -2,9 +2,9 @@
 
 package net.projecteuler.barreiro.algorithm;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.PrimitiveIterator;
 import java.util.function.Predicate;
@@ -23,8 +23,7 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
  */
 public final class Primes {
 
-    private Primes() {
-    }
+    private Primes() {}
 
     /**
      * Base of values to use in Miller-Rabin test. Accurate up to 2^32 and 2^64.
@@ -170,7 +169,7 @@ public final class Primes {
         public long nextPrime() {
             // Avoid put 2 into the cache. It's easy to skip all even numbers
             if ( primeCache == null ) {
-                primeCache = new LinkedList<>();
+                primeCache = new ArrayDeque<>();
                 return 2;
             }
             if ( primeCache.isEmpty() ) {

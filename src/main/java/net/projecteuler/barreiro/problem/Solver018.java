@@ -67,8 +67,8 @@ public class Solver018 extends ProjectEulerSolver {
     }
 
     // Recursive call on a node that returns the value of the node, plus the highest of its children
-    private long bestSum(Node<Integer> node) {
-        return node.element + ( node.isLeaf() ? 0 : maxLong( node.children.stream().mapToLong( this::bestSum ) ) );
+    private static long bestSum(Node<Integer> node) {
+        return node.element + ( node.isLeaf() ? 0 : maxLong( node.children.stream().mapToLong( Solver018::bestSum ) ) );
     }
 
     // --- //
