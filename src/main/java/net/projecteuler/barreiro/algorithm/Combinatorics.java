@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import static java.lang.Math.min;
 import static java.util.stream.IntStream.range;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 
 /**
@@ -83,26 +84,63 @@ public final class Combinatorics {
     // --- //
 
     /**
+     * Creates a Stream where each value is a permutation from the digits of a number
+     *
+     * @param value number to be permuted
+     * @return Stream of all possible permutations
+     */
+    public static Stream<long[]> rotationStream(long value) {
+        return lazyStream( new Rotator( toDigits( value ) ) );
+    }
+
+    /**
      * Creates a Stream where each value is a permutation from a set of elements
      *
      * @param value set to be permuted
      * @return Stream of all possible permutations
      */
     public static Stream<long[]> permutationStream(Set<Long> value) {
-        return lazyStream( new Permutator( value ) ).parallel();
+        return lazyStream( new Permutator( value ) );
     }
 
     /**
      * Creates a Stream where each value is a 3-way partition from an array of elements
      *
      * @param value array to be partitioned
+     * @param n number of partitions
      * @return Stream of all possible permutations
      */
     public static Stream<long[]> partitionStream(long[] value, int n) {
-        return lazyStream( new Partitioner( value, n ) ).parallel();
+        return lazyStream( new Partitioner( value, n ) );
     }
 
     // --- //
+
+    private static final class Rotator implements Iterator<long[]> {
+
+        private final long[] permutation;
+        private long rotations;
+
+        private Rotator(long[] set) {
+            this.permutation = new long[set.length];
+            int index = 0;
+            for ( long l : set ) {
+                this.permutation[index++] = l;
+            }
+        }
+
+        public boolean hasNext() {
+            return rotations < permutation.length;
+        }
+
+        public long[] next() {
+            long swap = permutation[permutation.length - 1];
+            System.arraycopy( permutation, 0, permutation, 1, permutation.length - 1 );
+            permutation[0] = swap;
+            rotations++;
+            return permutation;
+        }
+    }
 
     private static final class Permutator implements Iterator<long[]> {
 
@@ -229,4 +267,5 @@ public final class Combinatorics {
             return false;
         }
     }
+
 }

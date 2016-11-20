@@ -12,6 +12,7 @@ import java.util.stream.LongStream;
 
 import static java.lang.Long.numberOfTrailingZeros;
 import static java.util.Arrays.stream;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.fromDigits;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.powerMod;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
@@ -123,6 +124,16 @@ public final class Primes {
                 return predicate.test( next );
             }
         } );
+    }
+
+    /**
+     * Prime test using Miller-Rabin test.
+     *
+     * @param n Value to test
+     * @return true if the number is prime
+     */
+    public static boolean millerRabin(long... n) {
+        return millerRabin( fromDigits( n ) );
     }
 
     /**

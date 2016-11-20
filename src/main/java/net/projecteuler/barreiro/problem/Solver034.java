@@ -2,12 +2,6 @@
 
 package net.projecteuler.barreiro.problem;
 
-import net.projecteuler.barreiro.algorithm.util.LongUtils;
-import net.projecteuler.barreiro.algorithm.util.StreamUtils;
-
-import java.util.Arrays;
-import java.util.stream.LongStream;
-
 import static java.util.Arrays.stream;
 import static java.util.stream.LongStream.range;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;

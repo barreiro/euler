@@ -2,11 +2,6 @@
 
 package net.projecteuler.barreiro.problem;
 
-import net.projecteuler.barreiro.algorithm.util.LongUtils;
-import net.projecteuler.barreiro.algorithm.util.StreamUtils;
-
-import java.util.stream.LongStream;
-
 import static java.lang.Math.sqrt;
 import static java.util.stream.LongStream.range;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.notZero;

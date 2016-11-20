@@ -2,6 +2,7 @@
 
 package net.projecteuler.barreiro.problem;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,8 +51,9 @@ public class Problem032Test extends ProjectEulerAbstractTest {
     }
 
     @Test
-    public void medium4() {
-        assertEquals( 45228, new Solver032( 9 ).solve() );
+    @Ignore( "Takes too long!" )
+    public void big() {
+        assertEquals( 602220, new Solver032( 10 ).solve() );
     }
 
 }

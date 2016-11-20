@@ -31,7 +31,7 @@ public class Solver032 extends ProjectEulerSolver {
     // --- //
 
     public long solve() {
-        return permutationStream( longSet( rangeClosed( 1, N ) ) ).mapToLong( p -> partitionStream( p, 3 ).filter( l -> l[0] == l[1] * l[2] ).mapToLong( l -> l[0] ).sum() ).distinct().sum();
+        return permutationStream( longSet( rangeClosed( 1, N ) ) ).parallel().mapToLong( p -> partitionStream( p, 3 ).filter( l -> l[0] == l[1] * l[2] ).mapToLong( l -> l[0] ).sum() ).distinct().sum();
     }
 
 }
