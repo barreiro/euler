@@ -3,8 +3,10 @@
 package net.projecteuler.barreiro.problem;
 
 import static java.util.Arrays.stream;
-import static java.util.stream.LongStream.range;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
+import static net.projecteuler.barreiro.algorithm.Combinatorics.digitStream;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.factorial;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.fromDigits;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.digitSum;
 
 /**
  * 145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.
@@ -17,10 +19,10 @@ import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
  */
 public class Solver034 extends ProjectEulerSolver {
 
-    private static final long[] FACTORIAL_CACHE = new long[] { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880 };
+    private static final long[] FACTORIAL_CACHE = new long[]{1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880};
 
     public Solver034() {
-        this( 362880 );
+        this( 2 * factorial( 9 ) );
     }
 
     public Solver034(long n) {
@@ -29,15 +31,12 @@ public class Solver034 extends ProjectEulerSolver {
 
     // --- //
 
-    public long solve() {
-        if ( N <= 2 ) {
-            return N;
-        }
-        return range( 3, N ).parallel().filter( l -> l == fastFactorialSum( l ) ).sum();
+    private long fastFactorialSum(long[] l) {
+        return stream( l ).map( d -> FACTORIAL_CACHE[(int) d] ).sum();
     }
 
-    private long fastFactorialSum(long l) {
-        return stream( toDigits( l ) ).map( d -> FACTORIAL_CACHE[(int) d] ).sum();
+    public long solve() {
+        return digitSum( digitStream( 3, N ).parallel().filter( d -> fromDigits( d ) == fastFactorialSum( d ) ) );
     }
 
 }

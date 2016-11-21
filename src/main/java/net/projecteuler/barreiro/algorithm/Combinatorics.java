@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import static java.lang.Math.min;
 import static java.util.stream.IntStream.range;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow10;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 
@@ -19,7 +19,8 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
  */
 public final class Combinatorics {
 
-    private Combinatorics() {}
+    private Combinatorics() {
+    }
 
     /**
      * Method for calculation the combinations of a certain number of elements in a total number of places.
@@ -93,31 +94,7 @@ public final class Combinatorics {
         return lazyStream( new Rotator( toDigits( value ) ) );
     }
 
-    /**
-     * Creates a Stream where each value is a permutation from a set of elements
-     *
-     * @param value set to be permuted
-     * @return Stream of all possible permutations
-     */
-    public static Stream<long[]> permutationStream(Set<Long> value) {
-        return lazyStream( new Permutator( value ) );
-    }
-
-    /**
-     * Creates a Stream where each value is a 3-way partition from an array of elements
-     *
-     * @param value array to be partitioned
-     * @param n number of partitions
-     * @return Stream of all possible permutations
-     */
-    public static Stream<long[]> partitionStream(long[] value, int n) {
-        return lazyStream( new Partitioner( value, n ) );
-    }
-
-    // --- //
-
     private static final class Rotator implements Iterator<long[]> {
-
         private final long[] permutation;
         private long rotations;
 
@@ -142,8 +119,19 @@ public final class Combinatorics {
         }
     }
 
-    private static final class Permutator implements Iterator<long[]> {
+    // --- //
 
+    /**
+     * Creates a Stream where each value is a permutation from a set of elements
+     *
+     * @param value set to be permuted
+     * @return Stream of all possible permutations
+     */
+    public static Stream<long[]> permutationStream(Set<Long> value) {
+        return lazyStream( new Permutator( value ) );
+    }
+
+    private static final class Permutator implements Iterator<long[]> {
         private final long[] set;
         private long[] permutation;
         private boolean[] fixed, forward;
@@ -219,8 +207,20 @@ public final class Combinatorics {
         }
     }
 
-    private static final class Partitioner implements Iterator<long[]> {
+    // --- //
 
+    /**
+     * Creates a Stream where each value is a 3-way partition from an array of elements
+     *
+     * @param value array to be partitioned
+     * @param n     number of partitions
+     * @return Stream of all possible permutations
+     */
+    public static Stream<long[]> partitionStream(long[] value, int n) {
+        return lazyStream( new Partitioner( value, n ) );
+    }
+
+    private static final class Partitioner implements Iterator<long[]> {
         private final long[] array;
         private final int[] pivot;
 
@@ -236,7 +236,7 @@ public final class Combinatorics {
         private static long fromDigits(long[] digits, int from, int to) {
             long sum = 0;
             for ( int i = from; i < to; i++ ) {
-                sum += digits[i] * pow( 10, i - from );
+                sum += digits[i] * pow10( i - from );
             }
             return sum;
         }
@@ -265,6 +265,66 @@ public final class Combinatorics {
                 }
             }
             return false;
+        }
+    }
+
+    // --- //
+
+    /**
+     * Creates a Stream of digits.
+     *
+     * @param start the initial value
+     * @param count number of digits to be returned by this stream
+     * @return a Stream of digits
+     */
+    public static Stream<long[]> digitStream(long start, long count) {
+        return lazyStream( new DigitIterator( start, count ) );
+    }
+
+    private static final class DigitIterator implements Iterator<long[]> {
+        private final long max;
+        private long[] array;
+        private long count;
+
+        private DigitIterator(long start, long elements) {
+            array = toDigits( start - 1 );
+            max = elements;
+        }
+
+        public long[] next() {
+            if ( !increase() && !rotate() ) {
+                expand();
+            }
+            return array.clone();
+        }
+
+        private boolean increase() {
+            if ( array[0] < 9 ) {
+                array[0]++;
+                return true;
+            }
+            return false;
+        }
+
+        private boolean rotate() {
+            for ( int i = 1; i < array.length; i++ ) {
+                array[i - 1] = 0;
+                if ( array[i] != 9 ) {
+                    array[i]++;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void expand() {
+            long[] next = new long[array.length + 1];
+            next[array.length] = 1;
+            array = next;
+        }
+
+        public boolean hasNext() {
+            return count++ < max;
         }
     }
 

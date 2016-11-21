@@ -33,12 +33,6 @@ public class Solver033 extends ProjectEulerSolver {
 
     // --- //
 
-    public long solve() {
-        return product( denominator().mapToDouble( d -> contribution( numerator( d ).filter( naive( d ) ).mapToDouble( n -> (double) d / n ) ) ) );
-    }
-
-    // --- //
-
     private LongStream denominator() {
         return range( 1, N ).parallel();
     }
@@ -47,19 +41,24 @@ public class Solver033 extends ProjectEulerSolver {
         return range( 1, max ).parallel();
     }
 
-    private long product(DoubleStream stream) {
-        return (long) stream.reduce( 1, (d1, d2) -> d1 * d2);
+    private static long product(DoubleStream stream) {
+        return (long) stream.reduce( 1, (d1, d2) -> d1 * d2 );
     }
 
-    private double contribution(DoubleStream stream) {
+    /*
+     * Calculates the contribution to a product.
+     * In the context of this problem, we need double because of irreducible fractions like 2/5 -> 5/2
+     */
+    private static double contribution(DoubleStream stream) {
         return stream.findFirst().orElse( 1 );
     }
 
-    private LongPredicate naive(long denominator) {
+    /*
+     * Predicate to check if a fraction is naive, i.e. the end of the numerator equals the beginning of the denominator
+     */
+    private static LongPredicate naive(long denominator) {
         return numerator -> range( 0, BASE ).anyMatch( radix -> naiveCancellation( numerator, denominator, radix ) );
     }
-
-    // --- //
 
     /*
      * This is a bit over-optimized!
@@ -71,6 +70,12 @@ public class Solver033 extends ProjectEulerSolver {
      */
     public static boolean naiveCancellation(long n, long d, long r) {
         return n % 10 == r && d > r * 10 && n * ( d - r * BASE ) == d * ( n / BASE );
+    }
+
+    // --- //
+
+    public long solve() {
+        return product( denominator().mapToDouble( d -> contribution( numerator( d ).filter( naive( d ) ).mapToDouble( n -> (double) d / n ) ) ) );
     }
 
 }

@@ -2,9 +2,11 @@
 
 package net.projecteuler.barreiro.problem;
 
+import net.projecteuler.barreiro.algorithm.util.LongUtils;
+
 import static net.projecteuler.barreiro.algorithm.Factorization.hasFactorsBelow;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow10;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.firstLong;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
 
@@ -26,21 +28,8 @@ public class Solver004 extends ProjectEulerSolver {
 
     // --- //
 
-    public static boolean isPalindromic(long number) {
-        long[] digits = toDigits( number );
-        for ( int i = 0; i * 2 < digits.length; i++ ) {
-            if ( digits[i] != digits[digits.length - i - 1] ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // --- //
-
     public long solve() {
-        long roof = pow( 10, N ); // The max number with N digits
-        return firstLong( rangeReverse( roof * roof, 1 ).filter( Solver004::isPalindromic ).filter( pal -> hasFactorsBelow( pal, roof ) ) );
+        return firstLong( rangeReverse( pow( pow10( N ), 2 ), 1 ).filter( LongUtils::isPalindrome ).filter( pal -> hasFactorsBelow( pal, pow10( N ) ) ) );
     }
 
 }

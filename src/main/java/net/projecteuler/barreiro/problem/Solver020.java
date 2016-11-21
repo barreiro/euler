@@ -5,7 +5,7 @@ package net.projecteuler.barreiro.problem;
 import net.projecteuler.barreiro.algorithm.util.LongUtils;
 
 import static java.util.Arrays.stream;
-import static java.util.stream.LongStream.rangeClosed;
+import static net.projecteuler.barreiro.algorithm.Combinatorics.digitStream;
 
 /**
  * n! means n × (n − 1) × ... × 3 × 2 × 1
@@ -31,10 +31,7 @@ public class Solver020 extends ProjectEulerSolver {
     // --- //
 
     public long solve() {
-        if ( N <= 2 ) {
-            return N;
-        }
-        return stream( rangeClosed( 2, N ).mapToObj( LongUtils::toDigits ).reduce( LongUtils::multiplication ).orElse( EMPTY ) ).sum();
+        return stream( digitStream( 1, N ).reduce( LongUtils::multiplication ).orElse( EMPTY ) ).sum();
     }
 
 }

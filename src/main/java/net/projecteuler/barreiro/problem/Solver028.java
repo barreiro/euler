@@ -35,7 +35,7 @@ public class Solver028 extends ProjectEulerSolver {
     // --- //
 
     public long solve() {
-        return 1 + 2 * rangeClosed( 2, N ).filter( LongUtils::isOdd ).map( n -> 2 * pow( n, 2 ) - 3 * ( n - 1 ) ).sum();
+        return 1 + 2 * rangeClosed( 2, N ).filter( LongUtils::odd ).map( n -> 2 * pow( n, 2 ) - 3 * ( n - 1 ) ).sum();
     }
 
 }

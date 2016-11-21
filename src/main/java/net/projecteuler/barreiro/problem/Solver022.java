@@ -2,14 +2,14 @@
 
 package net.projecteuler.barreiro.problem;
 
+import net.projecteuler.barreiro.algorithm.util.StreamUtils;
+
 import java.io.BufferedInputStream;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.regex.Pattern.compile;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.letterSum;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 
 /**
@@ -41,12 +41,22 @@ public class Solver022 extends ProjectEulerSolver {
 
     // --- //
 
+    private static class Counter {
+
+        private long value = 1;
+
+        private long increment() {
+            return value++;
+        }
+
+    }
+
     public long solve() {
         Set<String> sortedNames = new TreeSet<>();
-        AtomicLong counter = new AtomicLong( 1 );
+        Counter c = new Counter();
 
         lazyStream( scanner.useDelimiter( compile( ",|\"" ) ) ).filter( s -> !s.isEmpty() ).forEach( sortedNames::add );
-        return sortedNames.stream().limit( N ).mapToLong( letterSum() ).reduce( 0L, (l1, l2) -> l1 + l2 * counter.getAndIncrement() );
+        return sortedNames.stream().limit( N ).mapToLong( StreamUtils::letterSum ).reduce( 0, (l1, l2) -> l1 + l2 * c.increment() );
     }
 
 }

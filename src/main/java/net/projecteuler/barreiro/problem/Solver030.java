@@ -2,10 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
-import static java.util.Arrays.stream;
 import static java.util.stream.LongStream.range;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigitsStream;
 
 /**
  * Surprisingly there are only three numbers that can be written as the sum of fourth powers of their digits:
@@ -34,7 +33,7 @@ public class Solver030 extends ProjectEulerSolver {
     // --- //
 
     public long solve() {
-        return range( N, N * pow( 9, N ) ).filter( n -> n == stream( toDigits( n ) ).map( d -> pow( d, N ) ).sum() ).sum();
+        return range( N, N * pow( 9, N ) ).filter( n -> n == toDigitsStream( n ).map( d -> pow( d, N ) ).sum() ).sum();
     }
 
 }

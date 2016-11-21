@@ -4,10 +4,9 @@ package net.projecteuler.barreiro.problem;
 
 import net.projecteuler.barreiro.algorithm.Primes;
 
-import static java.util.Arrays.stream;
 import static net.projecteuler.barreiro.algorithm.Combinatorics.rotationStream;
-import static net.projecteuler.barreiro.algorithm.Primes.primesUpTo;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
+import static net.projecteuler.barreiro.algorithm.Primes.primesStream;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigitsStream;
 
 /**
  * The number, 197, is called a circular prime because all rotations of the digits: 197, 971, and 719, are themselves prime.
@@ -30,12 +29,13 @@ public class Solver035 extends ProjectEulerSolver {
 
     // --- //
 
-    public long solve() {
-        return primesUpTo( N ).filter( Solver035::oddCheck ).filter( p -> rotationStream( p ).allMatch( Primes::millerRabin ) ).count();
+    // Optimization so that the rotation stream is not created. If there are even digits in a prime there are rotations that will not be prime.
+    private static boolean oddCheck(long p) {
+        return p <= 5 || toDigitsStream( p ).allMatch( i -> i == 1 || i == 3 || i == 7 | i == 9 );
     }
 
-    private static boolean oddCheck( long p ) {
-        return p <= 5 || stream( toDigits( p ) ).allMatch( i -> i == 1 || i == 3 || i == 7 | i == 9 );
+    public long solve() {
+        return primesStream( N ).filter( Solver035::oddCheck ).filter( p -> rotationStream( p ).allMatch( Primes::millerRabin ) ).count();
     }
 
 }

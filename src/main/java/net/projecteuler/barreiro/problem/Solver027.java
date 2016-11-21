@@ -44,7 +44,7 @@ public class Solver027 extends ProjectEulerSolver {
     public long solve() {
         // Conjecture: a is odd negative and b is one of the 5% highest primes
         // The discriminant must be an Heegner number, in particular -163
-        long candidate = 0, bestN = 0;
+        long candidate = 0, best = 0;
         for ( long a = ( N % 2 == 0 ) ? -N + 1 : -N; a < 0; a += 2 ) {
             for ( long b : longList( primesLessThan( N ).limit( N / 20 ) ) ) {
                 if ( a * a - 4 * b != HEEGNER ) {
@@ -55,8 +55,8 @@ public class Solver027 extends ProjectEulerSolver {
                 while ( millerRabin( n * n + a * n + b ) ) {
                     n++;
                 }
-                if ( n > bestN ) {
-                    bestN = n;
+                if ( n > best ) {
+                    best = n;
                     candidate = a * b;
                 }
             }

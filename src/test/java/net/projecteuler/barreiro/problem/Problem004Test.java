@@ -4,7 +4,6 @@ package net.projecteuler.barreiro.problem;
 
 import org.junit.Test;
 
-import static net.projecteuler.barreiro.problem.Solver004.isPalindromic;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -35,25 +34,4 @@ public class Problem004Test extends ProjectEulerAbstractTest {
         assertEquals( 99000099, new Solver004( 4 ).solve() );
     }
 
-    // --- //
-
-    @Test
-    public void palindromic0() {
-        assertEquals( false, isPalindromic( 15 ) );
-    }
-
-    @Test
-    public void palindromic1() {
-        assertEquals( true, isPalindromic( 88 ) );
-    }
-
-    @Test
-    public void palindromic2() {
-        assertEquals( false, isPalindromic( 15846 ) );
-    }
-
-    @Test
-    public void palindromic3() {
-        assertEquals( true, isPalindromic( 84048 ) );
-    }
 }

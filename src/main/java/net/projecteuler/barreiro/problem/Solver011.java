@@ -66,6 +66,13 @@ public class Solver011 extends ProjectEulerSolver {
 
     // --- //
 
+    private long solve(List<Integer> l) {
+        if ( l.size() < N ) {
+            return 0;
+        }
+        return maxLong( rangeClosed( 0, l.size() - (int) N ).mapToLong( i -> l.subList( i, i + (int) N ).stream().reduce( 1, (a1, a2) -> a1 * a2 ) ) );
+    }
+
     public long solve() {
         List<List<Integer>> data = stream( rawData ).map( s -> stream( s.split( " " ) ).map( Integer::valueOf ).collect( toList() ) ).collect( toList() );
         Map<Integer, List<Integer>> row = new HashMap<>(), column = new HashMap<>(), diagonalA = new HashMap<>(), diagonalB = new HashMap<>();
@@ -79,13 +86,6 @@ public class Solver011 extends ProjectEulerSolver {
         } ) );
 
         return maxLong( of( row, column, diagonalA, diagonalB ).mapToLong( m -> maxLong( m.values().stream().mapToLong( this::solve ) ) ) );
-    }
-
-    private long solve(List<Integer> l) {
-        if ( l.size() < N ) {
-            return 0;
-        }
-        return maxLong( rangeClosed( 0, l.size() - (int) N ).mapToLong( i -> l.subList( i, i + (int) N ).stream().reduce( 1, (a1, a2) -> a1 * a2 ) ) );
     }
 
 }

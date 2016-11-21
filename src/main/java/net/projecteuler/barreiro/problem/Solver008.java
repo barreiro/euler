@@ -2,8 +2,9 @@
 
 package net.projecteuler.barreiro.problem;
 
+import net.projecteuler.barreiro.algorithm.util.StreamUtils;
+
 import static java.util.stream.IntStream.rangeClosed;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.charProduct;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.maxLong;
 
 /**
@@ -54,7 +55,7 @@ public class Solver008 extends ProjectEulerSolver {
     // --- //
 
     public long solve() {
-        return maxLong( rangeClosed( 0, data.length() - (int) N ).mapToObj( i -> data.subSequence( i, (int) N + i ) ).mapToLong( charProduct() ) );
+        return maxLong( rangeClosed( 0, data.length() - (int) N ).mapToObj( i -> data.subSequence( i, (int) N + i ) ).mapToLong( StreamUtils::charProduct ) );
     }
 
 }

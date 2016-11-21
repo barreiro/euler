@@ -6,8 +6,10 @@ import static java.lang.Boolean.valueOf;
 import static java.lang.Class.forName;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.gc;
 import static java.lang.System.getProperty;
 import static java.lang.System.out;
+import static java.lang.Thread.sleep;
 import static java.util.stream.IntStream.rangeClosed;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.intStream;
 
@@ -70,6 +72,8 @@ public abstract class ProjectEulerSolver {
             ProjectEulerSolver solverInstance = ProjectEulerSolver.class.cast( forName( solverClassName ).newInstance() );
             if ( solverInstance != null ) {
                 if ( valueOf( getProperty( "euler.traceExecutionTime", "false" ) ) ) {
+                    gc();
+                    sleep( 50 );
                     long start = currentTimeMillis();
                     out.printf( "Solution for problem %03d is %-15d ( %4d ms )%n", number, solverInstance.solve(), currentTimeMillis() - start );
                 }

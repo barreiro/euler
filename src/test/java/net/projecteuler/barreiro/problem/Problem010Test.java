@@ -29,4 +29,9 @@ public class Problem010Test extends ProjectEulerAbstractTest {
         assertEquals( 5, new Solver010( 5 ).solve() );
     }
 
+    @Test
+    public void big() {
+        assertEquals( 37550402023L, new Solver010( 1000000 ).solve() );
+    }
+
 }

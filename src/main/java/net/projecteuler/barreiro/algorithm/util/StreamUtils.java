@@ -27,12 +27,12 @@ import static java.util.stream.StreamSupport.stream;
  */
 public final class StreamUtils {
 
-    private StreamUtils() {}
+    private StreamUtils() {
+    }
 
     /**
      * Utility Method to create a stream from an iterator. Elements are added lazily.
      *
-     * @param iterator Iterator to use
      * @return A long stream with the iterated longs
      */
     public static LongStream lazyStream(PrimitiveIterator.OfLong iterator) {
@@ -42,7 +42,6 @@ public final class StreamUtils {
     /**
      * Utility Method to create a stream from an iterator. Elements are added lazily.
      *
-     * @param iterator Iterator to use
      * @return A stream with the iterated objects
      */
     public static <E> Stream<E> lazyStream(Iterator<E> iterator) {
@@ -52,8 +51,6 @@ public final class StreamUtils {
     /**
      * Creates a stream is descending order
      *
-     * @param startExclusive Highest element not in the stream
-     * @param endInclusive   Lowest Element
      * @return A stream with the specified range
      */
     public static LongStream rangeReverse(long startExclusive, long endInclusive) {
@@ -70,45 +67,12 @@ public final class StreamUtils {
     }
 
     /**
-     * Finds an non zero element on the stream. To be used as na alternative to filter.
+     * Creates an infinite parallel long stream with a lower bound
      *
-     * @param stream the LongStream to use
-     * @return An non zero element, or zero if no element is found
+     * @return An infinite stream
      */
-    public static long notZero(LongStream stream) {
-        return stream.filter( LongUtils::notZero ).findAny().orElse( 0 );
-    }
-
-    // --- //
-
-    /**
-     * Returns the highest value on a stream of longs
-     *
-     * @param stream the Stream of Long to find the maximum of
-     * @return the highest value on the stream
-     */
-    public static long maxLong(Stream<Long> stream) {
-        return stream.mapToLong( Long::valueOf ).max().orElse( Long.MIN_VALUE );
-    }
-
-    /**
-     * Returns the highest value on a stream of longs
-     *
-     * @param stream the LongStream to find the maximum of
-     * @return the highest value on the stream
-     */
-    public static long maxLong(LongStream stream) {
-        return stream.max().orElse( Long.MIN_VALUE );
-    }
-
-    /**
-     * Returns the first value on a stream of longs
-     *
-     * @param stream the LongStream to find the first value of
-     * @return the first value on the stream
-     */
-    public static long firstLong(LongStream stream) {
-        return stream.findFirst().orElseThrow( () -> new ArithmeticException( "A value was expected on a stream" ) );
+    public static LongStream infiniteParallelStream(long start) {
+        return iterate( start, l -> l + 1 ).parallel();
     }
 
     // --- //
@@ -116,7 +80,6 @@ public final class StreamUtils {
     /**
      * Returns a List view of a LongStream
      *
-     * @param stream the LongStream to convert to a List
      * @return a List view
      */
     public static List<Long> longList(LongStream stream) {
@@ -126,7 +89,6 @@ public final class StreamUtils {
     /**
      * Returns a Set view of a LongStream
      *
-     * @param stream the LongStream to convert to a Set
      * @return a Set view
      */
     public static Set<Long> longSet(LongStream stream) {
@@ -136,7 +98,6 @@ public final class StreamUtils {
     /**
      * Returns a Set view of an IntStream
      *
-     * @param stream the IntStream to convert to a Set
      * @return a Set view
      */
     public static Set<Integer> intSet(IntStream stream) {
@@ -146,7 +107,6 @@ public final class StreamUtils {
     /**
      * Returns an array view of a Stream of Long
      *
-     * @param stream the Stream of Long to convert to an array
      * @return an array view
      */
     public static long[] longArray(Stream<Long> stream) {
@@ -156,11 +116,95 @@ public final class StreamUtils {
     /**
      * Returns a IntStream from numeric Strings
      *
-     * @param array Strings with numeric values
      * @return a IntStream from the values in the array
      */
     public static IntStream intStream(String... array) {
         return stream( array ).mapToInt( Integer::valueOf );
+    }
+
+    // --- //
+
+    /**
+     * Returns the highest value on a stream of longs
+     *
+     * @return the highest value on the stream
+     */
+    public static long maxLong(Stream<Long> stream) {
+        return stream.mapToLong( Long::valueOf ).max().orElse( Long.MIN_VALUE );
+    }
+
+    /**
+     * Returns the highest value on a stream of longs
+     *
+     * @return the highest value on the stream
+     */
+    public static long maxLong(LongStream stream) {
+        return stream.max().orElse( Long.MIN_VALUE );
+    }
+
+    /**
+     * Returns the first value on a stream of longs
+     *
+     * @return the first value on the stream
+     */
+    public static long firstLong(LongStream stream) {
+        return stream.findFirst().orElseThrow( () -> new ArithmeticException( "A value was expected on a stream" ) );
+    }
+
+    /**
+     * Finds an non zero element on the stream. To be used as na alternative to filter.
+     *
+     * @return An non zero element, or zero if no element is found
+     */
+    public static long notZero(LongStream stream) {
+        return stream.filter( l -> l != 0 ).findAny().orElse( 0 );
+    }
+
+    // --- //
+
+    /**
+     * Calculates the sum of a digit stream
+     *
+     * @return The sum
+     */
+    public static long digitSum(Stream<long[]> stream) {
+        return stream.mapToLong( LongUtils::fromDigits ).sum();
+    }
+
+    /**
+     * Calculates the sum of the even elements of a stream
+     *
+     * @return The sum
+     */
+    public static long evenSum(LongStream stream) {
+        return stream.filter( l -> l % 2 == 0 ).sum();
+    }
+
+    /**
+     * Reduces a long stream by applying the product reduction.
+     *
+     * @return The product
+     */
+    public static long product(LongStream stream) {
+        return stream.reduce( 1, (l1, l2) -> l1 * l2 );
+    }
+
+    /**
+     * Calculates the product of digits in a char sequence
+     *
+     * @return The product
+     */
+    public static long charProduct(CharSequence charSequence) {
+        return product( charSequence.chars().mapToLong( c -> c - '0' ) );
+    }
+
+    /**
+     * Calculates the product of letters in a char sequence of uppercase chars.
+     *
+     * @return The sum
+     */
+    public static long letterSum(CharSequence charSequence) {
+        return charSequence.chars().mapToLong( c -> c - 'A' + 1 ).sum();
     }
 
 }

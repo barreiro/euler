@@ -72,6 +72,11 @@ public class Problem017Test extends ProjectEulerAbstractTest {
         assertEquals( 19, new Solver017( 5 ).solve() );
     }
 
+    @Test
+    public void big() {
+        assertEquals( 737203, new Solver017( 19999 ).solve() );
+    }
+
     // --- //
 
     @Test
@@ -93,4 +98,15 @@ public class Problem017Test extends ProjectEulerAbstractTest {
     public void natural4() {
         assertArrayEquals( new String[]{"nine hundred and ninety nine", "one thousand", "one thousand and one"}, naturalLanguage( 999, 1001 ) );
     }
+
+    @Test
+    public void natural5() {
+        assertArrayEquals( new String[]{"nine thousand and nine hundred and ninety nine", "ten thousand", "ten thousand and one"}, naturalLanguage( 9999, 10001 ) );
+    }
+
+    @Test
+    public void natural6() {
+        assertArrayEquals( new String[]{"nineteen thousand and nine hundred and ninety nine"}, naturalLanguage( 19999, 19999 ) );
+    }
+
 }

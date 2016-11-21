@@ -62,16 +62,25 @@ public class Solver018 extends ProjectEulerSolver {
 
     // --- //
 
-    public long solve() {
-        return bestSum( parse( data ) );
-    }
+    private static final class Node<T> {
+        private final T element;
+        private List<Node<T>> children;
 
-    // Recursive call on a node that returns the value of the node, plus the highest of its children
-    private static long bestSum(Node<Integer> node) {
-        return node.element + ( node.isLeaf() ? 0 : maxLong( node.children.stream().mapToLong( Solver018::bestSum ) ) );
-    }
+        private Node(T element) {
+            this.element = element;
+        }
 
-    // --- //
+        private void addChild(Node<T> child) {
+            if ( this.children == null ) {
+                children = new ArrayList<>();
+            }
+            children.add( child );
+        }
+
+        private boolean isLeaf() {
+            return this.children == null;
+        }
+    }
 
     private Node<Integer> parse(String rawData) {
         List<List<Node<Integer>>> data = new ArrayList<>();
@@ -104,24 +113,15 @@ public class Solver018 extends ProjectEulerSolver {
         return data.get( 0 ).get( 0 );
     }
 
-    private static final class Node<T> {
-        private final T element;
-        private List<Node<T>> children;
+    // --- //
 
-        private Node(T element) {
-            this.element = element;
-        }
+    // Recursive call on a node that returns the value of the node, plus the highest of its children
+    private static long bestSum(Node<Integer> node) {
+        return node.element + ( node.isLeaf() ? 0 : maxLong( node.children.stream().mapToLong( Solver018::bestSum ) ) );
+    }
 
-        private void addChild(Node<T> child) {
-            if ( this.children == null ) {
-                children = new ArrayList<>();
-            }
-            children.add( child );
-        }
-
-        private boolean isLeaf() {
-            return this.children == null;
-        }
+    public long solve() {
+        return bestSum( parse( data ) );
     }
 
 }

@@ -15,7 +15,8 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
  */
 public final class Fibonacci {
 
-    private Fibonacci() {}
+    private Fibonacci() {
+    }
 
     /**
      * Creates a stream of fibonacci numbers, starting with 1, 2, ...

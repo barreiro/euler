@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN" "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
-  <suppress checks="ModifiedControlVariable" files="LongUtils.java" lines="191" />
-  <suppress checks="MemberName" files="ProjectEulerSolver.java" lines="26" />
+  <suppress checks="ModifiedControlVariable" files="LongUtils.java" columns="19" />
+  <suppress checks="MemberName" files="ProjectEulerSolver.java" lines="28" />
   <suppress checks="TrailingComment" files="Solver004.java" lines="42" />
   <!-- Tests -->
-  <suppress checks="ModifiedControlVariable" files="Problem017Test.java" lines="33, 41" />
+  <suppress checks="ModifiedControlVariable" files="Problem017Test.java" columns="26" />
 </suppressions>

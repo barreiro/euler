@@ -33,7 +33,7 @@ public class PrimesTest {
 
     @Test
     public void generatorEquivalence() {
-        assertArrayEquals( primesStreamMillerRabin().limit( 100000 ).toArray(), primesStream().limit( 100000 ).toArray() );
+        assertArrayEquals( primesStreamMillerRabin().limit( 10000 ).toArray(), primesStream().limit( 10000 ).toArray() );
     }
 
     @Test

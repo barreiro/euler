@@ -2,6 +2,7 @@
 
 package net.projecteuler.barreiro.algorithm;
 
+import net.projecteuler.barreiro.algorithm.util.LongUtils;
 import org.junit.Test;
 
 import java.util.List;
@@ -10,8 +11,11 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.rangeClosed;
+import static java.util.stream.LongStream.range;
 import static net.projecteuler.barreiro.algorithm.Combinatorics.choose;
+import static net.projecteuler.barreiro.algorithm.Combinatorics.digitStream;
 import static net.projecteuler.barreiro.algorithm.Combinatorics.partition;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -71,6 +75,11 @@ public class CombinatoricsTest {
             Set<Integer> constrains = rangeClosed( 1, i ).mapToObj( Integer::valueOf ).collect( toSet() );
             assertEquals( (long) naturalPartitions.get( i ), partition( i, constrains ) );
         }
+    }
+
+    @Test
+    public void digitStreamEquivalence() {
+        assertArrayEquals( range( 0, 100000 ).toArray(), digitStream( 0, 100000 ).mapToLong( LongUtils::fromDigits ).toArray() );
     }
 
 }

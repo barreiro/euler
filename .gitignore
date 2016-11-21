@@ -21,4 +21,5 @@ gradle
 
 # Thumbnails
 ._*
+.attach*
 

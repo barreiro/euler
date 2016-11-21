@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static java.util.stream.LongStream.rangeClosed;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.product;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.product;
 
 /**
  * 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.

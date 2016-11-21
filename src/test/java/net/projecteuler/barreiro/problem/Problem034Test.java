@@ -24,12 +24,12 @@ public class Problem034Test extends ProjectEulerAbstractTest {
 
     @Test
     public void minimal() {
-        assertEquals( 145, new Solver034( 150 ).solve() );
+        assertEquals( 145, new Solver034( 145 ).solve() );
     }
 
     @Test
     public void big() {
-        assertEquals( 40730, new Solver034( 1000000 ).solve() );
+        assertEquals( 40730, new Solver034( 100000 ).solve() );
     }
 
 }

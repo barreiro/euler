@@ -30,15 +30,15 @@ public class Solver021 extends ProjectEulerSolver {
 
     // --- //
 
+    private boolean isAmicable(long value, Map<Long, Long> factorSum) {
+        long sum = factorSum.get( value );
+        return ( sum > 1 && sum < N ) && ( factorSum.get( sum ) == value && sum != value );
+    }
+
     public long solve() {
         Map<Long, Long> factorSum = new ConcurrentHashMap<>();
         range( 2, N ).parallel().forEach( l -> factorSum.put( l, sumFactors( l ) ) );
         return range( 2, N ).filter( l -> isAmicable( l, factorSum ) ).sum();
-    }
-
-    private boolean isAmicable(long value, Map<Long, Long> factorSum) {
-        long sum = factorSum.get( value );
-        return ( sum > 1 && sum < N ) && ( factorSum.get( sum ) == value && sum != value );
     }
 
 }

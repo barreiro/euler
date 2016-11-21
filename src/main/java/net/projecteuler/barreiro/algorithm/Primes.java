@@ -24,14 +24,14 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
  */
 public final class Primes {
 
-    private Primes() {}
-
     /**
      * Base of values to use in Miller-Rabin test. Accurate up to 2^32 and 2^64.
      */
     private static final long[] MILLER_RABIN_FAST = new long[]{2, 7, 61};
     private static final long[] MILLER_RABIN_BASE = new long[]{2, 325, 9375, 28178, 450775, 9780504, 1795265022};
 
+    private Primes() {
+    }
     // --- //
 
     /**
@@ -77,17 +77,15 @@ public final class Primes {
     /**
      * Creates a stream of prime numbers, starting with 2, 3, ... up to N.
      *
-     * @param n Upper bound
      * @return A stream of prime numbers
      */
-    public static LongStream primesUpTo(long n) {
+    public static LongStream primesStream(long n) {
         return primesStream( p -> p < n );
     }
 
     /**
      * Creates a stream of prime numbers, starting with the one below N.
      *
-     * @param n Upper bound
      * @return A stream of prime numbers
      */
     public static LongStream primesLessThan(long n) {
@@ -129,7 +127,6 @@ public final class Primes {
     /**
      * Prime test using Miller-Rabin test.
      *
-     * @param n Value to test
      * @return true if the number is prime
      */
     public static boolean millerRabin(long... n) {
@@ -139,7 +136,6 @@ public final class Primes {
     /**
      * Prime test using Miller-Rabin test.
      *
-     * @param n Value to test
      * @return true if the number is prime
      */
     public static boolean millerRabin(long n) {

@@ -7,7 +7,9 @@ import org.junit.Test;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.addition;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.fromDigits;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.gcd;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.isPalindrome;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.multiplication;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.powerMod;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
 import static org.junit.Assert.assertEquals;
@@ -21,6 +23,27 @@ public class LongUtilsTest {
     public void gcdTest() {
         assertEquals( 6, gcd( 54, 24 ) );
         assertEquals( 6, gcd( 24, 54 ) );
+    }
+
+    @Test
+    public void powTest() {
+        assertEquals( 1, pow( 0, 0 ) );
+        assertEquals( 1, pow( 1, 1 ) );
+        assertEquals( 1, pow( 1, 100 ) );
+        assertEquals( 1, pow( 100, 0 ) );
+        assertEquals( 2, pow( 2, 1 ) );
+        assertEquals( 4, pow( 2, 2 ) );
+        assertEquals( 16, pow( 2, 4 ) );
+        assertEquals( 256, pow( 2, 8 ) );
+        assertEquals( 10, pow( 10, 1 ) );
+    }
+
+    @Test
+    public void palindrome() {
+        assertEquals( false, isPalindrome( 15 ) );
+        assertEquals( true, isPalindrome( 88 ) );
+        assertEquals( false, isPalindrome( 15846 ) );
+        assertEquals( true, isPalindrome( 84048 ) );
     }
 
     @Test

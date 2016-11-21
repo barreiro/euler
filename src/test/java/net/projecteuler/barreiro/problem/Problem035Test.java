@@ -39,7 +39,7 @@ public class Problem035Test extends ProjectEulerAbstractTest {
 
     @Test
     public void big() {
-        assertEquals( 55, new Solver035( 5000000 ).solve() );
+        assertEquals( 55, new Solver035( 1000000 ).solve() );
     }
 
 }

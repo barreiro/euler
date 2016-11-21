@@ -4,11 +4,10 @@ package net.projecteuler.barreiro.algorithm.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.LongBinaryOperator;
-import java.util.function.ToLongFunction;
 import java.util.stream.LongStream;
 
 import static java.util.Arrays.copyOf;
+import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
 
 /**
@@ -18,10 +17,34 @@ import static java.util.stream.IntStream.range;
  */
 public final class LongUtils {
 
-    private LongUtils() {}
+    private static final long[] POW10 = new long[]{
+            1,
+            10,
+            100,
+            1000,
+            10000,
+            100000,
+            1000000,
+            10000000,
+            100000000,
+            1000000000,
+            10000000000L,
+            100000000000L,
+            1000000000000L,
+            10000000000000L,
+            100000000000000L,
+            1000000000000000L,
+            10000000000000000L,
+            100000000000000000L,
+            1000000000000000000L
+    };
+
+    private LongUtils() {
+    }
 
     /**
      * Default value used as base for the numeric system. Used in methods that make array-based calculations.
+     *
      * @return Decimal system
      */
     private static int defaultRadix() {
@@ -29,40 +52,17 @@ public final class LongUtils {
     }
 
     /**
-     * Test if a long is not zero.
-     *
-     * @param l Value to test
-     * @return true if value not equal to zero
-     */
-    public static boolean notZero(long l) {
-        return l != 0;
-    }
-
-    /**
-     * Test if a long is even.
-     *
-     * @param l Value to test
-     * @return true if value is multiple of tow
-     */
-    public static boolean isEven(long l) {
-        return l % 2 == 0;
-    }
-
-    /**
      * Test if a long is odd.
      *
-     * @param l Value to test
-     * @return true if value is not multiple of tow
+     * @return true if value is not multiple of two
      */
-    public static boolean isOdd(long l) {
-        return !isEven( l );
+    public static boolean odd(long l) {
+        return l % 2 != 0;
     }
 
     /**
      * Greatest common divisor using Euclides algorithm.
      *
-     * @param a One of the values
-     * @param b The other value
      * @return The greatest common divisor
      */
     public static long gcd(long a, long b) {
@@ -77,7 +77,6 @@ public final class LongUtils {
     /**
      * Simple method to calculate the factorial of small values. No checks are performed. Use with caution.
      *
-     * @param l Value to calculate the factorial
      * @return The factorial of the argument
      */
     public static long factorial(long l) {
@@ -90,12 +89,93 @@ public final class LongUtils {
     /**
      * Convenience method to calculate the power.
      *
-     * @param base Value to be used as base
-     * @param exp  Value to be used as exponent
      * @return base^exp
      */
     public static long pow(long base, long exp) {
-        return (long) Math.pow( base, exp );
+        if ( base == 0 ) {
+            return exp == 0 ? 1 : 0;
+        }
+        if ( base == 1 ) {
+            return base;
+        }
+        if ( base == 2 ) {
+            return 1 << exp;
+        }
+        if ( base == 10 ) {
+            return pow10( exp );
+        }
+
+        if ( exp == 0 ) {
+            return 1;
+        }
+        if ( exp == 1 ) {
+            return base;
+        }
+        if ( exp == 2 ) {
+            return base * base;
+        }
+
+        // Perform exp by squaring, although could resort to Math.pow( base, exp );
+        long result = 1;
+        for ( ; exp != 0; exp /= 2, base *= base ) {
+            if ( exp % 2 != 0 ) {
+                result *= base;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Convenience method to calculate the power when in base 10.
+     *
+     * @return base^exp
+     */
+    public static long pow10(long exp) {
+        if ( exp < POW10.length ) {
+            return POW10[(int) exp];
+        }
+        return (long) Math.pow( 10, exp );
+    }
+
+    /**
+     * Calculates an approximate of the square root
+     *
+     * @return sqrt(value)
+     */
+    public static long intSqrt(long value) {
+        long result = 0, one = 1L << 30;
+
+        // "one" starts at the highest power of four <= than the argument
+        while ( one > value ) {
+            one >>= 2;
+        }
+
+        for ( ; one != 0; result >>= 1, one >>= 2 ) {
+            if ( value >= result + one ) {
+                value = value - ( result + one );
+                result = result + one * 2;
+            }
+        }
+
+        // Rounding to nearest integer
+        return value > result ? result + 1 : result;
+    }
+
+    // --- //
+
+    /**
+     * Tests if a given number is a palindrome, i.e. it's digits read the same both ways
+     *
+     * @return true if number is a palindrome
+     */
+    public static boolean isPalindrome(long l) {
+        long[] digits = toDigits( l );
+        for ( int i = 0; i * 2 < digits.length; i++ ) {
+            if ( digits[i] != digits[digits.length - i - 1] ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // --- //
@@ -103,27 +183,34 @@ public final class LongUtils {
     /**
      * Decompose a long value into a sequence of digits.
      *
-     * @param value Value to convert
+     * @param l Value to convert
      * @return An array with the digits that form the number, less significant first
      */
-    public static long[] toDigits(long value) {
-        return toDigits( value, defaultRadix() );
+    public static LongStream toDigitsStream(long l) {
+        return stream( toDigits( l ) );
     }
 
     /**
      * Decompose a long value into a sequence of digits.
      *
-     * @param value Value to convert
-     * @param radix Base to use
      * @return An array with the digits that form the number, less significant first
      */
-    public static long[] toDigits(long value, int radix) {
+    public static long[] toDigits(long l) {
+        return toDigits( l, defaultRadix() );
+    }
+
+    /**
+     * Decompose a long value into a sequence of digits.
+     *
+     * @return An array with the digits that form the number, less significant first
+     */
+    public static long[] toDigits(long l, int radix) {
         List<Long> digits = new ArrayList<>();
-        for ( ; value >= radix; value /= radix ) {
-            digits.add( value % radix );
+        for ( ; l >= radix; l /= radix ) {
+            digits.add( l % radix );
         }
-        digits.add( value );
-        return digits.stream().mapToLong( l -> l ).toArray();
+        digits.add( l );
+        return digits.stream().mapToLong( x -> x ).toArray();
     }
 
     /**
@@ -158,15 +245,17 @@ public final class LongUtils {
      * @return A long composed of the digits in the array
      */
     public static long fromDigits(long[] digits, int from, int to, int radix) {
-        return range( from, to ).mapToLong( i -> digits[i - from] * pow( radix, i ) ).sum();
+        long result = 0;
+        for ( int i = from; i < to; i++ ) {
+            result += digits[i - from] * pow( radix, i );
+        }
+        return result;
     }
 
     /**
      * Multiply two long numbers represented as an array of digits, less significant first.
      * There is not the risk of carry overflow, even for big numbers. Result may contain trailing zeros.
      *
-     * @param a Multiplicand one
-     * @param b Multiplicand two
      * @return Result of the multiplication of a and b
      */
     public static long[] multiplication(long[] a, long[] b) {
@@ -177,9 +266,6 @@ public final class LongUtils {
      * Multiply two long numbers represented as an array of digits, less significant first.
      * There is not the risk of carry overflow, even for big numbers. Result may contain trailing zeros.
      *
-     * @param a Multiplicand one
-     * @param b Multiplicand two
-     * @param radix Base for the numeric system
      * @return Result of the multiplication of a and b
      */
     public static long[] multiplication(long[] a, long[] b, int radix) {
@@ -198,9 +284,6 @@ public final class LongUtils {
      * Add two long numbers represented as an array of digits, less significant first. All arrays must have the same size.
      * If sum does not fit the result array a new one will be created and returned..
      *
-     * @param a      Addend one
-     * @param b      Addend two
-     * @param result The array where the result will be put
      * @return Result of the sum of a and b
      */
     public static long[] addition(long[] a, long[] b, long[] result) {
@@ -211,14 +294,12 @@ public final class LongUtils {
      * Add two long numbers represented as an array of digits, less significant first. All arrays must have the same size.
      * If sum does not fit the result array a new one will be created and returned..
      *
-     * @param a      Addend one
-     * @param b      Addend two
-     * @param result The array where the result will be put
-     * @param radix  Base for the numeric system
      * @return Result of the sum of a and b
      */
     public static long[] addition(long[] a, long[] b, long[] result, int radix) {
-        range( 0, result.length ).forEach( i -> result[i] = a[i] + b[i] );
+        for ( int i = 0; i < result.length; i++ ) {
+            result[i] = a[i] + b[i];
+        }
 
         long carry = 0;
         for ( int i = 0; i < result.length; i++ ) {
@@ -226,14 +307,12 @@ public final class LongUtils {
             carry = (int) result[i] / radix;
             result[i] -= carry * radix;
         }
-        if ( carry == 0 ) {
-            return result;
+        if ( carry != 0 ) {
+            // Expand the result as needed
+            result = copyOf( result, result.length + 1 );
+            result[result.length - 1] = carry;
         }
-
-        // Expand the result as needed
-        long[] r = copyOf( result, result.length + 1 );
-        r[result.length] = carry;
-        return r;
+        return result;
     }
 
     // --- //
@@ -257,44 +336,6 @@ public final class LongUtils {
             base = base * base % mod;
         }
         return result < 0 ? result + mod : result;
-    }
-
-    // --- //
-
-    /**
-     * Provides a product function to be used in reduce operations.
-     *
-     * @return A product operator
-     */
-    public static LongBinaryOperator product() {
-        return (l1, l2) -> l1 * l2;
-    }
-
-    /**
-     * Reduces a long stream by applying the product reduction.
-     *
-     * @return A product operator
-     */
-    public static long product(LongStream stream) {
-        return stream.reduce( 1, product() );
-    }
-
-    /**
-     * Provides a function to calculate the product of digits in a char sequence
-     *
-     * @return A function
-     */
-    public static ToLongFunction<CharSequence> charProduct() {
-        return s -> s.chars().mapToLong( c -> c - '0' ).reduce( 1, product() );
-    }
-
-    /**
-     * Provides a function to calculate the product of letters in a char sequence of uppercase chars.
-     *
-     * @return A function
-     */
-    public static ToLongFunction<CharSequence> letterSum() {
-        return s -> s.chars().mapToLong( c -> c - 'A' + 1 ).reduce( 0, Long::sum );
     }
 
 }
