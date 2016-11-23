@@ -169,7 +169,24 @@ public final class LongUtils {
      * @return true if number is a palindrome
      */
     public static boolean isPalindrome(long l) {
-        long[] digits = toDigits( l );
+        return isPalindrome( toDigits( l ) );
+    }
+
+    /**
+     * Tests if a given number is a palindrome in a given base, i.e. it's digits read the same both ways
+     *
+     * @return true if number is a palindrome
+     */
+    public static boolean isPalindrome(long l, int radix) {
+        return isPalindrome( toDigits( l, radix ) );
+    }
+
+    /**
+     * Tests if a given number is a palindrome, i.e. it's digits read the same both ways
+     *
+     * @return true if number is a palindrome
+     */
+    public static boolean isPalindrome(long... digits) {
         for ( int i = 0; i * 2 < digits.length; i++ ) {
             if ( digits[i] != digits[digits.length - i - 1] ) {
                 return false;

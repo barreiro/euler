@@ -20,7 +20,7 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.intStream;
  */
 public abstract class ProjectEulerSolver {
 
-    private static final int SOLVED_SO_FAR = 35;
+    private static final int SOLVED_SO_FAR = 40;
 
     /**
      * Scale of the problem.
