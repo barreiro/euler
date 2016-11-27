@@ -29,13 +29,8 @@ public class Solver035 extends ProjectEulerSolver {
 
     // --- //
 
-    // Optimization so that the rotation stream is not created. If there are even digits in a prime there are rotations that will not be prime.
-    private static boolean oddCheck(long p) {
-        return p <= 5 || toDigitsStream( p ).allMatch( i -> i == 1 || i == 3 || i == 7 | i == 9 );
-    }
-
     public long solve() {
-        return primesStream( N ).filter( Solver035::oddCheck ).filter( p -> rotationStream( p ).allMatch( Primes::millerRabin ) ).count();
+        return primesStream( N ).filter( Primes::testPrimePermutation ).filter( p -> rotationStream( p ).allMatch( Primes::millerRabin ) ).count();
     }
 
 }

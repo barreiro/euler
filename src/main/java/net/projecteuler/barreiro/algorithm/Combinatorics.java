@@ -350,7 +350,7 @@ public final class Combinatorics {
 
         private PalindromeIterator(long limit) {
             max = limit;
-            array = new long[] { 0 };
+            array = new long[]{0};
             next = 0;
         }
 
@@ -368,7 +368,7 @@ public final class Combinatorics {
             int middle = array.length / 2;
             if ( array[middle] < 9 ) {
                 array[middle]++;
-                if ( array.length % 2 == 0) {
+                if ( array.length % 2 == 0 ) {
                     array[middle - 1]++;
                 }
                 return true;
@@ -377,7 +377,7 @@ public final class Combinatorics {
         }
 
         private boolean rotate() {
-            for ( int i = array.length / 2 + 1 ; i < array.length; i++ ) {
+            for ( int i = array.length / 2 + 1; i < array.length; i++ ) {
                 array[i - 1] = 0;
                 array[array.length - i] = 0;
 

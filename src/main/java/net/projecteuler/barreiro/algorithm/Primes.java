@@ -14,6 +14,7 @@ import static java.lang.Long.numberOfTrailingZeros;
 import static java.util.Arrays.stream;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.fromDigits;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.powerMod;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigitsStream;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
 
@@ -32,6 +33,7 @@ public final class Primes {
 
     private Primes() {
     }
+
     // --- //
 
     /**
@@ -63,6 +65,15 @@ public final class Primes {
             factorMap.put( subject, 1L );
         }
         return factorMap;
+    }
+
+    /**
+     * Test if a number is made from prime digits
+     *
+     * @return False if any of the digits not not allow all permutations to be prime
+     */
+    public static boolean testPrimePermutation(long n) {
+        return n < 9 || toDigitsStream( n ).allMatch( l -> l == 1 || l == 3 | l == 7 | l == 9 );
     }
 
     /**
