@@ -6,7 +6,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PrimitiveIterator;
+import java.util.PrimitiveIterator.OfLong;
 import java.util.function.Predicate;
 import java.util.stream.LongStream;
 
@@ -108,7 +108,7 @@ public final class Primes {
     }
 
     private static LongStream primesStream(Predicate<Long> predicate, PrimeGenerator generator) {
-        return lazyStream( new PrimitiveIterator.OfLong() {
+        return lazyStream( new OfLong() {
 
             private long next = generator.nextPrime();
 

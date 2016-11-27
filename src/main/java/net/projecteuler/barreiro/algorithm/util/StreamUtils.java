@@ -5,14 +5,18 @@ package net.projecteuler.barreiro.algorithm.util;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PrimitiveIterator;
+import java.util.PrimitiveIterator.OfLong;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static java.util.Arrays.stream;
 import static java.util.Spliterator.IMMUTABLE;
 import static java.util.Spliterator.NONNULL;
+import static java.util.Spliterators.spliterator;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -35,7 +39,7 @@ public final class StreamUtils {
      *
      * @return A long stream with the iterated longs
      */
-    public static LongStream lazyStream(PrimitiveIterator.OfLong iterator) {
+    public static LongStream lazyStream(OfLong iterator) {
         return longStream( spliteratorUnknownSize( iterator, IMMUTABLE | NONNULL ), false );
     }
 

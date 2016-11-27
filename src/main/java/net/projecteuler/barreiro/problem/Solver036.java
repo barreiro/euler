@@ -2,9 +2,7 @@
 
 package net.projecteuler.barreiro.problem;
 
-import net.projecteuler.barreiro.algorithm.util.LongUtils;
-
-import static net.projecteuler.barreiro.algorithm.Combinatorics.digitStream;
+import static net.projecteuler.barreiro.algorithm.Combinatorics.palindromeStream;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.isPalindrome;
 
 /**
@@ -29,7 +27,7 @@ public class Solver036 extends ProjectEulerSolver {
     // --- //
 
     public long solve() {
-        return digitStream( 1, N ).filter( LongUtils::isPalindrome ).mapToLong( LongUtils::fromDigits ).filter( p -> isPalindrome( p, 2 ) ).sum();
+        return palindromeStream( N ).filter( p -> isPalindrome( p, 2 ) ).sum();
     }
 
 }

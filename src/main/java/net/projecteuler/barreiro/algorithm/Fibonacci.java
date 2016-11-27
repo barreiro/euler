@@ -2,7 +2,7 @@
 
 package net.projecteuler.barreiro.algorithm;
 
-import java.util.PrimitiveIterator;
+import java.util.PrimitiveIterator.OfLong;
 import java.util.function.Predicate;
 import java.util.stream.LongStream;
 
@@ -25,7 +25,7 @@ public final class Fibonacci {
      * @return A stream of fibonacci numbers
      */
     public static LongStream fibonacciStream(Predicate<Long> predicate) {
-        return lazyStream( new PrimitiveIterator.OfLong() {
+        return lazyStream( new OfLong() {
             private long previous = 0, last = 1;
 
             public long nextLong() {

@@ -3,11 +3,14 @@
 package net.projecteuler.barreiro.algorithm;
 
 import java.util.Iterator;
+import java.util.PrimitiveIterator.OfLong;
 import java.util.Set;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static java.lang.Math.min;
 import static java.util.stream.IntStream.range;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.fromDigits;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow10;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
@@ -325,6 +328,77 @@ public final class Combinatorics {
 
         public boolean hasNext() {
             return count++ < max;
+        }
+    }
+
+    // --- //
+
+    /**
+     * Creates a Stream of palindrome numbers.
+     *
+     * @param limit Maximum value
+     * @return a Stream of palindrome numbers
+     */
+    public static LongStream palindromeStream(long limit) {
+        return lazyStream( new PalindromeIterator( limit ) );
+    }
+
+    private static final class PalindromeIterator implements OfLong {
+        private final long max;
+        private long[] array;
+        private long next;
+
+        private PalindromeIterator(long limit) {
+            max = limit;
+            array = new long[] { 0 };
+            next = 0;
+        }
+
+        public long nextLong() {
+            long value = next;
+
+            if ( !increase() && !rotate() ) {
+                expand();
+            }
+            next = fromDigits( array );
+            return value;
+        }
+
+        private boolean increase() {
+            int middle = array.length / 2;
+            if ( array[middle] < 9 ) {
+                array[middle]++;
+                if ( array.length % 2 == 0) {
+                    array[middle - 1]++;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private boolean rotate() {
+            for ( int i = array.length / 2 + 1 ; i < array.length; i++ ) {
+                array[i - 1] = 0;
+                array[array.length - i] = 0;
+
+                if ( array[i] != 9 ) {
+                    array[i]++;
+                    array[array.length - i - 1]++;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void expand() {
+            long[] next = new long[array.length + 1];
+            next[0] = 1;
+            next[array.length] = 1;
+            array = next;
+        }
+
+        public boolean hasNext() {
+            return next < max;
         }
     }
 
