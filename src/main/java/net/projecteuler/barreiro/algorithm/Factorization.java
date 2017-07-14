@@ -2,7 +2,6 @@
 
 package net.projecteuler.barreiro.algorithm;
 
-import static java.lang.Math.sqrt;
 import static java.util.stream.LongStream.rangeClosed;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.intSqrt;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.rangeReverse;
@@ -36,7 +35,8 @@ public final class Factorization {
      */
     public static long numberOfFactors(long value) {
         // We need to adjust the number of divisors if the number is a perfect square
-        long ceiling = intSqrt( value ), divisors = ( ceiling * ceiling == value ) ? -1 : 0;
+        long ceiling = intSqrt( value );
+        long divisors = ( ceiling * ceiling == value ) ? -1 : 0;
         return divisors + rangeClosed( 1, ceiling ).filter( f -> value % f == 0 ).count() * 2;
     }
 
@@ -47,7 +47,8 @@ public final class Factorization {
      */
     public static long sumFactors(long value) {
         // We need to adjust the number of divisors if the number is a perfect square
-        long ceiling = (long) sqrt( value ), squareFactor = ( ceiling * ceiling == value ) ? -ceiling : 0;
+        long ceiling = intSqrt( value );
+        long squareFactor = ( ceiling * ceiling == value ) ? -ceiling : 0;
         return 1 + squareFactor + rangeClosed( 2, ceiling ).filter( f -> value % f == 0 ).map( f -> f + value / f ).sum();
     }
 
@@ -59,5 +60,4 @@ public final class Factorization {
     public static boolean isAbundant(long value) {
         return value < sumFactors( value );
     }
-
 }

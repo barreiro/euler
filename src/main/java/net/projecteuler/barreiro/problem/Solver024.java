@@ -48,8 +48,11 @@ public class Solver024 extends ProjectEulerSolver {
         long value = N - 1;
 
         // Use a kind of factorization of N over the factorials. In the end convert the digits to a number.
-        for ( int i = 0; i < base - 1; i++ ) {
-            long f = factorial( base - 1 - i ), q = ( value / f ), digit = unplaced.get( (int) q );
+        for ( long l = 0; l < base - 1; l++ ) {
+            long f = factorial( base - 1 - l );
+            long q = ( value / f );
+            long digit = unplaced.get( (int) q );
+            
             unplaced.remove( digit );
             placed.addFirst( digit );
             value %= f;

@@ -66,7 +66,7 @@ public class Solver033 extends ProjectEulerSolver {
      * We then check to see if the fractions match, juggling a bit with the terms to avoid double calculation.
      *
      * => naiveNumerator = numerator / 10, naiveDenominator = denominator - radix * 10
-     * => numerator / denominator == naiveNumerator / naiveDenominator;
+     * => numerator / denominator == naiveNumerator / naiveDenominator
      */
     public static boolean naiveCancellation(long n, long d, long r) {
         return n % 10 == r && d > r * 10 && n * ( d - r * BASE ) == d * ( n / BASE );

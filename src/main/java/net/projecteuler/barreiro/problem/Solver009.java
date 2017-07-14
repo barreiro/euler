@@ -31,7 +31,10 @@ public class Solver009 extends ProjectEulerSolver {
 
     public long solve() {
         return notZero( range( 2, intSqrt( N ) ).map( m -> notZero( range( 1, m ).map( n -> {
-            long mSquare = m * m, nSquare = n * n, a = mSquare - nSquare, b = 2 * m * n, c = mSquare + nSquare;
+            long a = m * m - n * n;
+            long b = 2 * m * n;
+            long c = m * m + n * n;
+            
             return a + b + c == N ? a * b * c : 0;
         } ) ) ) );
     }

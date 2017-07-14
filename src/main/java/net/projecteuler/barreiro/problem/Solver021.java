@@ -32,7 +32,7 @@ public class Solver021 extends ProjectEulerSolver {
 
     private boolean isAmicable(long value, Map<Long, Long> factorSum) {
         long sum = factorSum.get( value );
-        return ( sum > 1 && sum < N ) && ( factorSum.get( sum ) == value && sum != value );
+        return sum > 1 && sum < N && sum != value && factorSum.get( sum ) == value;
     }
 
     public long solve() {

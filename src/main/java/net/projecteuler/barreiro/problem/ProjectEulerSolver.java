@@ -2,7 +2,7 @@
 
 package net.projecteuler.barreiro.problem;
 
-import static java.lang.Boolean.valueOf;
+import static java.lang.Boolean.parseBoolean;
 import static java.lang.Class.forName;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
@@ -44,9 +44,8 @@ public abstract class ProjectEulerSolver {
     public static void main(String... args) {
         if ( args.length == 0 ) {
             solveAll();
-        }
-        else {
-            intStream( args ).forEachOrdered( ProjectEulerSolver::solve );
+        } else {
+            intStream( args ).forEachOrdered( ProjectEulerSolver::solveSingle );
         }
     }
 
@@ -56,7 +55,7 @@ public abstract class ProjectEulerSolver {
      * Solves all problems! The Euler ones.
      */
     private static void solveAll() {
-        rangeClosed( 1, SOLVED_SO_FAR ).forEachOrdered( ProjectEulerSolver::solve );
+        rangeClosed( 1, SOLVED_SO_FAR ).forEachOrdered( ProjectEulerSolver::solveSingle );
     }
 
     // --- //
@@ -66,28 +65,33 @@ public abstract class ProjectEulerSolver {
      *
      * @param number The number of the problem to solve
      */
-    private static void solve(int number) {
+    private static void solveSingle(int number) {
         try {
             String solverClassName = format( "%s.Solver%03d", ProjectEulerSolver.class.getPackage().getName(), number );
             ProjectEulerSolver solverInstance = ProjectEulerSolver.class.cast( forName( solverClassName ).newInstance() );
             if ( solverInstance != null ) {
-                if ( valueOf( getProperty( "euler.traceExecutionTime", "false" ) ) ) {
+                if ( parseBoolean( getProperty( "euler.traceExecutionTime", "false" ) ) ) {
                     gc();
-                    sleep( 50 );
+                    sleep( 100 );
                     long start = currentTimeMillis();
-                    out.printf( "Solution for problem %03d is %-15d ( %4d ms )%n", number, solverInstance.solve(), currentTimeMillis() - start );
-                }
-                else {
-                    out.printf( "Solution for problem %03d is %-15d%n", number, solverInstance.solve() );
+                    info( "Solution for problem %03d is %12d ( %3d ms )", number, solverInstance.solve(), currentTimeMillis() - start );
+                } else {
+                    info( "Solution for problem %03d is %12d", number, solverInstance.solve() );
                 }
             }
+        } catch ( ClassNotFoundException e ) {
+            warn( "ERROR: No implementation found for problem %d", number );
+        } catch ( Exception e ) {
+            warn( "ERROR: Exception during execution of problem %d: %s", number, e );
         }
-        catch ( ClassNotFoundException e ) {
-            out.printf( "ERROR: No implementation found for problem %d%n", number );
-        }
-        catch ( Exception e ) {
-            out.printf( "ERROR: Exception during execution of problem %s: %s%n", number, e.getMessage() );
-        }
+    }
+
+    private static void info(String msg, Object... args) {
+        out.println( format( msg, args ) );
+    }
+
+    private static void warn(String msg, Object... args) {
+        out.println( format( msg, args ) );
     }
 
     /**
@@ -96,5 +100,4 @@ public abstract class ProjectEulerSolver {
      * @return Solution for the problem
      */
     protected abstract long solve();
-
 }

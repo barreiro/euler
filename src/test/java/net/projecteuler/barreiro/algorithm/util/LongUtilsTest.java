@@ -13,6 +13,8 @@ import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.powerMod;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author barreiro
@@ -40,10 +42,10 @@ public class LongUtilsTest {
 
     @Test
     public void palindrome() {
-        assertEquals( false, isPalindrome( 15 ) );
-        assertEquals( true, isPalindrome( 88 ) );
-        assertEquals( false, isPalindrome( 15846 ) );
-        assertEquals( true, isPalindrome( 84048 ) );
+        assertFalse( isPalindrome( 15 ) );
+        assertTrue( isPalindrome( 88 ) );
+        assertFalse( isPalindrome( 15846 ) );
+        assertTrue( isPalindrome( 84048 ) );
     }
 
     @Test

@@ -47,6 +47,8 @@ public class Solver011 extends ProjectEulerSolver {
             "20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54",
             "01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"};
 
+    private static final Function<Integer, List<Integer>> NEW_LIST = list -> new ArrayList<>();
+
     private final String[] rawData;
 
     public Solver011() {
@@ -75,14 +77,17 @@ public class Solver011 extends ProjectEulerSolver {
 
     public long solve() {
         List<List<Integer>> data = stream( rawData ).map( s -> stream( s.split( " " ) ).map( Integer::valueOf ).collect( toList() ) ).collect( toList() );
-        Map<Integer, List<Integer>> row = new HashMap<>(), column = new HashMap<>(), diagonalA = new HashMap<>(), diagonalB = new HashMap<>();
-        Function<Integer, List<Integer>> newList = list -> new ArrayList<>();
+
+        Map<Integer, List<Integer>> row = new HashMap<>();
+        Map<Integer, List<Integer>> column = new HashMap<>();
+        Map<Integer, List<Integer>> diagonalA = new HashMap<>();
+        Map<Integer, List<Integer>> diagonalB = new HashMap<>();
 
         range( 0, data.size() ).forEach( r -> range( 0, data.get( 0 ).size() ).forEach( c -> {
-            row.computeIfAbsent( r, newList ).add( value( data, r, c ) );
-            column.computeIfAbsent( c, newList ).add( value( data, r, c ) );
-            diagonalA.computeIfAbsent( r - c, newList ).add( value( data, r, c ) );
-            diagonalB.computeIfAbsent( r + c, newList ).add( value( data, r, c ) );
+            row.computeIfAbsent( r, NEW_LIST ).add( value( data, r, c ) );
+            column.computeIfAbsent( c, NEW_LIST ).add( value( data, r, c ) );
+            diagonalA.computeIfAbsent( r - c, NEW_LIST ).add( value( data, r, c ) );
+            diagonalB.computeIfAbsent( r + c, NEW_LIST ).add( value( data, r, c ) );
         } ) );
 
         return maxLong( of( row, column, diagonalA, diagonalB ).mapToLong( m -> maxLong( m.values().stream().mapToLong( this::solve ) ) ) );

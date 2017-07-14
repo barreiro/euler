@@ -6,7 +6,6 @@ import net.projecteuler.barreiro.algorithm.Primes;
 
 import static net.projecteuler.barreiro.algorithm.Combinatorics.rotationStream;
 import static net.projecteuler.barreiro.algorithm.Primes.primesStream;
-import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigitsStream;
 
 /**
  * The number, 197, is called a circular prime because all rotations of the digits: 197, 971, and 719, are themselves prime.

@@ -34,16 +34,19 @@ public class Solver017 extends ProjectEulerSolver {
     // --- //
 
     private static long letterCount(long number) {
-        int k = (int) number, sum = 0;
+        int k = (int) number;
+        long sum = 0;
         if ( k / 1000 > 0 ) {
             sum += LOOKUP[k / 1000] + THOUSAND;
-            if ( ( k %= 1000 ) == 0 ) {
+            k %= 1000;
+            if ( k == 0 ) {
                 return sum - AND;
             }
         }
         if ( k / 100 > 0 ) {
             sum += LOOKUP[k / 100] + HUNDRED;
-            if ( ( k %= 100 ) == 0 ) {
+            k %= 100;
+            if ( k == 0 ) {
                 return sum - AND;
             }
         }

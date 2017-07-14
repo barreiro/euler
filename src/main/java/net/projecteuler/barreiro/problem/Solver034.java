@@ -31,7 +31,7 @@ public class Solver034 extends ProjectEulerSolver {
 
     // --- //
 
-    private long fastFactorialSum(long[] l) {
+    private long fastFactorialSum(long... l) {
         return stream( l ).map( d -> FACTORIAL_CACHE[(int) d] ).sum();
     }
 

@@ -43,7 +43,9 @@ public class Solver025 extends ProjectEulerSolver {
     // --- //
 
     public long solve() {
-        long[] previous = new long[(int) N], last = copyOf( toDigits( 1 ), (int) N ), current = copyOf( toDigits( 1 ), (int) N );
+        long[] previous = new long[(int) N];
+        long[] last = copyOf( toDigits( 1 ), (int) N );
+        long[] current = copyOf( toDigits( 1 ), (int) N );
 
         for ( long t = 3; ; t++ ) {
             long[] next = previous;

@@ -26,7 +26,8 @@ public final class Fibonacci {
      */
     public static LongStream fibonacciStream(Predicate<Long> predicate) {
         return lazyStream( new OfLong() {
-            private long previous = 0, last = 1;
+            private long previous = 0;
+            private long last = 1;
 
             public long nextLong() {
                 long result = previous + last;

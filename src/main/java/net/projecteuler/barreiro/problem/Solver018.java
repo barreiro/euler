@@ -82,18 +82,18 @@ public class Solver018 extends ProjectEulerSolver {
         }
     }
 
-    private Node<Integer> parse(String rawData) {
-        List<List<Node<Integer>>> data = new ArrayList<>();
+    private Node<Integer> parse(String rawData) throws IOException {
+        List<List<Node<Integer>>> parsedData = new ArrayList<>();
 
         // For each line read the numbers and add as children of the previous line
         try ( BufferedReader reader = new BufferedReader( new StringReader( rawData ) ) ) {
-            for ( String line = reader.readLine(); line != null; line = reader.readLine() ) {
+            for ( String line = reader.readLine(); line != null && parsedData.size() < N; line = reader.readLine() ) {
                 List<Node<Integer>> elements = new ArrayList<>();
                 for ( String elementStr : line.split( " " ) ) {
                     Node<Integer> element = new Node<>( valueOf( elementStr ) );
                     elements.add( element );
-                    if ( !data.isEmpty() ) {
-                        List<Node<Integer>> parentList = data.get( data.size() - 1 );
+                    if ( !parsedData.isEmpty() ) {
+                        List<Node<Integer>> parentList = parsedData.get( parsedData.size() - 1 );
                         if ( elements.size() > 1 ) {
                             parentList.get( elements.size() - 2 ).addChild( element );
                         }
@@ -102,15 +102,10 @@ public class Solver018 extends ProjectEulerSolver {
                         }
                     }
                 }
-                data.add( elements );
-                if ( data.size() == N ) {
-                    break;
-                }
+                parsedData.add( elements );
             }
-        } catch ( IOException e ) {
-            // Finish
         }
-        return data.get( 0 ).get( 0 );
+        return parsedData.get( 0 ).get( 0 );
     }
 
     // --- //
@@ -121,7 +116,11 @@ public class Solver018 extends ProjectEulerSolver {
     }
 
     public long solve() {
-        return bestSum( parse( data ) );
+        try {
+            return bestSum( parse( data ) );
+        } catch ( IOException e ) {
+            return 0;
+        }
     }
 
 }

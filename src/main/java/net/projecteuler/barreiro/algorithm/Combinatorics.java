@@ -3,12 +3,14 @@
 package net.projecteuler.barreiro.algorithm;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator.OfLong;
 import java.util.Set;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static java.lang.Math.min;
+import static java.lang.System.arraycopy;
 import static java.util.stream.IntStream.range;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.fromDigits;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow10;
@@ -29,18 +31,25 @@ public final class Combinatorics {
      * Method for calculation the combinations of a certain number of elements in a total number of places.
      * Uses recursion instead of the formula with factorials.
      *
-     * @param totalL  Number of places
-     * @param chooseL Number of elements
+     * @param total    Number of places
+     * @param elements Number of elements
      * @return The number of combinations
      */
-    public static long choose(long totalL, long chooseL) {
+    public static long choose(long total, long elements) {
         // Take full advantage of symmetry
-        int total = (int) totalL, choose = (int) min( chooseL, totalL - chooseL );
-        return choose < 0 ? 0 : choose == 0 ? 1 : choose( total, choose, new long[total + 1][choose + 1] );
+        int choose = (int) min( elements, total - elements );
+        if ( choose < 0 ) {
+            return 0;
+        }
+        if ( choose == 0 ) {
+            return 1;
+        }
+        return choose( (int) total, choose, new long[ (int) total + 1][choose + 1] );
     }
 
-    private static long choose(int total, int choose, long[][] cache) {
-        if ( ( choose = min( choose, total - choose ) ) == 1 ) {
+    private static long choose(int total, int elements, long[][] cache) {
+        int choose = min( elements, total - elements );
+        if ( choose == 1 ) {
             return total;
         }
         if ( cache[total][choose] != 0 ) {
@@ -101,7 +110,7 @@ public final class Combinatorics {
         private final long[] permutation;
         private long rotations;
 
-        private Rotator(long[] set) {
+        private Rotator(long... set) {
             this.permutation = new long[set.length];
             int index = 0;
             for ( long l : set ) {
@@ -114,8 +123,11 @@ public final class Combinatorics {
         }
 
         public long[] next() {
+            if( !hasNext() ) {
+                throw new NoSuchElementException();
+            }
             long swap = permutation[permutation.length - 1];
-            System.arraycopy( permutation, 0, permutation, 1, permutation.length - 1 );
+            arraycopy( permutation, 0, permutation, 1, permutation.length - 1 );
             permutation[0] = swap;
             rotations++;
             return permutation;
@@ -137,7 +149,8 @@ public final class Combinatorics {
     private static final class Permutator implements Iterator<long[]> {
         private final long[] set;
         private long[] permutation;
-        private boolean[] fixed, forward;
+        private boolean[] fixed;
+        private boolean[] forward;
 
         private Permutator(Set<Long> set) {
             this.set = new long[set.size()];
@@ -163,6 +176,9 @@ public final class Combinatorics {
          * Implementation of Steinhaus–Johnson–Trotter algorithm with Even's speedup
          */
         public long[] next() {
+            if( !hasNext() ) {
+                throw new NoSuchElementException();
+            }
             if ( permutation == null ) {
                 permutation = new long[set.length];
                 fixed = new boolean[set.length];
@@ -172,14 +188,14 @@ public final class Combinatorics {
                 return permutation.clone();
             }
             long max = -1;
-            int next, index = -1;
+            int index = -1;
             for ( int i = 0; i < permutation.length; i++ ) {
                 if ( !fixed[i] && permutation[i] > max ) {
                     max = permutation[i];
                     index = i;
                 }
             }
-            next = index + ( forward[index] ? 1 : -1 );
+            int next = index + ( forward[index] ? 1 : -1 );
             swap( permutation, index, next );
             swap( fixed, index, next );
             swap( forward, index, next );
@@ -239,12 +255,15 @@ public final class Combinatorics {
         private static long fromDigits(long[] digits, int from, int to) {
             long sum = 0;
             for ( int i = from; i < to; i++ ) {
-                sum += digits[i] * pow10( i - from );
+                sum += digits[i] * pow10( (long) i - from );
             }
             return sum;
         }
 
         public long[] next() {
+            if( !hasNext() ) {
+                throw new NoSuchElementException();
+            }
             long[] result = new long[pivot.length - 1];
             for ( int i = 0; i < pivot.length - 1; i++ ) {
                 result[i] = fromDigits( array, pivot[i], pivot[i + 1] );
@@ -295,9 +314,13 @@ public final class Combinatorics {
         }
 
         public long[] next() {
+            if( !hasNext() ) {
+                throw new NoSuchElementException();
+            }
             if ( !increase() && !rotate() ) {
                 expand();
             }
+            count++;
             return array.clone();
         }
 
@@ -327,7 +350,7 @@ public final class Combinatorics {
         }
 
         public boolean hasNext() {
-            return count++ < max;
+            return count < max;
         }
     }
 
@@ -366,14 +389,15 @@ public final class Combinatorics {
 
         private boolean increase() {
             int middle = array.length / 2;
-            if ( array[middle] < 9 ) {
-                array[middle]++;
-                if ( array.length % 2 == 0 ) {
-                    array[middle - 1]++;
-                }
-                return true;
+            if ( array[middle] >= 9 ) {
+                return false;
             }
-            return false;
+            if ( array.length % 2 == 0 ) {
+                array[middle - 1]++;
+            }
+            array[middle]++;
+            return true;
+            
         }
 
         private boolean rotate() {
@@ -391,10 +415,10 @@ public final class Combinatorics {
         }
 
         private void expand() {
-            long[] next = new long[array.length + 1];
-            next[0] = 1;
-            next[array.length] = 1;
-            array = next;
+            long[] nextArray = new long[array.length + 1];
+            nextArray[0] = 1;
+            nextArray[array.length] = 1;
+            array = nextArray;
         }
 
         public boolean hasNext() {

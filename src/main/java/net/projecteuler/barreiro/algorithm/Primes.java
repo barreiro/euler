@@ -39,13 +39,14 @@ public final class Primes {
     /**
      * Calculates the prime factors.
      *
-     * @param subject The number to calculate the factors
+     * @param l The number to calculate the factors
      * @return A map containing the factor and the power
      */
-    public static Map<Long, Long> primeFactors(long subject) {
+    public static Map<Long, Long> primeFactors(long l) {
         Map<Long, Long> factorMap = new HashMap<>();
         PrimeGenerator generator = new GeneratorTrialDivision();
-        long factor, ceiling = subject;
+        long factor;
+        long subject = l;
         do {
             factor = generator.nextPrime();
             long count = 0;
@@ -59,7 +60,7 @@ public final class Primes {
             if ( subject == 1 ) {
                 break;
             }
-        } while ( factor * factor < ceiling );
+        } while ( factor * factor < l );
         if ( ( subject >= factor ) || ( factorMap.isEmpty() ) ) {
             // If number is prime add itself
             factorMap.put( subject, 1L );
@@ -73,7 +74,7 @@ public final class Primes {
      * @return False if any of the digits not not allow all permutations to be prime
      */
     public static boolean testPrimePermutation(long n) {
-        return n < 9 || toDigitsStream( n ).allMatch( l -> l == 1 || l == 3 | l == 7 | l == 9 );
+        return n < 9 || toDigitsStream( n ).allMatch( l -> l == 1 || l == 3 || l == 7 || l == 9 );
     }
 
     /**
@@ -155,7 +156,9 @@ public final class Primes {
     }
 
     private static boolean millerRabinPass(long b, long n) {
-        long s = numberOfTrailingZeros( n - 1 ), d = ( n - 1 ) >> s, a = powerMod( b, d, n );
+        long s = numberOfTrailingZeros( n - 1 );
+        long d = ( n - 1 ) >> s;
+        long a = powerMod( b, d, n );
         if ( a == 1 ) {
             return true;
         }
@@ -194,14 +197,13 @@ public final class Primes {
                 primeCache.add( 3L );
                 return 3;
             }
-            long last = primeCache.getLast();
-            for ( long candidate = last % 2 == 0 ? last + 1 : last + 2; ; candidate += 2 ) {
+            for ( long candidate = primeCache.getLast() + 2; ; candidate += 2 ) {
                 for ( long prime : primeCache ) {
                     if ( candidate % prime == 0 ) {
                         break;
                     }
 
-                    if ( prime * prime > last ) {
+                    if ( prime * prime > primeCache.getLast() ) {
                         primeCache.add( candidate );
                         return candidate;
                     }

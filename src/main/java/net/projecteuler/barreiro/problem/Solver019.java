@@ -18,18 +18,13 @@ import static java.util.stream.LongStream.range;
  */
 public class Solver019 extends ProjectEulerSolver {
 
-    private static final long START_YEAR;
-    private static final long START_DAY;
+    // 1900 started on a monday, 1901 on a tuesday
+    private static final long START_YEAR = 1901;
+    private static final long START_DAY = 2;
 
     // Number of elapsed days in the first day of each month
     private static final long[] DAYS_COMMON = new long[]{0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
     private static final long[] DAYS_LEAP = new long[]{0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335};
-
-    static {
-        // 1900 started on a monday, 1901 on a tuesday
-        START_YEAR = 1901;
-        START_DAY = 2;
-    }
 
     public Solver019() {
         this( 100 );

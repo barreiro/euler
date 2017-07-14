@@ -4,19 +4,16 @@ package net.projecteuler.barreiro.algorithm.util;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.PrimitiveIterator;
 import java.util.PrimitiveIterator.OfLong;
 import java.util.Set;
-import java.util.Spliterator;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
+import static java.lang.Long.MIN_VALUE;
 import static java.util.Arrays.stream;
 import static java.util.Spliterator.IMMUTABLE;
 import static java.util.Spliterator.NONNULL;
-import static java.util.Spliterators.spliterator;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -87,7 +84,7 @@ public final class StreamUtils {
      * @return a List view
      */
     public static List<Long> longList(LongStream stream) {
-        return stream.mapToObj( Long::valueOf ).collect( toList() );
+        return stream.boxed().collect( toList() );
     }
 
     /**
@@ -96,7 +93,7 @@ public final class StreamUtils {
      * @return a Set view
      */
     public static Set<Long> longSet(LongStream stream) {
-        return stream.mapToObj( Long::valueOf ).collect( toSet() );
+        return stream.boxed().collect( toSet() );
     }
 
     /**
@@ -105,7 +102,7 @@ public final class StreamUtils {
      * @return a Set view
      */
     public static Set<Integer> intSet(IntStream stream) {
-        return stream.mapToObj( Integer::valueOf ).collect( toSet() );
+        return stream.boxed().collect( toSet() );
     }
 
     /**
@@ -134,7 +131,7 @@ public final class StreamUtils {
      * @return the highest value on the stream
      */
     public static long maxLong(Stream<Long> stream) {
-        return stream.mapToLong( Long::valueOf ).max().orElse( Long.MIN_VALUE );
+        return stream.mapToLong( Long::valueOf ).max().orElse( MIN_VALUE );
     }
 
     /**
@@ -143,7 +140,7 @@ public final class StreamUtils {
      * @return the highest value on the stream
      */
     public static long maxLong(LongStream stream) {
-        return stream.max().orElse( Long.MIN_VALUE );
+        return stream.max().orElse( MIN_VALUE );
     }
 
     /**
@@ -210,5 +207,4 @@ public final class StreamUtils {
     public static long letterSum(CharSequence charSequence) {
         return charSequence.chars().mapToLong( c -> c - 'A' + 1 ).sum();
     }
-
 }

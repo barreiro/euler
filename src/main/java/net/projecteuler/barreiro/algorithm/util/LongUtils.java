@@ -17,6 +17,9 @@ import static java.util.stream.IntStream.range;
  */
 public final class LongUtils {
 
+    /**
+     * Table for fast lookups of powers of 10
+     */
     private static final long[] POW10 = new long[]{
             1,
             10,
@@ -38,17 +41,13 @@ public final class LongUtils {
             100000000000000000L,
             1000000000000000000L
     };
+    
+    /**
+     * Default value used as base for the numeric system. Used in methods that make array-based calculations. Default to the decimal system.
+     */
+    private static final int DEFAULT_RADIX = 10;
 
     private LongUtils() {
-    }
-
-    /**
-     * Default value used as base for the numeric system. Used in methods that make array-based calculations.
-     *
-     * @return Decimal system
-     */
-    private static int defaultRadix() {
-        return 10;
     }
 
     /**
@@ -66,12 +65,14 @@ public final class LongUtils {
      * @return The greatest common divisor
      */
     public static long gcd(long a, long b) {
-        while ( b != 0 ) {
-            long n = a % b;
-            a = b;
-            b = n;
+        long one = a;
+        long two = b;
+        while ( two != 0 ) {
+            long remainder = one % two;
+            one = two;
+            two = remainder;
         }
-        return a;
+        return one;
     }
 
     /**
@@ -115,11 +116,17 @@ public final class LongUtils {
             return base * base;
         }
 
-        // Perform exp by squaring, although could resort to Math.pow( base, exp );
+        // Perform exp by squaring, although could resort to Math.pow( base, exp )
+        return squaring( base, exp );
+    }
+
+    private static long squaring(long base, long exp) {
         long result = 1;
-        for ( ; exp != 0; exp /= 2, base *= base ) {
-            if ( exp % 2 != 0 ) {
-                result *= base;
+        long squaringBase = base;
+        long squaringExp = exp;
+        for ( ; squaringExp != 0; squaringExp /= 2, squaringBase *= squaringBase ) {
+            if ( squaringExp % 2 != 0 ) {
+                result *= squaringBase;
             }
         }
         return result;
@@ -143,22 +150,24 @@ public final class LongUtils {
      * @return sqrt(value)
      */
     public static long intSqrt(long value) {
-        long result = 0, one = 1L << 30;
+        long result = 0;
+        long one = 1L << 30;
 
         // "one" starts at the highest power of four <= than the argument
         while ( one > value ) {
             one >>= 2;
         }
 
+        long approximation = value;
         for ( ; one != 0; result >>= 1, one >>= 2 ) {
-            if ( value >= result + one ) {
-                value = value - ( result + one );
-                result = result + one * 2;
+            if ( approximation >= result + one ) {
+                approximation -= result + one;
+                result = result + ( one << 1 );
             }
         }
 
         // Rounding to nearest integer
-        return value > result ? result + 1 : result;
+        return approximation > result ? result + 1 : result;
     }
 
     // --- //
@@ -213,7 +222,7 @@ public final class LongUtils {
      * @return An array with the digits that form the number, less significant first
      */
     public static long[] toDigits(long l) {
-        return toDigits( l, defaultRadix() );
+        return toDigits( l, DEFAULT_RADIX );
     }
 
     /**
@@ -223,10 +232,11 @@ public final class LongUtils {
      */
     public static long[] toDigits(long l, int radix) {
         List<Long> digits = new ArrayList<>();
-        for ( ; l >= radix; l /= radix ) {
-            digits.add( l % radix );
+        long value = l;
+        for ( ; value >= radix; value /= radix ) {
+            digits.add( value % radix );
         }
-        digits.add( l );
+        digits.add( value );
         return digits.stream().mapToLong( x -> x ).toArray();
     }
 
@@ -249,7 +259,7 @@ public final class LongUtils {
      * @return A long composed of the digits in the array
      */
     public static long fromDigits(long[] digits, int from, int to) {
-        return fromDigits( digits, from, to, defaultRadix() );
+        return fromDigits( digits, from, to, DEFAULT_RADIX );
     }
 
     /**
@@ -276,7 +286,7 @@ public final class LongUtils {
      * @return Result of the multiplication of a and b
      */
     public static long[] multiplication(long[] a, long[] b) {
-        return multiplication( a, b, defaultRadix() );
+        return multiplication( a, b, DEFAULT_RADIX );
     }
 
     /**
@@ -287,9 +297,10 @@ public final class LongUtils {
      */
     public static long[] multiplication(long[] a, long[] b, int radix) {
         long[] result = new long[a.length + b.length];
-        range( 0, a.length ).forEach( i -> range( 0, b.length ).forEach( j -> result[i + j] += a[i] * b[j] ) );
+        range( 0, a.length ).forEach( i -> range( 0, b.length ).forEach( j -> result[i + j] = result[i + j] + a[i] * b[j] ) );
 
-        for ( int carry = 0, i = 0; i < result.length; i++ ) {
+        long carry = 0;
+        for ( int i = 0; i < result.length; i++ ) {
             result[i] += carry;
             carry = (int) result[i] / radix;
             result[i] -= carry * radix;
@@ -304,7 +315,7 @@ public final class LongUtils {
      * @return Result of the sum of a and b
      */
     public static long[] addition(long[] a, long[] b, long[] result) {
-        return addition( a, b, result, defaultRadix() );
+        return addition( a, b, result, DEFAULT_RADIX );
     }
 
     /**
@@ -321,15 +332,16 @@ public final class LongUtils {
         long carry = 0;
         for ( int i = 0; i < result.length; i++ ) {
             result[i] += carry;
-            carry = (int) result[i] / radix;
+            carry = result[i] / radix;
             result[i] -= carry * radix;
         }
-        if ( carry != 0 ) {
-            // Expand the result as needed
-            result = copyOf( result, result.length + 1 );
-            result[result.length - 1] = carry;
+        if ( carry == 0 ) {
+            return result;
         }
-        return result;
+        // Expand the result as needed
+        long[] expanded = copyOf( result, result.length + 1 );
+        expanded[result.length] = carry;
+        return expanded;
     }
 
     // --- //
@@ -344,15 +356,15 @@ public final class LongUtils {
      */
     public static long powerMod(long base, long exp, long mod) {
         long result = 1;
-        base %= mod;
-        while ( exp > 0 ) {
-            if ( ( exp & 1 ) != 0 ) {
-                result = ( result * base ) % mod;
+        long b = base % mod;
+        long e = exp;
+        while ( e > 0 ) {
+            if ( ( e & 1 ) != 0 ) {
+                result = ( result * b ) % mod;
             }
-            exp >>= 1;
-            base = base * base % mod;
+            e >>= 1;
+            b = b * b % mod;
         }
         return result < 0 ? result + mod : result;
     }
-
 }

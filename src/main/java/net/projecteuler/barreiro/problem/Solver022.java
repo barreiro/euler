@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.nio.charset.Charset.defaultCharset;
 import static java.util.regex.Pattern.compile;
 import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 
@@ -24,6 +25,8 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.lazyStream;
 public class Solver022 extends ProjectEulerSolver {
 
     private final Scanner scanner;
+    
+    private long counter = 1;
 
     public Solver022() {
         this( 5163 );
@@ -31,7 +34,7 @@ public class Solver022 extends ProjectEulerSolver {
 
     public Solver022(long n) {
         super( n );
-        this.scanner = new Scanner( new BufferedInputStream( Solver022.class.getResourceAsStream( "problem022-data.txt" ) ) );
+        this.scanner = new Scanner( new BufferedInputStream( Solver022.class.getResourceAsStream( "problem022-data.txt" ) ), defaultCharset().name() );
     }
 
     public Solver022(long n, String data) {
@@ -41,22 +44,10 @@ public class Solver022 extends ProjectEulerSolver {
 
     // --- //
 
-    private static class Counter {
-
-        private long value = 1;
-
-        private long increment() {
-            return value++;
-        }
-
-    }
-
     public long solve() {
         Set<String> sortedNames = new TreeSet<>();
-        Counter c = new Counter();
 
         lazyStream( scanner.useDelimiter( compile( ",|\"" ) ) ).filter( s -> !s.isEmpty() ).forEach( sortedNames::add );
-        return sortedNames.stream().limit( N ).mapToLong( StreamUtils::letterSum ).reduce( 0, (l1, l2) -> l1 + l2 * c.increment() );
+        return sortedNames.stream().limit( N ).mapToLong( StreamUtils::letterSum ).reduce( 0, (l1, l2) -> l1 + l2 * counter++ );
     }
-
 }
