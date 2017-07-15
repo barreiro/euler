@@ -10,6 +10,7 @@ import static net.projecteuler.barreiro.algorithm.util.LongUtils.intSqrt;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.isPandigital;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow10;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
+import static net.projecteuler.barreiro.algorithm.util.StreamUtils.maxLong;
 
 /**
  * Take the number 192 and multiply it by each of 1, 2, and 3:
@@ -36,9 +37,9 @@ public class Solver038 extends ProjectEulerSolver {
 
     // --- //
 
-    // generate the natural product concatenation from every multiplier (within a sensible range) and check if it's a pandigital, then pick the biggest
+    // generate the natural product concatenation from every multiplier (within a sensible range) and check if it's a pandigital
     public long solve() {
-        return rangeClosed( intSqrt( N ), pow10( intSqrt( N ) + 1 ) ).mapToObj( n -> {
+        return maxLong( rangeClosed( intSqrt( N ), pow10( intSqrt( N ) + 1 ) ).mapToObj( n -> {
             long value = n;
             long[] digits = toDigits( value );
             while ( digits.length < N ) {
@@ -46,7 +47,6 @@ public class Solver038 extends ProjectEulerSolver {
                 digits = concatenation( digits, toDigits( value ) );
             }
             return digits;
-        } ).filter( d -> d.length == N && isPandigital( d ) ).mapToLong( LongUtils::fromDigits ).max().orElse( 0L );
+        } ).filter( d -> d.length == N && isPandigital( d ) ).mapToLong( LongUtils::fromDigits ) );
     }
-
 }

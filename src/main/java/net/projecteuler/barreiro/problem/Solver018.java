@@ -118,7 +118,8 @@ public class Solver018 extends ProjectEulerSolver {
     public long solve() {
         try {
             return bestSum( parse( data ) );
-        } catch ( IOException e ) {
+        }
+        catch ( IOException e ) {
             return 0;
         }
     }

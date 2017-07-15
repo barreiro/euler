@@ -44,7 +44,8 @@ public abstract class ProjectEulerSolver {
     public static void main(String... args) {
         if ( args.length == 0 ) {
             solveAll();
-        } else {
+        }
+        else {
             intStream( args ).forEachOrdered( ProjectEulerSolver::solveSingle );
         }
     }
@@ -75,13 +76,16 @@ public abstract class ProjectEulerSolver {
                     sleep( 100 );
                     long start = currentTimeMillis();
                     info( "Solution for problem %03d is %12d ( %3d ms )", number, solverInstance.solve(), currentTimeMillis() - start );
-                } else {
+                }
+                else {
                     info( "Solution for problem %03d is %12d", number, solverInstance.solve() );
                 }
             }
-        } catch ( ClassNotFoundException e ) {
+        }
+        catch ( ClassNotFoundException e ) {
             warn( "ERROR: No implementation found for problem %d", number );
-        } catch ( Exception e ) {
+        }
+        catch ( Exception e ) {
             warn( "ERROR: Exception during execution of problem %d: %s", number, e );
         }
     }

@@ -5,14 +5,8 @@ package net.projecteuler.barreiro.algorithm;
 import net.projecteuler.barreiro.algorithm.util.LongUtils;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.rangeClosed;
 import static java.util.stream.LongStream.range;
@@ -74,7 +68,7 @@ public class CombinatoricsTest {
 
     @Test
     public void partitionSmall() {
-        long [] natural = new long[] {1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002};
+        long[] natural = new long[]{1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002};
         for ( int i = 1; i < natural.length; i++ ) {
             Set<Integer> constrains = rangeClosed( 1, i ).boxed().collect( toSet() );
             assertEquals( natural[i], partition( i, constrains ) );
@@ -85,5 +79,4 @@ public class CombinatoricsTest {
     public void digitStreamEquivalence() {
         assertArrayEquals( range( 0, 100000 ).toArray(), digitStream( 0, 100000 ).mapToLong( LongUtils::fromDigits ).toArray() );
     }
-
 }
