@@ -2,10 +2,9 @@
 
 package net.projecteuler.barreiro.algorithm.util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.LongStream;
 
+import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
@@ -204,6 +203,21 @@ public final class LongUtils {
         return true;
     }
 
+    /**
+     * Tests if a given number is pandigital, i.e. it has all the digits one and only once
+     *
+     * @return true if number is pandigital
+     */
+    public static boolean isPandigital(long... digits) {
+        for ( long n = 1; n <= digits.length; n++ ) {
+            long digit = n;
+            if ( stream( digits ).noneMatch( d -> d == digit ) ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // --- //
 
     /**
@@ -231,13 +245,14 @@ public final class LongUtils {
      * @return An array with the digits that form the number, less significant first
      */
     public static long[] toDigits(long l, int radix) {
-        List<Long> digits = new ArrayList<>();
+        long[] digits = new long[20];
         long value = l;
+        int position = 0;
         for ( ; value >= radix; value /= radix ) {
-            digits.add( value % radix );
+            digits[position++] = value % radix;
         }
-        digits.add( value );
-        return digits.stream().mapToLong( x -> x ).toArray();
+        digits[position++] = value;
+        return copyOf( digits, position );
     }
 
     /**
@@ -276,6 +291,18 @@ public final class LongUtils {
         for ( int i = from; i < to; i++ ) {
             result += digits[i - from] * pow( radix, i );
         }
+        return result;
+    }
+
+    /**
+     * Concatenates two digits into a new one. First argument becomes more significant and second argument becomes less significant.
+     *
+     * @return New digit from the concatenation of both parameters
+     */
+    public static long[] concatenation(long[] digit1, long[] digit2) {
+        // due to the way digits are represented, we concatenate them backwards (2 first then 1)
+        long[] result = copyOf( digit2, digit2.length + digit1.length );
+        arraycopy( digit1, 0, result, digit2.length, digit1.length );
         return result;
     }
 

@@ -8,6 +8,7 @@ import static net.projecteuler.barreiro.algorithm.util.LongUtils.addition;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.fromDigits;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.gcd;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.isPalindrome;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.isPandigital;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.multiplication;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.powerMod;
@@ -38,6 +39,17 @@ public class LongUtilsTest {
         assertEquals( 16, pow( 2, 4 ) );
         assertEquals( 256, pow( 2, 8 ) );
         assertEquals( 10, pow( 10, 1 ) );
+    }
+
+    @Test
+    public void pandigital() {
+        assertFalse( isPandigital( toDigits( 15 ) ) );
+        assertTrue( isPandigital( toDigits( 21 ) ) );
+        assertFalse( isPandigital( toDigits( 15846 ) ) );
+        assertTrue( isPandigital( toDigits( 123456789)  ) );
+        assertTrue( isPandigital( toDigits( 987654321 ) ) );
+        assertTrue( isPandigital( toDigits( 192837465 ) ) );
+        assertFalse( isPandigital( toDigits( 504321 ) ) );
     }
 
     @Test
