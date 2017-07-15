@@ -4,15 +4,12 @@ package net.projecteuler.barreiro.problem;
 
 import net.projecteuler.barreiro.algorithm.util.LongUtils;
 
-import java.util.Comparator;
-import java.util.function.LongPredicate;
-
-import static java.util.Arrays.stream;
 import static java.util.stream.LongStream.rangeClosed;
-import static net.projecteuler.barreiro.algorithm.Combinatorics.partitionStream;
-import static net.projecteuler.barreiro.algorithm.Combinatorics.permutationStream;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.concatenation;
 import static net.projecteuler.barreiro.algorithm.util.LongUtils.intSqrt;
-import static net.projecteuler.barreiro.algorithm.util.StreamUtils.longSet;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.isPandigital;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.pow10;
+import static net.projecteuler.barreiro.algorithm.util.LongUtils.toDigits;
 
 /**
  * Take the number 192 and multiply it by each of 1, 2, and 3:
@@ -29,15 +26,6 @@ import static net.projecteuler.barreiro.algorithm.util.StreamUtils.longSet;
  */
 public class Solver038 extends ProjectEulerSolver {
 
-    private static final Comparator<long[]> REVERSE_COMPARATOR = (l1, l2) -> {
-        for ( int i = l1.length - 1; i >= 0; i-- ) {
-            if ( l1[i] != l2[i] ) {
-                return (int) ( l2[i] - l1[i] );
-            }
-        }
-        return 0;
-    };
-
     public Solver038() {
         this( 9 );
     }
@@ -48,17 +36,17 @@ public class Solver038 extends ProjectEulerSolver {
 
     // --- //
 
-    private boolean hasSameFactor(long... partition) {
-        LongPredicate reverseNatural = p -> rangeClosed( 1, partition.length ).allMatch( n -> partition[(int) n - 1] / p == partition.length - n + 1 );
-        return stream( partition ).filter( l -> stream( partition ).allMatch( p -> l != 0 && p % l == 0 && p / l < N ) ).anyMatch( reverseNatural );
-    }
-
-    private boolean solveSingle(long partitions, long... permutation) {
-        return partitionStream( permutation, (int) partitions ).filter( l -> stream( l ).allMatch( a -> a > 10 ) ).anyMatch( this::hasSameFactor );
-    }
-
-    // different approach: generate pandigital numbers, order them and then try to find a multiplier from one of the possible partitions
+    // generate the natural product concatenation from every multiplier (within a sensible range) and check if it's a pandigital, then pick the biggest
     public long solve() {
-        return permutationStream( longSet( rangeClosed( 1, N ) ) ).sorted( REVERSE_COMPARATOR ).filter( p -> rangeClosed( 2, intSqrt( N ) ).anyMatch( n -> solveSingle( n, p ) ) ).mapToLong( LongUtils::fromDigits ).findFirst().orElse( 0L );
+        return rangeClosed( intSqrt( N ), pow10( intSqrt( N ) + 1 ) ).mapToObj( n -> {
+            long value = n;
+            long[] digits = toDigits( value );
+            while ( digits.length < N ) {
+                value += n;
+                digits = concatenation( digits, toDigits( value ) );
+            }
+            return digits;
+        } ).filter( d -> d.length == N && isPandigital( d ) ).mapToLong( LongUtils::fromDigits ).max().orElse( 0L );
     }
+
 }
