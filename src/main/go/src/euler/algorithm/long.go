@@ -54,6 +54,46 @@ func IntSqrt(value int) int {
 	}
 }
 
+func Pow(base int, exp int) int {
+	if base == 0 {
+		if exp == 0 {
+			return 1
+		} else {
+			return 0
+		}
+	}
+	if base == 1 {
+		return base
+	}
+	if base == 2 {
+		return 1 << uint(exp)
+	}
+	if base == 10 {
+		return Pow10(exp)
+	}
+
+	if exp == 0 {
+		return 1
+	}
+	if exp == 1 {
+		return base
+	}
+	if exp == 2 {
+		return base * base
+	}
+	return squaring(base, exp);
+}
+
+func squaring(base int, exp int) int {
+	result, squaringBase, squaringExp := 1, base, exp
+	for ; squaringExp != 0; squaringExp, squaringBase = squaringExp/2, squaringBase*squaringBase {
+		if squaringExp%2 != 0 {
+			result *= squaringBase
+		}
+	}
+	return result
+}
+
 // Convenience method to calculate the power when in base 10.
 func Pow10(exp int) int {
 	if exp < len(POW10) {
@@ -90,4 +130,14 @@ func toDigitsRadix(value int, radix int) []int {
 		digits = append(digits, value%radix)
 	}
 	return append(digits, value)
+}
+
+// ---
+
+func Max(a int, b int) int {
+	if a >= b {
+		return a
+	} else {
+		return b
+	}
 }

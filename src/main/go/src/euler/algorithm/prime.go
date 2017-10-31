@@ -4,30 +4,27 @@ package algorithm
 
 // Calculates the prime factors
 func PrimeFactors(n int) map[int]int {
-	m := make(map[int]int)
-	generator := generatorTrialDivision()
-	subject := n
-	stop := IntSqrt(n)
+	factorMap, generator, stop := make(map[int]int), GeneratorTrialDivision(), IntSqrt(n)
 
-	for subject != 1 {
+	for n != 1 {
 		factor := generator()
-		for ; subject%factor == 0; subject /= factor {
-			m[factor]++
+		for ; n%factor == 0; n /= factor {
+			factorMap[factor]++
 		}
 
-		if factor > stop {
+		if factor >= stop {
 			// if the number is prime, or if there is still a remainder, add itself as a factor
-			if subject >= factor || len(m) == 0 {
-				m[subject] = 1
+			if n >= factor || len(factorMap) == 0 {
+				factorMap[n] = 1
 			}
 			break
 		}
 	}
-	return m
+	return factorMap
 }
 
 // closure that generates primes based on the method of trial division
-func generatorTrialDivision() func() int {
+func GeneratorTrialDivision() func() int {
 
 	var cache []int
 

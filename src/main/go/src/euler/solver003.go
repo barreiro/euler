@@ -15,11 +15,11 @@ func Solver003() int {
 }
 
 func solver003(N int) int {
-	return max(algorithm.PrimeFactors(N))
+	return maxFactor(algorithm.PrimeFactors(N))
 }
 
 // biggest value present on a map
-func max(factors map[int]int) int {
+func maxFactor(factors map[int]int) int {
 	max := math.MinInt64
 	for f := range factors {
 		if f > max {

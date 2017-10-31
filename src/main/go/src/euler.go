@@ -19,8 +19,14 @@ func singleProblem(n int, a interface{}) {
 // --- //
 
 func main() {
-	singleProblem(001, euler.Solver001())
-	singleProblem(002, euler.Solver002())
-	singleProblem(003, euler.Solver003())
-	singleProblem(004, euler.Solver004())
+	singleProblem(1, euler.Solver001())
+	singleProblem(2, euler.Solver002())
+	singleProblem(3, euler.Solver003())
+	singleProblem(4, euler.Solver004())
+	singleProblem(5, euler.Solver005())
+	singleProblem(6, euler.Solver006())
+	singleProblem(7, euler.Solver007())
+	singleProblem(8, euler.Solver008())
+	singleProblem(9, euler.Solver009())
+	singleProblem(10, euler.Solver010())
 }

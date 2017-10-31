@@ -45,3 +45,51 @@ func TestSolver004(t *testing.T) {
 	assert(t, solver004(2), 9009)
 	assert(t, solver004(4), 99000099)
 }
+
+func TestSolver005(t *testing.T) {
+	assert(t, Solver005(), 232792560)
+
+	assert(t, solver005(6), 60)
+	assert(t, solver005(10), 2520)
+	assert(t, solver005(20), 232792560)
+	assert(t, solver005(40), 5342931457063200)
+}
+
+func TestSolver006(t *testing.T) {
+	assert(t, Solver006(), 25164150)
+
+	assert(t, solver006(5), 170)
+	assert(t, solver006(10), 2640)
+	assert(t, solver006(200), 401323300)
+}
+
+func TestSolver007(t *testing.T) {
+	assert(t, Solver007(), 104743)
+
+	assert(t, solver007(1), 2)
+	assert(t, solver007(6), 13)
+	assert(t, solver007(100000), 1299709)
+}
+
+func TestSolver008(t *testing.T) {
+	assert(t, Solver008(), 23514624000)
+
+	assert(t, solver008(1), 9)
+	assert(t, solver008(4), 5832)
+	assert(t, solver008(20), 240789749760000)
+}
+
+func TestSolver009(t *testing.T) {
+	assert(t, Solver009(), 31875000)
+
+	assert(t, solver009(12), 60)
+	assert(t, solver009(20000), 265387500000)
+}
+
+func TestSolver010(t *testing.T) {
+	assert(t, Solver010(), 142913828922)
+
+	assert(t, solver010(5), 5)
+	assert(t, solver010(10), 17)
+	assert(t, solver010(1000000), 37550402023)
+}
