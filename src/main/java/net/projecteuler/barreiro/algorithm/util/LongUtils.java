@@ -40,7 +40,7 @@ public final class LongUtils {
             100000000000000000L,
             1000000000000000000L
     };
-    
+
     /**
      * Default value used as base for the numeric system. Used in methods that make array-based calculations. Default to the decimal system.
      */
@@ -245,7 +245,7 @@ public final class LongUtils {
      * @return An array with the digits that form the number, less significant first
      */
     public static long[] toDigits(long l, int radix) {
-        long[] digits = new long[20];
+        long[] digits = new long[32 / (int) intSqrt( radix )];
         long value = l;
         int position = 0;
         for ( ; value >= radix; value /= radix ) {

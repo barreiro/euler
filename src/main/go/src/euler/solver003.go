@@ -3,7 +3,7 @@
 package euler
 
 import (
-	"euler/algoritm"
+	"euler/algorithm"
 	"math"
 )
 
@@ -15,7 +15,7 @@ func Solver003() int {
 }
 
 func solver003(N int) int {
-	return max(algoritm.PrimeFactors(N))
+	return max(algorithm.PrimeFactors(N))
 }
 
 // biggest value present on a map

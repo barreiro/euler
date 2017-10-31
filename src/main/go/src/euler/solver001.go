@@ -14,11 +14,11 @@ func Solver001() int {
 func solver001(N int) int {
 	sum := 0
 	for i := 0; i < len(factors); i++ {
-		sum += contribution(N, factors[i])
+		sum += contribution(N - 1, factors[i])
 
 		// remove the numbers that are appear twice as they are multiple of more than one factor
 		for j := i + 1; j < len(factors); j++ {
-			sum -= contribution(N, factors[i]*factors[j])
+			sum -= contribution(N - 1, factors[i]*factors[j])
 		}
 	}
 	return sum
@@ -26,6 +26,6 @@ func solver001(N int) int {
 
 func contribution(N int, f int) int {
 	// count the number of existing factors and then multiply it by the arithmetic progression to find the sum
-	count := (N - 1) / f
+	count := N / f
 	return f * count * (count + 1) / 2
 }

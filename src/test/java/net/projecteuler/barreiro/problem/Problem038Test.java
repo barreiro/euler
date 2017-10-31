@@ -28,11 +28,21 @@ public class Problem038Test extends ProjectEulerAbstractTest {
 
     @Test
     public void minimal() {
-        assertEquals( 0, new Solver038( 7 ).solve() );
+        assertEquals( Long.MIN_VALUE, new Solver038( 7 ).solve() );
     }
 
     @Test
     public void small() {
         assertEquals( 78156234, new Solver038( 8 ).solve() );
+    }
+
+    @Test
+    public void big() {
+        assertEquals( Long.MIN_VALUE, new Solver038( 10 ).solve() );
+    }
+
+    @Test
+    public void huge() {
+        assertEquals( Long.MIN_VALUE, new Solver038( 15 ).solve() );
     }
 }

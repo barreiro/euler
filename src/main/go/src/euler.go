@@ -16,10 +16,11 @@ func singleProblem(n int, a interface{}) {
 	fmt.Printf("Solution for problem %03d is %12d ( took %6d ns )\n", n, result, elapsed)
 }
 
-// ---
+// --- //
 
 func main() {
 	singleProblem(001, euler.Solver001())
 	singleProblem(002, euler.Solver002())
 	singleProblem(003, euler.Solver003())
+	singleProblem(004, euler.Solver004())
 }

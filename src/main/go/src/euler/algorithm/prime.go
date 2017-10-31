@@ -1,6 +1,6 @@
 // COPYRIGHT (C) 2014 barreiro. All Rights Reserved.
 // GoLang helper for Project Euler problems
-package algoritm
+package algorithm
 
 // Calculates the prime factors
 func PrimeFactors(n int) map[int]int {

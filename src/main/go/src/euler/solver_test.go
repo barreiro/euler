@@ -4,7 +4,7 @@ package euler
 
 import "testing"
 
-func test(t *testing.T, actual int, expected int) {
+func assert(t *testing.T, actual int, expected int) {
 	if expected != actual {
 		t.Fatal(t.Name(), "Expected:", expected, "Actual:", actual)
 	}
@@ -14,26 +14,34 @@ func test(t *testing.T, actual int, expected int) {
 // ---
 
 func TestSolver001(t *testing.T) {
-	test(t, Solver001(), 233168)
+	assert(t, Solver001(), 233168)
 
-	test(t, solver001(6), 8)
-	test(t, solver001(7), 14)
-	test(t, solver001(10), 23)
-	test(t, solver001(30), 195)
-	test(t, solver001(1000000000), 233333333166666668)
+	assert(t, solver001(6), 8)
+	assert(t, solver001(7), 14)
+	assert(t, solver001(10), 23)
+	assert(t, solver001(30), 195)
+	assert(t, solver001(1000000000), 233333333166666668)
 }
 
 func TestSolver002(t *testing.T) {
-	test(t, Solver002(), 4613732)
+	assert(t, Solver002(), 4613732)
 
-	test(t, solver002(100), 44)
-	test(t, solver002(1000000000000), 478361013020)
+	assert(t, solver002(100), 44)
+	assert(t, solver002(1000000000000), 478361013020)
 }
 
 func TestSolver003(t *testing.T) {
-	test(t, Solver003(), 6857)
+	assert(t, Solver003(), 6857)
 
-	test(t, solver003(12), 3)
-	test(t, solver003(13195), 29)
-	test(t, solver003(1000000000031), 85302397)
+	assert(t, solver003(12), 3)
+	assert(t, solver003(13195), 29)
+	assert(t, solver003(1000000000031), 85302397)
+}
+
+func TestSolver004(t *testing.T) {
+	assert(t, Solver004(), 906609)
+
+	assert(t, solver004(1), 9)
+	assert(t, solver004(2), 9009)
+	assert(t, solver004(4), 99000099)
 }
