@@ -2,6 +2,8 @@
 // GoLang helper for Project Euler problems
 package algorithm
 
+import "math"
+
 // Default value used as base for the numeric system. Used in methods that make array-based calculations. Default to the decimal system.
 var DEFAULTRADIX = 10
 
@@ -141,3 +143,14 @@ func Max(a int, b int) int {
 		return b
 	}
 }
+
+func MaxArray(a ...int) int {
+	max := math.MinInt64
+	for _, i := range a {
+		if i > max {
+			max = i
+		}
+	}
+	return max
+}
+
