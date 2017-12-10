@@ -33,4 +33,5 @@ func main() {
 	singleProblem(10, euler.Solver010())
 	singleProblem(11, euler.Solver011())
 	singleProblem(12, euler.Solver012())
+	singleProblem(13, euler.Solver013())
 }
