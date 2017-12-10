@@ -32,8 +32,7 @@ var POW10 = []int{
 
 // Calculates an approximate of the square root
 func IntSqrt(value int) int {
-	result := 0
-	one := 1 << 30
+	result, one := 0, 1<<30
 
 	// "one" starts at the highest power of four <= than the argument
 	for one > value {
@@ -153,4 +152,3 @@ func MaxArray(a ...int) int {
 	}
 	return max
 }
-

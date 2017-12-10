@@ -10,3 +10,19 @@ func HasFactorBelow(value int, roof int) bool {
 	}
 	return false
 }
+
+func NumberOfFactors(value int) int {
+	factors, ceiling := 0, IntSqrt(value)
+	for i := 1; i <= ceiling; i++ {
+		if value%i == 0 {
+			factors += 2
+		}
+	}
+
+	// We need to adjust the number of divisors if the number is a perfect square
+	if ceiling*ceiling == value {
+		return factors - 1
+	} else {
+		return factors
+	}
+}

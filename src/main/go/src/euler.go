@@ -5,6 +5,7 @@ package main
 import (
 	"euler"
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -14,6 +15,7 @@ func singleProblem(n int, a interface{}) {
 	elapsed := time.Since(start)
 
 	fmt.Printf("Solution for problem %03d is %12d ( took %6d ns )\n", n, result, elapsed)
+	os.Stdout.Sync()
 }
 
 // --- //
@@ -30,4 +32,5 @@ func main() {
 	singleProblem(9, euler.Solver009())
 	singleProblem(10, euler.Solver010())
 	singleProblem(11, euler.Solver011())
+	singleProblem(12, euler.Solver012())
 }
