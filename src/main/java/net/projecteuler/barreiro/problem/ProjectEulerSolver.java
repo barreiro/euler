@@ -5,9 +5,9 @@ package net.projecteuler.barreiro.problem;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Class.forName;
 import static java.lang.String.format;
-import static java.lang.System.currentTimeMillis;
 import static java.lang.System.gc;
 import static java.lang.System.getProperty;
+import static java.lang.System.nanoTime;
 import static java.lang.System.out;
 import static java.lang.Thread.sleep;
 import static java.util.stream.IntStream.rangeClosed;
@@ -71,11 +71,11 @@ public abstract class ProjectEulerSolver {
             String solverClassName = format( "%s.Solver%03d", ProjectEulerSolver.class.getPackage().getName(), number );
             ProjectEulerSolver solverInstance = ProjectEulerSolver.class.cast( forName( solverClassName ).newInstance() );
             if ( solverInstance != null ) {
-                if ( parseBoolean( getProperty( "euler.traceExecutionTime", "false" ) ) ) {
+                if ( parseBoolean( getProperty( "euler.traceExecutionTime", "true" ) ) ) {
                     gc();
                     sleep( 100 );
-                    long start = currentTimeMillis();
-                    info( "Solution for problem %03d is %12d ( %3d ms )", number, solverInstance.solve(), currentTimeMillis() - start );
+                    long start = nanoTime();
+                    info( "Solution for problem %03d is %12d ( took %9.3f ms )", number, solverInstance.solve(), ( nanoTime() - start ) / 1000000.0 );
                 }
                 else {
                     info( "Solution for problem %03d is %12d", number, solverInstance.solve() );

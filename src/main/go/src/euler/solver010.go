@@ -15,7 +15,7 @@ func Solver010() int {
 
 func solver010(N int) int {
 	sum, generator := 0, algorithm.GeneratorTrialDivision()
-	for prime := 0; prime < N ; prime = generator() {
+	for prime := 0; prime < N; prime = generator() {
 		sum += prime
 	}
 	return sum

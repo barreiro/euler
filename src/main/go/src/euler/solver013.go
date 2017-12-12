@@ -9,7 +9,7 @@ import (
 
 // Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
 
-var Input13 = []string{
+var input013 = []string{
 	"37107287533902102798797998220837590246510135740250",
 	"46376937677490009712648124896970078050417018260538",
 	"74324986199524741059474233309513058123726617309629",
@@ -117,7 +117,7 @@ func Solver013() int {
 
 func solver013(N int) int {
 	sum := 0
-	for _, s := range Input13 {
+	for _, s := range input013 {
 		if i, err := strconv.Atoi(s[:N+1]); err == nil {
 			sum += i
 		}

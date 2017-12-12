@@ -122,3 +122,11 @@ func TestSolver013(t *testing.T) {
 	assert(t, solver013(5), 55373)
 	assert(t, solver013(15), 553737623039087)
 }
+
+func TestSolver014(t *testing.T) {
+	assert(t, Solver014(), 837799)
+
+	assert(t, solver014(5), 3)
+	assert(t, solver014(100), 97)
+	assert(t, solver014(5000000), 3732423)
+}

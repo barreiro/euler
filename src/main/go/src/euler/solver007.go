@@ -13,7 +13,7 @@ func Solver007() int {
 
 func solver007(N int) int {
 	prime, generator := 0, algorithm.GeneratorTrialDivision()
-	for i:= 1; i <= N; i++ {
+	for i := 1; i <= N; i++ {
 		prime = generator()
 	}
 	return prime

@@ -2,7 +2,7 @@
 // GoLang solvers for Project Euler problems
 package euler
 
-var factors = []int{3, 5}
+var input001 = []int{3, 5}
 
 // If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
 // Find the sum of all the multiples of 3 or 5 below 1000.
@@ -13,12 +13,12 @@ func Solver001() int {
 
 func solver001(N int) int {
 	sum := 0
-	for i := 0; i < len(factors); i++ {
-		sum += contribution(N - 1, factors[i])
+	for i := 0; i < len(input001); i++ {
+		sum += contribution(N-1, input001[i])
 
 		// remove the numbers that are appear twice as they are multiple of more than one factor
-		for j := i + 1; j < len(factors); j++ {
-			sum -= contribution(N - 1, factors[i]*factors[j])
+		for j := i + 1; j < len(input001); j++ {
+			sum -= contribution(N-1, input001[i]*input001[j])
 		}
 	}
 	return sum
@@ -26,6 +26,5 @@ func solver001(N int) int {
 
 func contribution(N int, f int) int {
 	// count the number of existing factors and then multiply it by the arithmetic progression to find the sum
-	count := N / f
-	return f * count * (count + 1) / 2
+	return f * (N / f) * ( (N / f) + 1) / 2
 }
