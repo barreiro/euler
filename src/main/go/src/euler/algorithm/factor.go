@@ -20,7 +20,7 @@ func NumberOfFactors(value int) int {
 	}
 
 	// We need to adjust the number of divisors if the number is a perfect square
-	if ceiling*ceiling == value {
+	if Square(ceiling) == value {
 		return factors - 1
 	} else {
 		return factors

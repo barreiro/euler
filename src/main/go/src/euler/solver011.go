@@ -47,10 +47,7 @@ func solver011(N int) int {
 		for m := 0; m < len(intGrid[n])-N; m++ {
 			row, column, diagA, diagB := 1, 1, 1, 1
 			for i := 0; i < N; i++ {
-				row *= intGrid[n][m+i]
-				column *= intGrid[n+i][m]
-				diagA *= intGrid[n+i][m+i]
-				diagB *= intGrid[n+i][m+N-i]
+				row, column, diagA, diagB = row*intGrid[n][m+i], column*intGrid[n+i][m], diagA*intGrid[n+i][m+i], diagB*intGrid[n+i][m+N-i]
 			}
 			max = algorithm.Max(max, algorithm.MaxArray(row, column, diagA, diagB))
 		}

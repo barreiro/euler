@@ -17,11 +17,10 @@ func Solver009() int {
 }
 
 func solver009(N int) int {
-	// Solved with Euclides Formula --- a=m^2-n^2 --- b=2nm --- c=m^2+n^2 --- with m>n
+	// solved with Euclides Formula --- a=m^2-n^2 --- b=2nm --- c=m^2+n^2 --- with m>n
 	for m := 2; m < algorithm.IntSqrt(N); m++ {
 		for n := 1; n < m; n++ {
-			a, b, c := m*m-n*n, 2*m*n, m*m+n*n
-			if a+b+c == N {
+			if a, b, c := m*m-n*n, 2*m*n, m*m+n*n; a+b+c == N {
 				return a * b * c
 			}
 		}

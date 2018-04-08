@@ -12,7 +12,7 @@ func Solver004() int {
 }
 
 func solver004(N int) int {
-	for l := algorithm.Pow10(N) * algorithm.Pow10(N); ; l-- {
+	for l := algorithm.Square(algorithm.Pow10(N)); ; l-- {
 		if algorithm.IsPalindrome(l) && algorithm.HasFactorBelow(l, algorithm.Pow10(N)) {
 			return l
 		}

@@ -141,3 +141,29 @@ func TestSolver015(t *testing.T) {
 	assert(t, solver015(10), 184756)
 	assert(t, solver015(30), 118264581564861424)
 }
+
+func TestSolver016(t *testing.T) {
+	assert(t, Solver016(), 1366)
+
+	assert(t, solver016(0), 1)
+	assert(t, solver016(1), 2)
+	assert(t, solver016(4), 7)
+	assert(t, solver016(8), 13)
+	assert(t, solver016(10), 7)
+	assert(t, solver016(33), 62)
+	assert(t, solver016(65), 86)
+	assert(t, solver016(100), 115)
+	assert(t, solver016(200), 256)
+	assert(t, solver016(500), 679)
+	assert(t, solver016(10000), 13561)
+}
+
+func TestSolver017(t *testing.T) {
+	assert(t, Solver017(), 21124)
+
+	assert(t, solver017(5), 19)
+	assert(t, solver017(19), 106)
+	assert(t, solver017(19999), 737203)
+
+	// for a more comprehensive set of tests on the algorithm, check the java version
+}

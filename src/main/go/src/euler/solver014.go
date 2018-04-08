@@ -17,30 +17,40 @@ func Solver014() int {
 }
 
 func solver014(N int) int {
-	cache, max, i := make([]int, N), 1, 2
-	for cache[1] = 1; i < N; i++ {
-		if collatzLength(i, cache) > cache[max] {
-			max = i
+	collatzGenerator, maxLength, max := collatzLengthGen(N), 1, 1
+	for i := max; i < N; i++ {
+		if length := collatzGenerator(i); length > maxLength {
+			maxLength, max = length, i
 		}
 	}
 	return max
 }
 
-func collatzLength(i int, cache []int) int {
-	// Can't rely on the cache for everything but in many cases we can cut lots of recursion
-	if i < len(cache) {
-		if cache[i] == 0 {
-			cache[i] = rawCollatzLength(i, cache)
-		}
-		return cache[i]
-	}
-	return rawCollatzLength(i, cache)
-}
+// closure that memorizes calls up to a certain capacity
+func collatzLengthGen(capacity int) func(int) int {
 
-func rawCollatzLength(i int, cache []int) int {
-	if i%2 == 0 {
-		return collatzLength(i/2, cache) + 1
-	} else {
-		return collatzLength(3*i+1, cache) + 1
+	var memoized func(int) int
+
+	cache, collatz := make([]int, capacity), func(i int) int {
+		if i == 1 {
+			return 1
+		} else if i%2 == 0 {
+			return memoized(i/2) + 1
+		} else {
+			return memoized(3*i+1) + 1
+		}
 	}
+
+	memoized = func(i int) int {
+		// can't rely on the cache for everything but in many cases we can cut lots of recursion
+		if i < len(cache) {
+			if cache[i] == 0 {
+				cache[i] = collatz(i)
+			}
+			return cache[i]
+		}
+		return collatz(i)
+	}
+
+	return memoized
 }

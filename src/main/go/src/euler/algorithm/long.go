@@ -56,12 +56,11 @@ func IntSqrt(value int) int {
 }
 
 func Pow(base int, exp int) int {
+	if base == 0 && exp == 0 {
+		return 1
+	}
 	if base == 0 {
-		if exp == 0 {
-			return 1
-		} else {
-			return 0
-		}
+		return 0
 	}
 	if base == 1 {
 		return base
@@ -82,17 +81,21 @@ func Pow(base int, exp int) int {
 	if exp == 2 {
 		return base * base
 	}
-	return squaring(base, exp);
+	return squaring(base, exp)
 }
 
 func squaring(base int, exp int) int {
-	result, squaringBase, squaringExp := 1, base, exp
-	for ; squaringExp != 0; squaringExp, squaringBase = squaringExp/2, squaringBase*squaringBase {
-		if squaringExp%2 != 0 {
-			result *= squaringBase
+	result := 1
+	for sqrBase, sqrExp := base, exp; sqrExp != 0; sqrExp, sqrBase = sqrExp/2, sqrBase*sqrBase {
+		if sqrExp%2 != 0 {
+			result *= sqrBase
 		}
 	}
 	return result
+}
+
+func Square(base int) int {
+	return base * base
 }
 
 // Convenience method to calculate the power when in base 10.
