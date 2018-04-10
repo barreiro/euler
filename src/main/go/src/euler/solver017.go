@@ -6,6 +6,12 @@ package euler
 // If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?
 // NOTE: Do not count spaces or hyphens.
 
+// number of letters for zero (0), one, two [...] nineteen and zero (0), ten, twenty [...] ninety
+var lookupOnes, lookupTens = [20]int{0, 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, 6, 6, 8, 8, 7, 7, 9, 8, 8}, [10]int{0, 3, 6, 6, 5, 5, 5, 7, 6, 6}
+
+// number of letters for 'and' 'thousand and' and 'hundred and'
+const andCount, thousandCount, hundredCount = len("and"), andCount + len("thousand"), andCount + len("hundred")
+
 func Solver017() int {
 	return solver017(1000)
 }
@@ -19,24 +25,20 @@ func solver017(N int) int {
 }
 
 func letterCount(i int) int {
-	// number of letters for zero (0), one, two [...] nineteen and zero (0), ten, twenty [...] ninety
-	LOOKUP1, LOOKUP10 := [20]int{0, 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, 6, 6, 8, 8, 7, 7, 9, 8, 8}, [10]int{0, 3, 6, 6, 5, 5, 5, 7, 6, 6}
-	// number of letters for 'thousand and' 'hundred and' and 'and'
-	THOUSAND, HUNDRED, AND, sum := 11, 10, 3, 0
-
-	// the number of letters of the thousands, then the hundreds, and finally lookup tens and ones
+	// the number of letters of the thousands, then the hundreds, and finally lookupOnes tens and ones
+	sum := 0
 	if thousand := i / 1000; thousand > 0 {
-		sum += LOOKUP1[thousand] + THOUSAND
+		sum += lookupOnes[thousand] + thousandCount
 	}
 	if hundred := i % 1000 / 100; hundred > 0 {
-		sum += LOOKUP1[hundred] + HUNDRED
+		sum += lookupOnes[hundred] + hundredCount
 	}
 
 	if ten, one := i%100/10, i%10; ten == 0 && one == 0 {
-		return sum - AND
+		return sum - andCount
 	} else if ten > 1 {
-		return sum + LOOKUP10[ten] + LOOKUP1[one]
+		return sum + lookupTens[ten] + lookupOnes[one]
 	} else {
-		return sum + LOOKUP1[i%100]
+		return sum + lookupOnes[i%100]
 	}
 }

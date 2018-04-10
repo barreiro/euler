@@ -14,11 +14,9 @@ func singleProblem(n int, solver func() int) {
 	runtime.GC()
 	time.Sleep(100)
 
-	start := time.Now()
-	result := solver()
-	elapsed := float64(time.Since(start))
+	start, result := time.Now(), solver()
 
-	fmt.Printf("Solution for problem %03d is %12d ( took %9.3f ms )\n", n, result, elapsed / 1000000)
+	fmt.Printf("Solution for problem %03d is %12d ( took %9.3f ms )\n", n, result, float64(time.Since(start)) / 1000000)
 	os.Stdout.Sync()
 }
 
@@ -41,5 +39,7 @@ func main() {
 	singleProblem(14, euler.Solver014)
 	singleProblem(15, euler.Solver015)
 	singleProblem(16, euler.Solver016)
-	singleProblem(17, euler.Solver016)
+	singleProblem(17, euler.Solver017)
+	singleProblem(18, euler.Solver018)
+	singleProblem(19, euler.Solver019)
 }

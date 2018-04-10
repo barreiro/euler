@@ -30,7 +30,7 @@ var POW10 = []int{
 	1000000000000000000,
 }
 
-// Calculates an approximate of the square root
+// calculates an approximate of the square root
 func IntSqrt(value int) int {
 	result, one := 0, 1<<30
 
@@ -53,6 +53,11 @@ func IntSqrt(value int) int {
 	} else {
 		return result
 	}
+}
+
+// the sum of all the numbers up to value
+func ArithmeticSum(value int) int {
+	return value * (value + 1) / 2
 }
 
 func Pow(base int, exp int) int {
@@ -107,7 +112,7 @@ func Pow10(exp int) int {
 	}
 }
 
-// ---
+// --- //
 
 func IsPalindrome(value int) bool {
 	return isPalindromeDigits(ToDigits(value))
@@ -122,7 +127,7 @@ func isPalindromeDigits(digits []int) bool {
 	return true
 }
 
-// ---
+// --- //
 
 func ToDigits(value int) []int {
 	return toDigitsRadix(value, DEFAULTRADIX)
@@ -136,7 +141,7 @@ func toDigitsRadix(value int, radix int) []int {
 	return append(digits, value)
 }
 
-// ---
+// --- //
 
 func Min(a int, b int) int {
 	if a <= b {

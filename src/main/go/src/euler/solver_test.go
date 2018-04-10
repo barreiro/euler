@@ -11,6 +11,20 @@ func assert(t *testing.T, actual int, expected int) {
 	t.Log(t.Name(), "Expected:", expected)
 }
 
+func assertTrue(t *testing.T, expected bool) {
+	if !expected {
+		t.Fatal(t.Name(), "Expected:", !expected, "Actual:", expected)
+	}
+	t.Log(t.Name(), "Expected:", expected)
+}
+
+func assertFalse(t *testing.T, expected bool) {
+	if expected {
+		t.Fatal(t.Name(), "Expected:", !expected, "Actual:", expected)
+	}
+	t.Log(t.Name(), "Expected:", expected)
+}
+
 // ---
 
 func TestSolver001(t *testing.T) {
@@ -82,6 +96,7 @@ func TestSolver008(t *testing.T) {
 func TestSolver009(t *testing.T) {
 	assert(t, Solver009(), 31875000)
 
+	assert(t, solver009(10), 0)
 	assert(t, solver009(12), 60)
 	assert(t, solver009(20000), 265387500000)
 }
@@ -109,6 +124,7 @@ func TestSolver012(t *testing.T) {
 
 	assert(t, solver012(4), 6)
 	assert(t, solver012(5), 28)
+	assert(t, solver012(10), 120)
 	assert(t, solver012(100), 73920)
 }
 
@@ -166,4 +182,28 @@ func TestSolver017(t *testing.T) {
 	assert(t, solver017(19999), 737203)
 
 	// for a more comprehensive set of tests on the algorithm, check the java version
+}
+
+func TestSolver018(t *testing.T) {
+	assert(t, Solver018(), 1074)
+
+	assert(t, solver018(1), 75)
+	assert(t, solver018(2), 170)
+	assert(t, solver018(10), 696)
+}
+
+func TestSolver019(t *testing.T) {
+	assert(t, Solver019(), 171)
+
+	assert(t, solver019(1), 2)
+	assert(t, solver019(2), 3)
+	assert(t, solver019(3), 6)
+	assert(t, solver019(4), 7)
+	assert(t, solver019(10), 17)
+	assert(t, solver019(10000), 17200)
+
+	assertFalse(t, isLeap(2001))
+	assertTrue(t, isLeap(2012))
+	assertTrue(t, isLeap(2000))
+	assertFalse(t, isLeap(1900))
 }

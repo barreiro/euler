@@ -14,12 +14,13 @@ func Solver016() int {
 }
 
 func solver016(N int) int {
-	// each element is a digit. Each iteration we double every digit and adjust.
-	values, radix, sum := make([]int, N+1), algorithm.DEFAULTRADIX, 0
+	// each element is a digit. Each iteration we double every digit and adjust
+	// N/3 is an estimate on the number of digits for each power
+	values, radix, sum := make([]int, algorithm.Max(N/3+1, 1)), algorithm.DEFAULTRADIX, 0
 	values[0] = 1
 	for i := 0; i < N; i++ {
 		// since carry never ripples we can iterate backwards, using less memory
-		for j := len(values) - 1; j >= 0; j-- {
+		for j := i / 3; j >= 0; j-- {
 			if values[j] *= 2; values[j] >= radix {
 				values[j+1] += values[j] / radix
 				values[j] %= radix

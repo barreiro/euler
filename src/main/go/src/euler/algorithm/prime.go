@@ -2,7 +2,7 @@
 // GoLang helper for Project Euler problems
 package algorithm
 
-// Calculates the prime factors
+// calculates the prime factors of a given number. The result is a map where the keys are primes and the values are the occurrences
 func PrimeFactors(n int) map[int]int {
 	factorMap, generator, stop := make(map[int]int), GeneratorTrialDivision(), IntSqrt(n)
 

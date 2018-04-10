@@ -3,7 +3,7 @@
 package algorithm
 
 func HasFactorBelow(value int, roof int) bool {
-	for l := roof; l > IntSqrt(value); l-- {
+	for l, floor := roof, IntSqrt(value); l > floor; l-- {
 		if value%l == 0 && value/l < roof {
 			return true
 		}
@@ -12,17 +12,17 @@ func HasFactorBelow(value int, roof int) bool {
 }
 
 func NumberOfFactors(value int) int {
-	factors, ceiling := 0, IntSqrt(value)
-	for i := 1; i <= ceiling; i++ {
+	factors, ceiling, perfect := 0, IntSqrt(value), Square(IntSqrt(value)) == value
+	for i := ceiling; i > 0; i-- {
 		if value%i == 0 {
-			factors += 2
+			factors ++
 		}
 	}
 
-	// We need to adjust the number of divisors if the number is a perfect square
-	if Square(ceiling) == value {
-		return factors - 1
+	// need to adjust the number of divisors if the number is a perfect square
+	if perfect {
+		return 2 * factors - 1
 	} else {
-		return factors
+		return 2 * factors
 	}
 }

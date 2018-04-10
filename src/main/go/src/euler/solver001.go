@@ -2,6 +2,8 @@
 // GoLang solvers for Project Euler problems
 package euler
 
+import "euler/algorithm"
+
 var input001 = []int{3, 5}
 
 // If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -24,7 +26,7 @@ func solver001(N int) int {
 	return sum
 }
 
-func contribution(N int, f int) int {
-	// count the number of existing factors and then multiply it by the arithmetic progression to find the sum
-	return f * (N / f) * ( (N / f) + 1) / 2
+func contribution(number int, factor int) int {
+	// the sum is the factor multiplied by the number of occurrences 
+	return factor * algorithm.ArithmeticSum(number/factor)
 }

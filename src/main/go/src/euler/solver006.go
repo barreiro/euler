@@ -16,5 +16,5 @@ func Solver006() int {
 
 func solver006(N int) int {
 	// using Faulhaber's Formula for the square of the sum and Gauss's Formula for the sum of the squares
-	return ( algorithm.Pow(N, 4)+2*algorithm.Pow(N, 3)+algorithm.Pow(N, 2) )/4 - N*( N+1 )*( 2*N+1 )/6
+	return (algorithm.Pow(N, 4)+2*algorithm.Pow(N, 3)+algorithm.Pow(N, 2))/4 - N*(N+1)*(2*N+1)/6
 }

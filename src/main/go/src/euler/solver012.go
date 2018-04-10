@@ -25,9 +25,21 @@ func Solver012() int {
 }
 
 func solver012(N int) int {
-	for i, triangle := 1, 1; ; i, triangle = i+1, i*(i+1)/2 {
+	for generator := triangleGenerator(N-1); ; {
+		triangle := generator()
 		if algorithm.NumberOfFactors(triangle) >= N {
 			return triangle
 		}
+	}
+}
+
+// closure that generates triangle numbers
+func triangleGenerator(N int) func() int {
+
+	var n = N-1
+
+	return func() int {
+		n++
+		return algorithm.ArithmeticSum(n)
 	}
 }
