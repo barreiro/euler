@@ -168,3 +168,13 @@ func MaxArray(a ...int) int {
 	}
 	return max
 }
+
+func MaxKey(a map[int]int) int {
+	max := math.MinInt64
+	for i := range a {
+		if i > max {
+			max = i
+		}
+	}
+	return max
+}

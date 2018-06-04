@@ -27,6 +27,6 @@ func solver001(N int) int {
 }
 
 func contribution(number int, factor int) int {
-	// the sum is the factor multiplied by the number of occurrences 
+	// the sum is the factor multiplied by the sum of the number of occurrences
 	return factor * algorithm.ArithmeticSum(number/factor)
 }

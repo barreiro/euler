@@ -17,29 +17,28 @@ func Solver014() int {
 }
 
 func solver014(N int) int {
-	collatzGenerator, maxLength, max := collatzLengthGen(N), 1, 1
-	for i := max; i < N; i++ {
-		if length := collatzGenerator(i); length > maxLength {
-			maxLength, max = length, i
+	collatzLength, max := collatzLengthMemoize(N), 1
+	for i := 1; i < N; i++ {
+		if length := collatzLength(i); length > collatzLength(max) {
+			max = i
 		}
 	}
 	return max
 }
 
 // closure that memorizes calls up to a certain capacity
-func collatzLengthGen(capacity int) func(int) int {
+func collatzLengthMemoize(capacity int) func(int) int {
 
 	var memoized func(int) int
 
 	cache, collatz := make([]int, capacity), func(i int) int {
-		if i == 1 {
-			return 1
-		} else if i%2 == 0 {
+		if i%2 == 0 {
 			return memoized(i/2) + 1
 		} else {
 			return memoized(3*i+1) + 1
 		}
 	}
+	cache[1] = 1
 
 	memoized = func(i int) int {
 		// can't rely on the cache for everything but in many cases we can cut lots of recursion

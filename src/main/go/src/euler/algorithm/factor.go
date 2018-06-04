@@ -21,7 +21,7 @@ func NumberOfFactors(value int) int {
 
 	// need to adjust the number of divisors if the number is a perfect square
 	if perfect {
-		return 2 * factors - 1
+		return 2*factors - 1
 	} else {
 		return 2 * factors
 	}

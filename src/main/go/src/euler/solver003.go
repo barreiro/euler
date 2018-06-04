@@ -4,7 +4,6 @@ package euler
 
 import (
 	"euler/algorithm"
-	"math"
 )
 
 // The prime factors of 13195 are 5, 7, 13 and 29.
@@ -15,16 +14,5 @@ func Solver003() int {
 }
 
 func solver003(N int) int {
-	return maxFactor(algorithm.PrimeFactors(N))
-}
-
-// biggest value present on a map
-func maxFactor(factors map[int]int) int {
-	max := math.MinInt64
-	for f := range factors {
-		if f > max {
-			max = f
-		}
-	}
-	return max
+	return algorithm.MaxKey(algorithm.PrimeFactors(N))
 }

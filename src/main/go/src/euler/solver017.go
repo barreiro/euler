@@ -10,7 +10,7 @@ package euler
 var lookupOnes, lookupTens = [20]int{0, 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, 6, 6, 8, 8, 7, 7, 9, 8, 8}, [10]int{0, 3, 6, 6, 5, 5, 5, 7, 6, 6}
 
 // number of letters for 'and' 'thousand and' and 'hundred and'
-const andCount, thousandCount, hundredCount = len("and"), andCount + len("thousand"), andCount + len("hundred")
+const andCount, thousandCount, hundredCount = len("and"), len("thousand") + andCount, len("hundred") + andCount
 
 func Solver017() int {
 	return solver017(1000)

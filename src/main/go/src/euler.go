@@ -5,19 +5,17 @@ package main
 import (
 	"euler"
 	"fmt"
-	"os"
 	"runtime"
 	"time"
 )
 
 func singleProblem(n int, solver func() int) {
 	runtime.GC()
-	time.Sleep(100)
+	time.Sleep(time.Millisecond)
 
 	start, result := time.Now(), solver()
 
-	fmt.Printf("Solution for problem %03d is %12d ( took %9.3f ms )\n", n, result, float64(time.Since(start)) / 1000000)
-	os.Stdout.Sync()
+	println(fmt.Sprintf("Solution for problem %03d is %12d ( took %9.3f ms )", n, result, time.Since(start).Seconds() * 1000 ))
 }
 
 // --- //
