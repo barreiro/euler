@@ -207,3 +207,21 @@ func TestSolver019(t *testing.T) {
 	assertTrue(t, isLeap(2000))
 	assertFalse(t, isLeap(1900))
 }
+
+func TestSolver020(t *testing.T) {
+	assert(t, Solver020(), 648)
+
+	assert(t, solver020(1), 1)
+	assert(t, solver020(2), 2)
+	assert(t, solver020(3), 6)
+	assert(t, solver020(4), 6)
+	assert(t, solver020(10), 27)
+	assert(t, solver020(1000) ,10539)
+}
+
+func TestSolver021(t *testing.T) {
+	assert(t, Solver021(), 31626)
+
+	assert(t, solver021(300), 504)
+	assert(t, solver021(200000), 2896242)
+}

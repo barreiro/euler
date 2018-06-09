@@ -26,3 +26,19 @@ func NumberOfFactors(value int) int {
 		return 2 * factors
 	}
 }
+
+func SumOfFactors(value int) int {
+	sum, ceiling, perfect := 1, IntSqrt(value), Square(IntSqrt(value)) == value
+	for i := ceiling; i > 1; i-- {
+		if value%i == 0 {
+			sum += i + value / i
+		}
+	}
+
+	// need to adjust the number of divisors if the number is a perfect square
+	if perfect {
+		return sum - ceiling
+	} else {
+		return sum
+	}
+}

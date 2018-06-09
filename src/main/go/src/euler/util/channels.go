@@ -3,24 +3,35 @@
 
 package util
 
-import "runtime"
+import (
+	"runtime"
+	"sync"
+)
 
-const defaultBuffer = 500
+const defaultBuffer = 100
+
+func ParallelFill(array []int, function func(int) int) {
+	source, wg := make(chan int, defaultBuffer), sync.WaitGroup{}
+	for i := 0; i < runtime.NumCPU(); i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for n, ok := 0, true; ok; {
+				if n, ok = <-source; ok {
+					array[n] = function(n)
+				}
+			}
+		}()
+	}
+	for i := range array {
+		source <- i
+	}
+	close(source)
+	wg.Wait()
+}
 
 func ParallelUnbound(lowerBound int, supplier func(int) int, predicate func(int) bool) int {
 	source, result := make(chan int, defaultBuffer), make(chan int)
-	startWorkers(source, result, predicate)
-	for n := lowerBound; ; n++ {
-		select {
-		case source <- supplier(n):
-		case r := <-result:
-			close(source)
-			return r
-		}
-	}
-}
-
-func startWorkers(source, result chan int, predicate func(int) bool) {
 	for i := 0; i < runtime.NumCPU(); i++ {
 		go func() {
 			for n, ok := 0, true; ok; {
@@ -29,5 +40,13 @@ func startWorkers(source, result chan int, predicate func(int) bool) {
 				}
 			}
 		}()
+	}
+	for n := lowerBound; ; n++ {
+		select {
+		case source <- supplier(n):
+		case r := <-result:
+			close(source)
+			return r
+		}
 	}
 }

@@ -54,7 +54,7 @@ func TestIsPalindrome(t *testing.T) {
 	assertTrue(t, IsPalindrome(84048))
 }
 
-// --- primes.go
+// --- prime.go
 
 func TestPrimeFactors(t *testing.T) {
 	assertMap(t, PrimeFactors(4), map[int]int{2: 2})
@@ -62,4 +62,22 @@ func TestPrimeFactors(t *testing.T) {
 	assertMap(t, PrimeFactors(23), map[int]int{23: 1})
 	assertMap(t, PrimeFactors(840), map[int]int{2: 3, 3: 1, 5: 1, 7: 1})
 	assertMap(t, PrimeFactors(1031), map[int]int{1031: 1})
+}
+
+// --- factor.go
+
+func TestNumberOfFactors(t *testing.T) {
+	assertInt(t, NumberOfFactors(4), 3)
+	assertInt(t, NumberOfFactors(21), 4)
+	assertInt(t, NumberOfFactors(23), 2)
+	assertInt(t, NumberOfFactors(840), 32)
+	assertInt(t, NumberOfFactors(1031), 2)
+}
+
+func TestSumOfFactors(t *testing.T) {
+	assertInt(t, SumOfFactors(4), 7)
+	assertInt(t, SumOfFactors(21), 32)
+	assertInt(t, SumOfFactors(23), 24)
+	assertInt(t, SumOfFactors(840), 2880)
+	assertInt(t, SumOfFactors(1031), 1032)
 }
