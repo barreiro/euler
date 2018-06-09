@@ -2,7 +2,10 @@
 // GoLang solvers for Project Euler problems
 package euler
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func assert(t *testing.T, actual int, expected int) {
 	if expected != actual {
@@ -216,7 +219,7 @@ func TestSolver020(t *testing.T) {
 	assert(t, solver020(3), 6)
 	assert(t, solver020(4), 6)
 	assert(t, solver020(10), 27)
-	assert(t, solver020(1000) ,10539)
+	assert(t, solver020(1000), 10539)
 }
 
 func TestSolver021(t *testing.T) {
@@ -224,4 +227,16 @@ func TestSolver021(t *testing.T) {
 
 	assert(t, solver021(300), 504)
 	assert(t, solver021(200000), 2896242)
+}
+
+func TestSolver022(t *testing.T) {
+	assert(t, Solver022(), 871198282)
+
+	assert(t, solver022(5), 496)
+	assert(t, solver022(938), 26819198)
+
+	assert(t, solver022reader(1, strings.NewReader("COLIN")), 53)
+	assert(t, solver022reader(1, strings.NewReader("LUIS")), 61)
+	assert(t, solver022reader(1, strings.NewReader("BARREIRO")), 86)
+	assert(t, solver022reader(2, strings.NewReader("\"LUIS\",\"BARREIRO\"")), 208)
 }

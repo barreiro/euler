@@ -15,18 +15,20 @@ func Solver001() int {
 
 func solver001(N int) int {
 	sum := 0
-	for i := 0; i < len(input001); i++ {
-		sum += contribution(N-1, input001[i])
+	for i, f := range input001 {
+		sum += contribution(f, N-1)
 
 		// remove the numbers that are appear twice as they are multiple of more than one factor
-		for j := i + 1; j < len(input001); j++ {
-			sum -= contribution(N-1, input001[i]*input001[j])
+		for j, other := range input001 {
+			if j < i {
+				sum -= contribution(f*other, N-1)
+			}
 		}
 	}
 	return sum
 }
 
-func contribution(number int, factor int) int {
+func contribution(factor int, ceiling int) int {
 	// the sum is the factor multiplied by the sum of the number of occurrences
-	return factor * algorithm.ArithmeticSum(number/factor)
+	return factor * algorithm.ArithmeticSum(ceiling/factor)
 }

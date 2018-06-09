@@ -42,4 +42,5 @@ func main() {
 	singleProblem(19, euler.Solver019)
 	singleProblem(20, euler.Solver020)
 	singleProblem(21, euler.Solver021)
+	singleProblem(22, euler.Solver022)
 }
