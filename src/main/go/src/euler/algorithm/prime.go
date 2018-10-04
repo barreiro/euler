@@ -66,14 +66,14 @@ func PrimesLessThan(n int) func() int {
 
 	return func() int {
 		for candidate--; ; candidate-- {
-			if millerRabin(candidate) {
+			if MillerRabin(candidate) {
 				return candidate
 			}
 		}
 	}
 }
 
-func millerRabin(n int) bool {
+func MillerRabin(n int) bool {
 	effectiveBase := millerRabinFast
 	if n >= 4759123141 {
 		effectiveBase = millerRabinBase

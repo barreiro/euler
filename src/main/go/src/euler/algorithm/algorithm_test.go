@@ -99,17 +99,17 @@ func TestPrimeGeneratorReverse(t *testing.T) {
 }
 
 func TestMillerRabin(t *testing.T) {
-	assertTrue(t, millerRabin(2) && millerRabin(3) && millerRabin(5) && millerRabin(7) && millerRabin(11) && millerRabin(13))
-	assertFalse(t, millerRabin(4) || millerRabin(6) || millerRabin(8) || millerRabin(9) || millerRabin(10) || millerRabin(12))
+	assertTrue(t, MillerRabin(2) && MillerRabin(3) && MillerRabin(5) && MillerRabin(7) && MillerRabin(11) && MillerRabin(13))
+	assertFalse(t, MillerRabin(4) || MillerRabin(6) || MillerRabin(8) || MillerRabin(9) || MillerRabin(10) || MillerRabin(12))
 }
 
 func TestMillerRabinCarmichael(t *testing.T) {
-	assertFalse(t, millerRabin(561) || millerRabin(1105) || millerRabin(1729) || millerRabin(2465) || millerRabin(2821) || millerRabin(6601))
-	assertFalse(t, millerRabin(101101) || millerRabin(252601) || millerRabin(314821) || millerRabin(340561) || millerRabin(410041) || millerRabin(512461))
+	assertFalse(t, MillerRabin(561) || MillerRabin(1105) || MillerRabin(1729) || MillerRabin(2465) || MillerRabin(2821) || MillerRabin(6601))
+	assertFalse(t, MillerRabin(101101) || MillerRabin(252601) || MillerRabin(314821) || MillerRabin(340561) || MillerRabin(410041) || MillerRabin(512461))
 }
 
 func TestMillerRabinLong(t *testing.T) {
-	assertFalse(t, millerRabin(154639673381) || millerRabin(585226005592931977) || millerRabin(7999252175582851) || millerRabin(55245642489451))
+	assertFalse(t, MillerRabin(154639673381) || MillerRabin(585226005592931977) || MillerRabin(7999252175582851) || MillerRabin(55245642489451))
 }
 
 // --- factor.go
