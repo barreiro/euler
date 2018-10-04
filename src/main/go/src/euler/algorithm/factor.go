@@ -31,7 +31,7 @@ func SumOfFactors(value int) int {
 	sum, ceiling, perfect := 1, IntSqrt(value), Square(IntSqrt(value)) == value
 	for i := ceiling; i > 1; i-- {
 		if value%i == 0 {
-			sum += i + value / i
+			sum += i + value/i
 		}
 	}
 
@@ -41,4 +41,8 @@ func SumOfFactors(value int) int {
 	} else {
 		return sum
 	}
+}
+
+func IsAbundant(value int) bool {
+	return value < SumOfFactors(value)
 }

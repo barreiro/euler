@@ -240,3 +240,12 @@ func TestSolver022(t *testing.T) {
 	assert(t, solver022reader(1, strings.NewReader("BARREIRO")), 86)
 	assert(t, solver022reader(2, strings.NewReader("\"LUIS\",\"BARREIRO\"")), 208)
 }
+
+func TestSolver023(t *testing.T) {
+	assert(t, Solver023(), 4179871)
+
+	assert(t, solver023(23), 276)
+	assert(t, solver023(24), 276)
+	assert(t, solver023(25), 301)
+	assert(t, solver023(50000), 4179871)
+}

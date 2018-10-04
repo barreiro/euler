@@ -33,9 +33,9 @@ func solver022reader(N int, reader io.Reader) int {
 	}
 	sort.Strings(names)
 	for i, name := range names {
-		if j := i + 1; i < N {
+		if i < N {
 			for _, c := range name {
-				sum += j * int(c-'A'+1)
+				sum += (i + 1) * int(c-'A'+1)
 			}
 		}
 	}

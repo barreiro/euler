@@ -30,7 +30,7 @@ func ParallelFill(array []int, function func(int) int) {
 	wg.Wait()
 }
 
-func ParallelUnbound(lowerBound int, supplier func(int) int, predicate func(int) bool) int {
+func ParallelUnbound(floor int, supplier func(int) int, predicate func(int) bool) int {
 	source, result := make(chan int, defaultBuffer), make(chan int)
 	for i := 0; i < runtime.NumCPU(); i++ {
 		go func() {
@@ -41,7 +41,7 @@ func ParallelUnbound(lowerBound int, supplier func(int) int, predicate func(int)
 			}
 		}()
 	}
-	for n := lowerBound; ; n++ {
+	for n := floor; ; n++ {
 		select {
 		case source <- supplier(n):
 		case r := <-result:
