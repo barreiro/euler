@@ -249,3 +249,19 @@ func TestSolver023(t *testing.T) {
 	assert(t, solver023(25), 301)
 	assert(t, solver023(50000), 4179871)
 }
+
+func TestSolver024(t *testing.T) {
+	assert(t, Solver024(), 2783915460)
+
+	assert(t, solver024(1), 123456789)
+	assert(t, solver024(2), 123456798)
+	assert(t, solver024(3628799), 9876543201)
+	assert(t, solver024(3628800), 9876543210)
+
+	assert(t, solver024slice(1, []int{0, 1, 2}), 12)
+	assert(t, solver024slice(2, []int{0, 1, 2}), 21)
+	assert(t, solver024slice(3, []int{0, 1, 2}), 102)
+	assert(t, solver024slice(4, []int{0, 1, 2}), 120)
+	assert(t, solver024slice(5, []int{0, 1, 2}), 201)
+	assert(t, solver024slice(6, []int{0, 1, 2}), 210)
+}

@@ -60,6 +60,14 @@ func ArithmeticSum(value int) int {
 	return value * (value + 1) / 2
 }
 
+// Simple method to calculate the factorial of small values. No checks are performed. Use with caution.
+func Factorial(l int) int {
+	if l <= 2 {
+		return l
+	}
+	return l * Factorial(l-1)
+}
+
 func Pow(base int, exp int) int {
 	if base == 0 && exp == 0 {
 		return 1
