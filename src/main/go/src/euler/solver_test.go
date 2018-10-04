@@ -265,3 +265,14 @@ func TestSolver024(t *testing.T) {
 	assert(t, solver024slice(5, []int{0, 1, 2}), 201)
 	assert(t, solver024slice(6, []int{0, 1, 2}), 210)
 }
+
+func TestSolver025(t *testing.T) {
+	assert(t, Solver025(), 4782)
+
+	assert(t, solver025(3), 12)
+	assert(t, solver025(2), 7)
+	assert(t, solver025(1), 2)
+	assert(t, solver025(8), 36)
+	assert(t, solver025(5000), 23922)
+	assert(t, solver025(50000), 239246)
+}
