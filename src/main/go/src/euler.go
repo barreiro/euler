@@ -15,7 +15,7 @@ func singleProblem(n int, solver func() int) {
 
 	start, result := time.Now(), solver()
 
-	println(fmt.Sprintf("Solution for problem %03d is %12d ( took %9.3f ms )", n, result, time.Since(start).Seconds() * 1000 ))
+	fmt.Printf("Solution for problem %03d is %12d ( took %9.3f ms )\n", n, result, time.Since(start).Seconds() * 1000 )
 }
 
 // --- //
@@ -46,4 +46,5 @@ func main() {
 	singleProblem(23, euler.Solver023)
 	singleProblem(24, euler.Solver024)
 	singleProblem(25, euler.Solver025)
+	singleProblem(26, euler.Solver026)
 }

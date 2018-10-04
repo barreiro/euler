@@ -16,7 +16,7 @@ func Solver016() int {
 func solver016(N int) int {
 	// each element is a digit. Each iteration we double every digit and adjust
 	// N/3 is an estimate on the number of digits for each power
-	values, radix, sum := make([]int, algorithm.Max(N/3+1, 1)), algorithm.DEFAULTRADIX, 0
+	values, radix, sum := make([]int, algorithm.Max(N/3+1, 1)), algorithm.DefaultRadix, 0
 	values[0] = 1
 	for i := 0; i < N; i++ {
 		// since carry never ripples we can iterate backwards, using less memory

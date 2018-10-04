@@ -27,6 +27,7 @@ func NumberOfFactors(value int) int {
 	}
 }
 
+// defined according to problem 21: numbers less than n which divide evenly into n
 func SumOfFactors(value int) int {
 	sum, ceiling, perfect := 1, IntSqrt(value), Square(IntSqrt(value)) == value
 	for i := ceiling; i > 1; i-- {

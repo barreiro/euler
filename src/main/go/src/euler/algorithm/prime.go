@@ -2,6 +2,10 @@
 // GoLang helper for Project Euler problems
 package algorithm
 
+import "math/bits"
+
+var millerRabinFast, millerRabinBase = []int{2, 7, 61}, []int{2, 325, 9375, 28178, 450775, 9780504, 1795265022}
+
 // calculates the prime factors of a given number. The result is a map where the keys are primes and the values are the occurrences
 func PrimeFactors(n int) map[int]int {
 	factorMap, generator, stop := make(map[int]int), GeneratorTrialDivision(), IntSqrt(n)
@@ -53,4 +57,53 @@ func GeneratorTrialDivision() func() int {
 			}
 		}
 	}
+}
+
+// closure that generates primes prime numbers, starting with the one below N.
+func PrimesLessThan(n int) func() int {
+
+	candidate := n
+
+	return func() int {
+		for candidate--; ; candidate-- {
+			if millerRabin(candidate) {
+				return candidate
+			}
+		}
+	}
+}
+
+func millerRabin(n int) bool {
+	effectiveBase := millerRabinFast
+	if n >= 4759123141 {
+		effectiveBase = millerRabinBase
+	}
+
+	for _, b := range effectiveBase {
+		if n > b && !millerRabinPass(b, n) {
+			return false
+		}
+	}
+	return true
+	// return (n > 1) && ((n == 2) || stream(effectiveBase).allMatch(b- > n <= b || millerRabinPass(b, n)));
+}
+
+func millerRabinPass(b, n int) bool {
+	s := bits.TrailingZeros64(uint64(n - 1))
+	d := (n - 1) >> uint64(s)
+	a := PowerMod(b, d, n)
+
+	if a == 1 {
+		return true
+	}
+	for i := 0; i < s-1; i++ {
+		if a == n-1 {
+			return true
+		}
+		if a == 1 {
+			return false
+		}
+		a = PowerMod(a, 2, n)
+	}
+	return a == n-1
 }

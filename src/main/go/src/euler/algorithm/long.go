@@ -5,10 +5,10 @@ package algorithm
 import "math"
 
 // Default value used as base for the numeric system. Used in methods that make array-based calculations. Default to the decimal system.
-var DEFAULTRADIX = 10
+const DefaultRadix = 10
 
 // Table for fast lookup of powers of 10
-var POW10 = []int{
+var pow10 = []int{
 	1,
 	10,
 	100,
@@ -113,8 +113,8 @@ func Square(base int) int {
 
 // Convenience method to calculate the power when in base 10.
 func Pow10(exp int) int {
-	if exp < len(POW10) {
-		return POW10[exp]
+	if exp < len(pow10) {
+		return pow10[exp]
 	} else {
 		return -2
 	}
@@ -138,7 +138,7 @@ func isPalindromeDigits(digits []int) bool {
 // --- //
 
 func ToDigits(value int) []int {
-	return toDigitsRadix(value, DEFAULTRADIX)
+	return toDigitsRadix(value, DefaultRadix)
 }
 
 func toDigitsRadix(value int, radix int) []int {
@@ -185,4 +185,19 @@ func MaxKey(a map[int]int) int {
 		}
 	}
 	return max
+}
+
+// --- //
+
+func PowerMod(base, exp, mod int) int {
+	result, b, e := 1, base%mod, exp
+	for ; e > 0; e, b = e>>1, b*b%mod {
+		if e&1 != 0 {
+			result = (result * b) % mod
+		}
+	}
+	if result < 0 {
+		return result + mod
+	}
+	return result
 }
