@@ -22,9 +22,8 @@ func solver016(N int) int {
 		// since carry never ripples we can iterate backwards, using less memory
 		for j := i / 3; j >= 0; j-- {
 			if values[j] *= 2; values[j] >= radix {
-				// with radix > 2 can use increment and subtraction instead of divide and take the remainder
-				values[j+1]++
-				values[j] -= radix
+				// with radix > 2 can use increment and subtract instead of divide and take the remainder
+				values[j], values[j+1] = values[j]-radix, values[j+1]+1
 			}
 		}
 	}
