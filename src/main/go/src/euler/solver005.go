@@ -12,15 +12,11 @@ func Solver005() int {
 }
 
 func solver005(N int) int {
-	factorsOfSmallest, sum := make(map[int]int), 1
-
+	factorsOfSmallest := make(map[int]int)
 	for l := 2; l < N; l++ {
 		for factor, count := range algorithm.PrimeFactors(l) {
 			factorsOfSmallest[factor] = algorithm.Max(factorsOfSmallest[factor], count)
 		}
 	}
-	for base, exp := range factorsOfSmallest {
-		sum *= algorithm.Pow(base, exp)
-	}
-	return sum
+	return algorithm.PrimeComposition(factorsOfSmallest)
 }

@@ -16,13 +16,15 @@ func Solver020() int {
 
 func solver020(N int) int {
 	factorial, sum, ceiling := algorithm.ToDigits(1), 0, algorithm.Pow10(15)
-	for i, carry := 1, 0; i <= N; i++ {
-		for n := 0; n < len(factorial); n++ {
-			factorial[n] = factorial[n]*i + carry
+	for n, carry := 1, 0; n <= N; n++ {
+		for i, old := range factorial {
+			value := old*n + carry
 
 			// Adjust the buckets that grow beyond the ceiling value, carrying to next bucket
-			if carry = 0; factorial[n] > ceiling {
-				carry, factorial[n] = factorial[n]/ceiling, factorial[n]%ceiling
+			if value > ceiling {
+				carry, factorial[i] = value/ceiling, value%ceiling
+			} else {
+				carry, factorial[i] = 0, value
 			}
 		}
 		if carry != 0 {
@@ -31,9 +33,7 @@ func solver020(N int) int {
 		}
 	}
 	for _, n := range factorial {
-		for _, digit := range algorithm.ToDigits(n) {
-			sum += digit
-		}
+		sum += algorithm.ArraySum(algorithm.ToDigits(n))
 	}
 	return sum
 }

@@ -187,6 +187,14 @@ func MaxKey(a map[int]int) int {
 	return max
 }
 
+func ArraySum(a []int) int {
+	sum := 0
+	for _, i := range a {
+		sum += i
+	}
+	return sum
+}
+
 // --- //
 
 func PowerMod(base, exp, mod int) int {

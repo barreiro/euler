@@ -13,8 +13,7 @@ func Solver007() int {
 
 func solver007(N int) int {
 	generator := algorithm.GeneratorTrialDivision()
-	for i := 1; i < N; i++ {
-		generator()
+	for i := N; i > 1; i, _ = i-1, generator() {
 	}
 	return generator()
 }

@@ -41,7 +41,7 @@ func solver029(N int) int {
 			}
 		}
 	}
-	return (N-1)*(N-1) - duplicates
+	return algorithm.Pow(N-1, 2) - duplicates
 }
 
 func factoredPower(base, power int) (int, int) {

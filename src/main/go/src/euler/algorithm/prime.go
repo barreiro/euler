@@ -27,6 +27,14 @@ func PrimeFactors(n int) map[int]int {
 	return factorMap
 }
 
+func PrimeComposition(factormap map[int]int) int {
+	sum := 1
+	for base, exp := range factormap {
+		sum *= Pow(base, exp)
+	}
+	return sum
+}
+
 // closure that generates primes based on the method of trial division
 func GeneratorTrialDivision() func() int {
 

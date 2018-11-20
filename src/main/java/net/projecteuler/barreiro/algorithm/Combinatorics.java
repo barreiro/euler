@@ -86,7 +86,7 @@ public final class Combinatorics {
 
         long l = 0;
         for ( int c = min( remaining, total ); c > 0; c-- ) {
-            if ( c <= remaining && constrains.contains( c ) ) {
+            if ( constrains.contains( c ) ) {
                 l += partition( remaining - c, c, sum + c, constrains, cache );
             }
         }

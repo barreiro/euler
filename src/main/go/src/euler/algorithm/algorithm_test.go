@@ -129,3 +129,17 @@ func TestSumOfFactors(t *testing.T) {
 	assertInt(t, SumOfFactors(840), 2040)
 	assertInt(t, SumOfFactors(1031), 1)
 }
+
+// combinatorics.go
+
+func TestPartition(t *testing.T) {
+	natural := []int{1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002}
+
+	for i := 1; i < len(natural); i++ {
+		constrains := make(map[int]bool)
+		for j := 1; j <= i; j++ {
+			constrains[j] = true
+		}
+		assertInt(t, natural[i], Partition(i, constrains))
+	}
+}
