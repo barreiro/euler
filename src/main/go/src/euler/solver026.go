@@ -33,8 +33,7 @@ func solver026(N int) int {
 }
 
 func isPrimeRootTen(p int) bool {
-	factors := algorithm.PrimeFactors(p - 1)
-	for f := range factors {
+	for f := range algorithm.PrimeFactors(p - 1) {
 		if algorithm.PowerMod(10, (p-1)/f, p) == 1 {
 			return false
 		}

@@ -2,6 +2,8 @@
 // GoLang helper for Project Euler problems
 package algorithm
 
+import "math"
+
 func HasFactorBelow(value int, roof int) bool {
 	for l, floor := roof, IntSqrt(value); l > floor; l-- {
 		if value%l == 0 && value/l < roof {
@@ -12,9 +14,13 @@ func HasFactorBelow(value int, roof int) bool {
 }
 
 func NumberOfFactors(value int) int {
-	factors, ceiling, perfect := 0, IntSqrt(value), Square(IntSqrt(value)) == value
+	factors, ceiling, perfect, small := 0, IntSqrt(value), Square(IntSqrt(value)) == value, value <= math.MaxInt32
 	for i := ceiling; i > 0; i-- {
-		if value%i == 0 {
+		if small {
+			if int32(value) % int32(i) == 0 {
+				factors ++
+			}
+		} else if value%i == 0 {
 			factors ++
 		}
 	}
@@ -29,9 +35,14 @@ func NumberOfFactors(value int) int {
 
 // defined according to problem 21: numbers less than n which divide evenly into n
 func SumOfFactors(value int) int {
-	sum, ceiling, perfect := 1, IntSqrt(value), Square(IntSqrt(value)) == value
+	sum, ceiling, perfect, small := 1, IntSqrt(value), Square(IntSqrt(value)) == value, value <= math.MaxInt32
 	for i := ceiling; i > 1; i-- {
-		if value%i == 0 {
+		if small {
+			// optimization for small values
+			if int32(value)%int32(i) == 0 {
+				sum += i + value/i
+			}
+		} else  if value%i == 0 {
 			sum += i + value/i
 		}
 	}

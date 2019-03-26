@@ -1,0 +1,8 @@
+[package]
+name = "euler"
+version = "1.0.0"
+authors = ["barreiro <lbbbarreiro@gmail.com>"]
+
+[[bin]]
+name = "euler"
+path = "src/main/rust/euler.rs"

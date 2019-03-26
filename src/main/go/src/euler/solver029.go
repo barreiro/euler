@@ -6,7 +6,7 @@ import (
 	"euler/algorithm"
 )
 
-// Consider all integer combinations of ab for 2 ≤ a ≤ 5 and 2 ≤ b ≤ 5:
+// Consider all integer combinations of a^b for 2 ≤ a ≤ 5 and 2 ≤ b ≤ 5:
 // 2^2=4,  2^3=8,   2^4=16,  2^5=32
 // 3^2=9,  3^3=27,  3^4=81,  3^5=243
 // 4^2=16, 4^3=64,  4^4=256, 4^5=1024
@@ -32,7 +32,7 @@ func solver029(N int) int {
 				for j := N; j > N/i; j-- {
 					factoredBase, factoredExp := factoredPower(a, j)
 					for base, exp, k := factoredBase, factoredExp, 2; base < a; base, exp, k = base*factoredBase, factoredExp/k, k+1 {
-						if base < a && exp <= N && factoredExp%exp == 0 {
+						if exp <= N && factoredExp%exp == 0 {
 							duplicates ++
 							break
 						}
@@ -41,7 +41,7 @@ func solver029(N int) int {
 			}
 		}
 	}
-	return algorithm.Pow(N-1, 2) - duplicates
+	return algorithm.Square(N-1) - duplicates
 }
 
 func factoredPower(base, power int) (int, int) {

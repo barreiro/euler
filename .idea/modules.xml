@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/go.iml" filepath="$PROJECT_DIR$/.idea/modules/go.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java.iml" filepath="$PROJECT_DIR$/.idea/modules/java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rust.iml" filepath="$PROJECT_DIR$/.idea/modules/rust.iml" />
     </modules>
   </component>
 </project>

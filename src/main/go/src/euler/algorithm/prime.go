@@ -2,7 +2,10 @@
 // GoLang helper for Project Euler problems
 package algorithm
 
-import "math/bits"
+import (
+	"math"
+	"math/bits"
+)
 
 var millerRabinFast, millerRabinBase = []int{2, 7, 61}, []int{2, 325, 9375, 28178, 450775, 9780504, 1795265022}
 
@@ -52,11 +55,16 @@ func GeneratorTrialDivision() func() int {
 			return 3
 		}
 		for candidate, stop := cache[len(cache)-1]+2, IntSqrt(cache[len(cache)-1]); ; candidate += 2 {
+			small := candidate <= math.MaxInt32
 			for _, prime := range cache {
-				if candidate%prime == 0 {
-					// found a prime factor, thus candidate is not prime
+				if small {
+					if int32(candidate)%int32(prime) == 0 {
+						break
+					}
+				} else if candidate%prime == 0 {
 					break
 				}
+
 				if prime > stop {
 					// won't find a prime factor, therefore the candidate is prime
 					cache = append(cache, candidate)

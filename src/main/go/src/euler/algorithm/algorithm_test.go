@@ -71,13 +71,13 @@ func TestModularExponentiation(t *testing.T) {
 }
 
 func TestModularExponentiationSmall(t *testing.T) {
-	assertInt(t, 1, PowerMod(3, 0, 7));
-	assertInt(t, 3, PowerMod(3, 1, 7));
-	assertInt(t, 2, PowerMod(3, 2, 7));
-	assertInt(t, 6, PowerMod(3, 3, 7));
-	assertInt(t, 4, PowerMod(3, 4, 7));
-	assertInt(t, 5, PowerMod(3, 5, 7));
-	assertInt(t, 1, PowerMod(3, 6, 7));
+	assertInt(t, 1, PowerMod(3, 0, 7))
+	assertInt(t, 3, PowerMod(3, 1, 7))
+	assertInt(t, 2, PowerMod(3, 2, 7))
+	assertInt(t, 6, PowerMod(3, 3, 7))
+	assertInt(t, 4, PowerMod(3, 4, 7))
+	assertInt(t, 5, PowerMod(3, 5, 7))
+	assertInt(t, 1, PowerMod(3, 6, 7))
 }
 
 // --- prime.go
