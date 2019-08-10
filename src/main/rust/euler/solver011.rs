@@ -56,7 +56,7 @@ impl<'a> Solver for Solver011<'a> {
                 candidates.push(row.max(column.max(diag_a.max(diag_b))));
             }
         }
-        *candidates.iter().max().unwrap_or(&0)
+        *candidates.iter().max().unwrap()
     }
 }
 

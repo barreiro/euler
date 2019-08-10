@@ -397,7 +397,6 @@ public final class Combinatorics {
             }
             array[middle]++;
             return true;
-            
         }
 
         private boolean rotate() {

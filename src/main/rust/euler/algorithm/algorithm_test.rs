@@ -1,12 +1,12 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+use euler::algorithm::combinatorics::partition;
 use euler::algorithm::long::int_sqrt;
 use euler::algorithm::long::is_palindrome;
 use euler::algorithm::long::power_modulo;
 use euler::algorithm::prime::miller_rabin;
 use euler::algorithm::prime::prime_factors;
-use euler::algorithm::combinatorics::partition;
 
 #[test]
 fn int_sqrt_test() {
@@ -70,7 +70,7 @@ fn miller_rabin_long_test() {
 
 #[test]
 fn partition_test() {
-    let natural = vec![ 1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002];
+    let natural = vec![1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002];
 
     for i in 1..natural.len() {
         let mut constrains = vec![0; i];

@@ -41,6 +41,15 @@ fn main() {
     solve(029, Solver029::default());
     solve(030, Solver030::default());
     solve(031, Solver031::default());
+    solve(032, Solver032::default());
+    solve(033, Solver033::default());
+    solve(034, Solver034::default());
+    solve(035, Solver035::default());
+    solve(036, Solver036::default());
+    solve(037, Solver037::default());
+    solve(038, Solver038::default());
+    solve(039, Solver039::default());
+    solve(040, Solver040::default());
 }
 
 mod euler {
@@ -93,6 +102,15 @@ mod euler {
     pub mod solver029;
     pub mod solver030;
     pub mod solver031;
+    pub mod solver032;
+    pub mod solver033;
+    pub mod solver034;
+    pub mod solver035;
+    pub mod solver036;
+    pub mod solver037;
+    pub mod solver038;
+    pub mod solver039;
+    pub mod solver040;
 
     pub use self::solver001::Solver001;
     pub use self::solver002::Solver002;
@@ -125,4 +143,13 @@ mod euler {
     pub use self::solver029::Solver029;
     pub use self::solver030::Solver030;
     pub use self::solver031::Solver031;
+    pub use self::solver032::Solver032;
+    pub use self::solver033::Solver033;
+    pub use self::solver034::Solver034;
+    pub use self::solver035::Solver035;
+    pub use self::solver036::Solver036;
+    pub use self::solver037::Solver037;
+    pub use self::solver038::Solver038;
+    pub use self::solver039::Solver039;
+    pub use self::solver040::Solver040;
 }

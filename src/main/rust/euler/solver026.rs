@@ -2,9 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::long::power_modulo;
-use euler::algorithm::prime::prime_factors;
-use euler::algorithm::prime::PrimeGenerator;
-use euler::algorithm::prime::PrimesLessThan;
+use euler::algorithm::prime::{prime_factors, primes_less_than};
 use euler::Solver;
 
 // A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10 are given:
@@ -34,22 +32,9 @@ impl Default for Solver026 {
 
 impl Solver for Solver026 {
     fn solve(&self) -> isize {
-        // For primes: if 10 is a primitive root modulo p, the recurring cycle is equal to p − 1; if not is a factor of p − 1
-        let mut generator = PrimesLessThan { n: self.n };
-        loop {
-            let p = generator.next_prime();
-            if is_prime_root_ten(p) {
-                return p;
-            }
-        }
-    }
-}
+        // For primes: if 10 is a primitive root modulo p, the recurring cycle is equal to p − 1; if not is a factor of p − 1 (thus smaller)
+        let is_prime_root_ten = |p| prime_factors(p - 1).keys().all(|&f| power_modulo(10, (p - 1) / f, p) != 1);
 
-fn is_prime_root_ten(p: isize) -> bool {
-    for f in prime_factors(p - 1).keys() {
-        if power_modulo(10, (p - 1) / f, p) == 1 {
-            return false;
-        }
+        primes_less_than(self.n).find(|&p| is_prime_root_ten(p)).unwrap()
     }
-    true
 }

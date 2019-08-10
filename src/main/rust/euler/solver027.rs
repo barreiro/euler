@@ -1,10 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::square;
-use euler::algorithm::prime::miller_rabin;
-use euler::algorithm::prime::PrimeGenerator;
-use euler::algorithm::prime::PrimesLessThan;
+use euler::algorithm::long::{square, is_even};
+use euler::algorithm::prime::{miller_rabin, primes_less_than};
 use euler::Solver;
 
 // Euler discovered the remarkable quadratic formula: n^2 + n + 41
@@ -35,13 +33,11 @@ impl Solver for Solver027 {
         // Conjecture: a is odd negative and b is one of the 10% highest primes
         // The discriminant must be an Heegner number, in particular -163
         let (mut candidate, mut best, mut a) = (0, 0, -self.n);
-        if self.n % 2 == 0 {
+        if is_even(&self.n) {
             a += 1;
         }
         while a < 0 {
-            let (mut generator, bound) = (PrimesLessThan { n: self.n }, self.n - self.n / 10);
-            let mut b = generator.next_prime();
-            while b > bound {
+            for b in primes_less_than(self.n).take_while(|&p| p > self.n - self.n / 10) {
                 if square(a) - 4 * b == HEEGNER {
                     for n in 0.. {
                         if !miller_rabin(square(n) + a * n + b) {
@@ -53,7 +49,6 @@ impl Solver for Solver027 {
                         }
                     }
                 }
-                b = generator.next_prime();
             }
             a += 2;
         }

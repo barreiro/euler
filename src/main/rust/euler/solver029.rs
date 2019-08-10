@@ -64,8 +64,8 @@ impl Solver for Solver029 {
 fn factored_power(base: isize, power: isize) -> (isize, isize) {
     let (mut factored_base, mut factored_exp, factors) = (1, 0, prime_factors(base));
     for (k, v) in factors.iter() {
-        factored_base *= k;
-        factored_exp += v;
+        factored_base *= *k;
+        factored_exp += *v;
     }
     (factored_base, factored_exp * power / factors.len() as isize)
 }

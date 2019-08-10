@@ -58,7 +58,7 @@ fn start_day(year: isize) -> isize {
 fn sundays_common(start: isize) -> isize {
     let mut sum = 0;
     for d in DAYS_COMMON {
-        sum += if (start + d) % 7 == 0 { 1 } else { 0 }
+        sum += if (start + *d) % 7 == 0 { 1 } else { 0 }
     }
     sum
 }
@@ -66,7 +66,7 @@ fn sundays_common(start: isize) -> isize {
 fn sundays_leap(start: isize) -> isize {
     let mut sum = 0;
     for d in DAYS_LEAP {
-        sum += if (start + d) % 7 == 0 { 1 } else { 0 }
+        sum += if (start + *d) % 7 == 0 { 1 } else { 0 }
     }
     sum
 }

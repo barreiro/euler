@@ -30,6 +30,7 @@ impl<'a> Solver for Solver024<'a> {
     fn solve(&self) -> isize {
         let (mut value, mut unplaced, mut sum) = (self.n as usize - 1, Vec::from(self.base), 0);
 
+        // Use a kind of factorization of N over the factorials. In the end convert the digits to a number.
         for l in (1..unplaced.len() as isize).rev() {
             let f = factorial(l) as usize;
             sum += pow_10(l) * unplaced[value / f];

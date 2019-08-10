@@ -1,38 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::Solver;
-use euler::solver001::Solver001;
-use euler::solver002::Solver002;
-use euler::solver003::Solver003;
-use euler::solver004::Solver004;
-use euler::solver005::Solver005;
-use euler::solver006::Solver006;
-use euler::solver007::Solver007;
-use euler::solver008::Solver008;
-use euler::solver009::Solver009;
-use euler::solver010::Solver010;
-use euler::solver011::Solver011;
-use euler::solver012::Solver012;
-use euler::solver013::Solver013;
-use euler::solver014::Solver014;
-use euler::solver015::Solver015;
-use euler::solver016::Solver016;
-use euler::solver017::Solver017;
-use euler::solver018::Solver018;
-use euler::solver019::Solver019;
-use euler::solver020::Solver020;
-use euler::solver021::Solver021;
-use euler::solver022::Solver022;
-use euler::solver023::Solver023;
-use euler::solver024::Solver024;
-use euler::solver025::Solver025;
-use euler::solver026::Solver026;
-use euler::solver027::Solver027;
-use euler::solver028::Solver028;
-use euler::solver029::Solver029;
-use euler::solver030::Solver030;
-use euler::Solver031;
+use euler::*;
 
 #[test]
 fn solver_001_test() {
@@ -375,4 +344,99 @@ fn solver_031_test() {
     assert_eq!(Solver031 { n: 10, ..Default::default() }.solve(), 11);
     assert_eq!(Solver031 { n: 1000, ..Default::default() }.solve(), 321335886);
     assert_eq!(Solver031 { n: 5000, ..Default::default() }.solve(), 10082315214426);
+}
+
+#[test]
+fn solver_032_test() {
+    assert_eq!(Solver032::default().solve(), 45228);
+
+    assert_eq!(Solver032 { n: 3, ..Default::default() }.solve(), 0);
+    assert_eq!(Solver032 { n: 5, ..Default::default() }.solve(), 52);
+    assert_eq!(Solver032 { n: 6, ..Default::default() }.solve(), 162);
+    assert_eq!(Solver032 { n: 7, ..Default::default() }.solve(), 0);
+    assert_eq!(Solver032 { n: 8, ..Default::default() }.solve(), 13458);
+    //assert_eq!(Solver032 { n: 10, ..Default::default() }.solve(), 602220);
+}
+
+#[test]
+fn solver_033_test() {
+    assert_eq!(Solver033::default().solve(), 100);
+
+    assert_eq!(Solver033 { n: 1, ..Default::default() }.solve(), 1);
+    assert_eq!(Solver033 { n: 65, ..Default::default() }.solve(), 4);
+    assert_eq!(Solver033 { n: 66, ..Default::default() }.solve(), 10);
+    assert_eq!(Solver033 { n: 1000, ..Default::default() }.solve(), 100);
+}
+
+#[test]
+fn solver_034_test() {
+    assert_eq!(Solver034::default().solve(), 40730);
+
+    assert_eq!(Solver034 { n: 145, ..Default::default() }.solve(), 145);
+    assert_eq!(Solver034 { n: 100000, ..Default::default() }.solve(), 40730);
+}
+
+#[test]
+fn solver_035_test() {
+    assert_eq!(Solver035::default().solve(), 55);
+
+    assert_eq!(Solver035 { n: 5, ..Default::default() }.solve(), 2);
+    assert_eq!(Solver035 { n: 9, ..Default::default() }.solve(), 4);
+    assert_eq!(Solver035 { n: 20, ..Default::default() }.solve(), 7);
+    assert_eq!(Solver035 { n: 100, ..Default::default() }.solve(), 13);
+    assert_eq!(Solver035 { n: 100000, ..Default::default() }.solve(), 43);
+    assert_eq!(Solver035 { n: 10000000, ..Default::default() }.solve(), 55);
+}
+
+#[test]
+fn solver_036_test() {
+    assert_eq!(Solver036::default().solve(), 872187);
+
+    assert_eq!(Solver036 { n: 2, ..Default::default() }.solve(), 1);
+    assert_eq!(Solver036 { n: 20, ..Default::default() }.solve(), 25);
+    assert_eq!(Solver036 { n: 586, ..Default::default() }.solve(), 1055);
+    assert_eq!(Solver036 { n: 10000000, ..Default::default() }.solve(), 25846868);
+}
+
+#[test]
+fn solver_037_test() {
+    assert_eq!(Solver037::default().solve(), 748317);
+
+    assert_eq!(Solver037 { n: 1, ..Default::default() }.solve(), 23);
+    assert_eq!(Solver037 { n: 4, ..Default::default() }.solve(), 186);
+    assert_eq!(Solver037 { n: 9, ..Default::default() }.solve(), 5123);
+    assert_eq!(Solver037 { n: 10, ..Default::default() }.solve(), 8920);
+}
+
+#[test]
+fn solver_038_test() {
+    assert_eq!(Solver038::default().solve(), 932718654);
+
+    assert_eq!(Solver038 { n: 7, ..Default::default() }.solve(), 0);
+    assert_eq!(Solver038 { n: 8, ..Default::default() }.solve(), 78156234);
+    assert_eq!(Solver038 { n: 10, ..Default::default() }.solve(), 0);
+    assert_eq!(Solver038 { n: 15, ..Default::default() }.solve(), 0);
+}
+
+#[test]
+fn solver_039_test() {
+    assert_eq!(Solver039::default().solve(), 840);
+
+    assert_eq!(Solver039 { n: 14, ..Default::default() }.solve(), 12);
+    assert_eq!(Solver039 { n: 66, ..Default::default() }.solve(), 60);
+    assert_eq!(Solver039 { n: 150, ..Default::default() }.solve(), 120);
+    assert_eq!(Solver039 { n: 10000, ..Default::default() }.solve(), 7560);
+}
+
+#[test]
+fn solver_040_test() {
+    assert_eq!(Solver040::default().solve(), 210);
+
+    assert_eq!(Solver040 { n: 1, ..Default::default() }.solve(), 1);
+    assert_eq!(Solver040 { n: 2, ..Default::default() }.solve(), 1);
+    assert_eq!(Solver040 { n: 3, ..Default::default() }.solve(), 5);
+    assert_eq!(Solver040 { n: 4, ..Default::default() }.solve(), 15);
+    assert_eq!(Solver040 { n: 5, ..Default::default() }.solve(), 105);
+    assert_eq!(Solver040 { n: 10, ..Default::default() }.solve(), 11760);
+    assert_eq!(Solver040 { n: 12, ..Default::default() }.solve(), 0);
 }

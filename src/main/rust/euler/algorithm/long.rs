@@ -4,6 +4,16 @@
 use std::alloc::{alloc, Layout};
 use std::mem;
 
+pub const fn is_even(l: &isize) -> bool {
+    *l % 2 == 0
+}
+
+pub const fn is_odd(l: &isize) -> bool {
+    *l % 2 != 0
+}
+
+// --- //
+
 // Table for fast lookup of powers of 10
 const POW_10: [isize; 19] = [
     1,
@@ -32,6 +42,11 @@ pub const DEFAULT_RADIX: isize = 10;
 /// Convenience method to calculate the power when in base 10.
 pub fn pow_10(exp: isize) -> isize {
     POW_10[exp as usize]
+}
+
+/// Convenience method to calculate the integer logarithm in base 10.
+pub fn int_log_10(n: isize) -> isize {
+    (0..).find_map(|i| if n < POW_10[i] { Some(i as isize) } else { None }).unwrap()
 }
 
 /// calculates an approximate of the square root
@@ -70,9 +85,10 @@ pub fn arithmetic_sum(value: isize) -> isize {
     value * (value + 1) / 2
 }
 
+/// Simple method to calculate the factorial of small values. No checks are performed. Use with caution.
 pub fn factorial(value: isize) -> isize {
     let mut prod = 1;
-    for l in 1..value + 1 {
+    for l in 1..=value {
         prod *= l
     }
     prod
@@ -128,10 +144,14 @@ pub fn square(base: isize) -> isize {
 // --- //
 
 pub fn is_palindrome(value: isize) -> bool {
-    is_palindrome_digits(to_digits(value))
+    is_palindrome_digits(&to_digits(value))
 }
 
-fn is_palindrome_digits(digits: Vec<isize>) -> bool {
+pub fn is_palindrome_radix(value: isize, radix: isize) -> bool {
+    is_palindrome_digits(&to_digits_radix(value, radix))
+}
+
+fn is_palindrome_digits(digits: &Vec<isize>) -> bool {
     let (mut l, len, digits_ptr) = (digits.len() as isize / 2, digits.len() as isize, digits.as_ptr());
     while l != 0 {
         // fast read of digits
@@ -143,7 +163,29 @@ fn is_palindrome_digits(digits: Vec<isize>) -> bool {
     unsafe { *digits_ptr == *digits_ptr.offset(len - 1) }
 }
 
+/// Tests if a given number is pandigital, i.e. it has all the digits one and only once (excluding zero)
+pub fn is_pandigital(digits: &Vec<isize>) -> bool {
+    for i in 0..digits.len() as isize {
+        if !digits.contains(&(i + 1)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/// Concatenates two digits into a new one. First argument becomes more significant and second argument becomes less significant.
+pub fn concatenation(digit1: &mut Vec<isize>, digit2: &mut Vec<isize>) -> Vec<isize> {
+    let mut array = Vec::with_capacity(digit1.len() + digit2.len());
+    array.append(digit2);
+    array.append(digit1);
+    array
+}
+
 // --- //
+
+pub fn nth_digit(value: isize, n: isize) -> isize {
+    value / pow_10(int_log_10(value) - n) % DEFAULT_RADIX
+}
 
 pub fn to_digits(value: isize) -> Vec<isize> {
     to_digits_radix(value, DEFAULT_RADIX)
@@ -164,6 +206,94 @@ fn to_digits_radix(mut value: isize, radix: isize) -> Vec<isize> {
         *digits_ptr.offset(len) = value;
         Vec::from_raw_parts(digits_ptr, len as usize + 1, size)
     }
+}
+
+// --- //
+
+pub fn from_digits(digits: &Vec<isize>) -> isize {
+    from_digits_index_radix(digits, 0, digits.len(), DEFAULT_RADIX)
+}
+
+pub fn from_digits_index(digits: &Vec<isize>, from: usize, to: usize) -> isize {
+    from_digits_index_radix(digits, from, to, DEFAULT_RADIX)
+}
+
+fn from_digits_index_radix(digits: &Vec<isize>, from: usize, to: usize, radix: isize) -> isize {
+    let mut result = 0;
+    for i in from..to {
+        result += digits[i] * pow(radix, (i - from) as isize);
+    }
+    result
+}
+
+// --- //
+
+pub struct Decrementing {
+    value: isize
+}
+
+pub fn decrementing(initial: isize) -> Decrementing {
+    Decrementing { value: initial }
+}
+
+impl Iterator for Decrementing {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.value -= 1;
+        if self.value > 0 {
+            Some(self.value)
+        } else {
+            None
+        }
+    }
+}
+
+// --- //
+
+pub struct IncrementingDigits {
+    array: Vec<isize>
+}
+
+pub fn incrementing_digits(initial: isize) -> IncrementingDigits {
+    IncrementingDigits { array: to_digits(initial) }
+}
+
+impl Iterator for IncrementingDigits {
+    type Item = Vec<isize>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if !increase(&mut self.array) && !rotate(&mut self.array) {
+            expand(&mut self.array);
+        }
+        Some(self.array.to_owned())
+    }
+}
+
+fn increase(array: &mut Vec<isize>) -> bool {
+    if array[0] < 9 {
+        array[0] = array[0] + 1;
+        return true;
+    }
+    return false;
+}
+
+fn rotate(array: &mut Vec<isize>) -> bool {
+    for i in 1..array.len() {
+        array[i - 1] = 0;
+        if array[i] != 9 {
+            array[i] = array[i] + 1;
+            return true;
+        }
+    }
+    return false;
+}
+
+fn expand(array: &mut Vec<isize>) {
+    let size = array.len();
+    array.clear();
+    array.resize(size + 1, 0);
+    array[size] = 1;
 }
 
 // --- //

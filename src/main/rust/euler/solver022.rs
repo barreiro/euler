@@ -29,20 +29,8 @@ impl Default for Solver022 {
 
 impl Solver for Solver022 {
     fn solve(&self) -> isize {
-        let (mut names, mut sum) = (vec![], 0);
-
-        for s in self.input.split(',') {
-            names.push(s.trim_matches('\"'));
-        }
+        let mut names: Vec<&str> = self.input.split(',').map(|s| s.trim_matches('\"')).collect();
         names.sort();
-
-        for (i, name) in names.iter().enumerate() {
-            if i < self.n as usize {
-                for c in name.chars() {
-                    sum += (i + 1) * (c as usize - 'A' as usize + 1)
-                }
-            }
-        }
-        sum as isize
+        names.iter().take(self.n as usize).enumerate().map(|(i, name)| (i as isize + 1) * name.chars().map(|c| 1 + c as isize - 'A' as isize).sum::<isize>()).sum()
     }
 }

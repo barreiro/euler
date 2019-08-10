@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 
-use euler::algorithm::long::int_sqrt;
+use euler::algorithm::long::{int_sqrt, is_even};
 use euler::algorithm::long::power_modulo;
 
 const MILLER_RABIN_THRESHOLD: isize = 4759123141;
@@ -12,9 +12,8 @@ const MILLER_RABIN_BASE: &[isize] = &[2, 325, 9375, 28178, 450775, 9780504, 1795
 
 /// calculates the prime factors of a given number. The result is a map where the keys are primes and the values are the occurrences
 pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
-    let (mut factor_map, mut generator, mut value, small, stop) = (HashMap::new(), GeneratorTrialDivision::default(), n, n <= i32::max_value() as isize, int_sqrt(n));
-    loop {
-        let factor = generator.next_prime();
+    let (mut factor_map, mut value, small, stop) = (HashMap::new(), n, n <= i32::max_value() as isize, int_sqrt(n));
+    for factor in generator_trial_division() {
         while if small { value as i32 % factor as i32 == 0 } else { value % factor == 0 } {
             value /= factor;
             *factor_map.entry(factor).or_insert(0) += 1;
@@ -30,24 +29,21 @@ pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
     factor_map
 }
 
-/// Trait for prime generators
-pub trait PrimeGenerator {
-    fn next_prime(&mut self) -> isize;
-}
+// --- //
 
 /// closure that generates primes based on the method of trial division
 pub struct GeneratorTrialDivision {
     cache: Option<Vec<isize>>
 }
 
-impl Default for GeneratorTrialDivision {
-    fn default() -> Self {
-        GeneratorTrialDivision { cache: None }
-    }
+pub fn generator_trial_division() -> GeneratorTrialDivision {
+    GeneratorTrialDivision { cache: None }
 }
 
-impl PrimeGenerator for GeneratorTrialDivision {
-    fn next_prime(&mut self) -> isize {
+impl Iterator for GeneratorTrialDivision {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
         let next: isize = match &self.cache {
             None => {
                 2
@@ -88,33 +84,45 @@ impl PrimeGenerator for GeneratorTrialDivision {
             2 => { self.cache = Some(vec![]) }
             _ => { self.cache.get_or_insert(vec![]).push(next) }
         }
-        next
+        Some(next)
     }
 }
+
+// --- //
 
 /// closure that generates primes prime numbers, starting with the one below N.
 pub struct PrimesLessThan {
     pub n: isize
 }
 
-impl PrimeGenerator for PrimesLessThan {
-    fn next_prime(&mut self) -> isize {
-        self.n -= 1;
-        while !miller_rabin(self.n) {
-            self.n -= 1;
+pub fn primes_less_than(n: isize) -> PrimesLessThan {
+    PrimesLessThan { n: if is_even(&n) { n - 1 } else { n } }
+}
+
+impl Iterator for PrimesLessThan {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            self.n -= 2;
+            if miller_rabin(self.n) {
+                return Some(self.n);
+            }
         }
-        self.n
     }
 }
 
 pub fn miller_rabin(n: isize) -> bool {
+    if n == 1 {
+        return false;
+    }
     let base = if n < MILLER_RABIN_THRESHOLD { MILLER_RABIN_FAST } else { MILLER_RABIN_BASE };
     for b in base {
         if n > *b && !miller_rabin_pass(*b, n) {
             return false;
         }
     }
-    true
+    return true;
 }
 
 fn miller_rabin_pass(b: isize, n: isize) -> bool {
@@ -123,7 +131,7 @@ fn miller_rabin_pass(b: isize, n: isize) -> bool {
     let mut a = power_modulo(b, d, n);
 
     if a == 1 {
-        return true
+        return true;
     }
     for _ in 0..s - 1 {
         if a == n - 1 {

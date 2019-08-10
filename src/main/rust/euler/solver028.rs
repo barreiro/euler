@@ -1,8 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+use euler::algorithm::long::{is_odd, square};
 use euler::Solver;
-use euler::algorithm::long::square;
 
 // Starting with the number 1 and moving to the right in a clockwise direction a 5 by 5 spiral is formed as follows:
 // 21 22 23 24 25
@@ -27,13 +27,7 @@ impl Default for Solver028 {
 
 impl Solver for Solver028 {
     fn solve(&self) -> isize {
-        let mut sum = 1;
-        for i in 3..self.n + 1 {
-            if i % 2 != 0 {
-                // sum of the left corners == right corners == 2*i*i - 3*(i-1)
-                sum += 4 * square(i) - 6 * (i - 1);
-            }
-        }
-        sum
+        // sum of the left corners == right corners == 2*i*i - 3*(i-1)
+        (3..=self.n).filter(is_odd).map(|i| 4 * square(i) - 6 * (i - 1)).sum::<isize>() + 1
     }
 }

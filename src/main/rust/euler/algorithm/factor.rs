@@ -33,7 +33,7 @@ pub fn number_of_factors(value: isize) -> isize {
 // defined according to problem 21: numbers less than n which divide evenly into n
 pub fn sum_of_factors(value: isize) -> isize {
     let (mut sum, ceiling, small, perfect) = (1, int_sqrt(value), value <= std::i32::MAX as isize, square(int_sqrt(value)) == value);
-    for i in (2..ceiling + 1).rev() {
+    for i in (2..=ceiling).rev() {
         if if small { value as i32 % i as i32 == 0 } else { value % i == 0 } {
             sum += i + value / i;
         }
@@ -43,6 +43,6 @@ pub fn sum_of_factors(value: isize) -> isize {
     if perfect { sum - ceiling } else { sum }
 }
 
-pub fn is_abundant(value : isize) -> bool {
+pub fn is_abundant(value: isize) -> bool {
     value < sum_of_factors(value)
 }

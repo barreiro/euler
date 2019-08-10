@@ -19,6 +19,6 @@ impl Default for Solver003 {
 
 impl Solver for Solver003 {
     fn solve(&self) -> isize {
-        *prime_factors(self.n).keys().max().unwrap_or(&0)
+        *prime_factors(self.n).keys().max().unwrap()
     }
 }

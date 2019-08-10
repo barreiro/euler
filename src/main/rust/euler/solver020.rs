@@ -23,7 +23,7 @@ impl Default for Solver020 {
 impl Solver for Solver020 {
     fn solve(&self) -> isize {
         let (mut factorial, ceiling) = (long::to_digits(1), long::pow_10(10));
-        for n in 1..self.n + 1 {
+        for n in 1..=self.n {
             let mut carry = 0;
             for i in 0..factorial.len() {
                 let value = factorial[i] * n + carry;

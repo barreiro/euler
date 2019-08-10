@@ -33,12 +33,12 @@ impl Default for Solver012 {
 
 impl Solver for Solver012 {
     fn solve(&self) -> isize {
-        let mut value = self.n - 1;
         loop {
-            if number_of_factors(arithmetic_sum(value)) >= self.n {
-                break arithmetic_sum(value)
+            for value in self.n - 1.. {
+                if number_of_factors(arithmetic_sum(value)) >= self.n {
+                    return arithmetic_sum(value);
+                }
             }
-            value += 1;
         }
     }
 }

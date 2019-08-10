@@ -28,7 +28,7 @@ impl Default for Solver023 {
 impl Solver for Solver023 {
     fn solve(&self) -> isize {
         let (mut abundant, mut list, mut sum) = (vec![false; self.n as usize], vec![], arithmetic_sum(self.n));
-        for i in 1..1 + self.n {
+        for i in 1..=self.n {
             if is_abundant(i) {
                 abundant.insert(i as usize, true);
                 list.push(i);
@@ -37,7 +37,7 @@ impl Solver for Solver023 {
             for j in list.iter() {
                 if abundant[(i - *j) as usize] {
                     sum -= i;
-                    break
+                    break;
                 }
             }
         }

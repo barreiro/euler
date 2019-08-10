@@ -22,22 +22,9 @@ impl<'a> Default for Solver001<'a> {
 
 impl<'a> Solver for Solver001<'a> {
     fn solve(&self) -> isize {
-        let mut values = vec![];
+        // the contribution is the factor multiplied by the sum of the number of occurrences
+        let contribution = |factor| factor * arithmetic_sum((self.n - 1) / factor);
 
-        for factor in self.input {
-            values.push(contribution(*factor, self.n - 1));
-
-            for other in self.input {
-                if other < factor {
-                    values.push(-contribution(*factor * *other, self.n - 1));
-                }
-            }
-        }
-        values.iter().sum()
+        self.input.iter().map(|&factor| contribution(factor) - self.input.iter().filter(|&other| other < &factor).map(|&other| contribution(factor * other)).sum::<isize>()).sum()
     }
-}
-
-fn contribution(factor: isize, ceiling: isize) -> isize {
-    // the sum is the factor multiplied by the sum of the number of occurrences
-    factor * arithmetic_sum(ceiling / factor)
 }
