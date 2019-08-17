@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::{from_digits, int_log_10, to_digits};
+use euler::algorithm::long::{from_digits_index, int_log_10, to_digits};
 use euler::algorithm::prime::{generator_trial_division, miller_rabin};
 use euler::Solver;
 
@@ -15,9 +15,7 @@ pub struct Solver035 {
 
 impl Default for Solver035 {
     fn default() -> Self {
-        Solver035 {
-            n: 1000000
-        }
+        Solver035 { n: 1000000 }
     }
 }
 
@@ -28,16 +26,16 @@ impl Solver for Solver035 {
 }
 
 fn is_circular_prime(prime: isize) -> bool {
-    let digits = &mut to_digits(prime);
+    let mut digits = to_digits(prime);
 
     // circular primes are only made of the digits 1, 3, 7 and 9
     if prime >= 10 && digits.iter().any(|&d| d != 1 && d != 3 && d != 7 && d != 9) {
         return false;
     }
 
-    let mut next_rotation = || {
+    let next_rotation = |_| {
         digits.rotate_left(1);
-        from_digits(digits)
+        from_digits_index(&digits, 0, digits.len())
     };
-    (1..int_log_10(prime)).map(|_| next_rotation()).all(|p| miller_rabin(p))
+    (1..int_log_10(prime)).map(next_rotation).all(miller_rabin)
 }

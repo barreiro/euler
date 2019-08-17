@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long;
+use euler::algorithm::long::{pow_10, to_digits};
 use euler::Solver;
 
 // n! means n × (n − 1) × ... × 3 × 2 × 1
@@ -14,15 +14,13 @@ pub struct Solver020 {
 
 impl Default for Solver020 {
     fn default() -> Self {
-        Solver020 {
-            n: 100
-        }
+        Solver020 { n: 100 }
     }
 }
 
 impl Solver for Solver020 {
     fn solve(&self) -> isize {
-        let (mut factorial, ceiling) = (long::to_digits(1), long::pow_10(10));
+        let (mut factorial, ceiling) = (vec![1], pow_10(10));
         for n in 1..=self.n {
             let mut carry = 0;
             for i in 0..factorial.len() {
@@ -37,6 +35,6 @@ impl Solver for Solver020 {
                 factorial.push(carry)
             }
         }
-        factorial.iter().fold(0, |sum, &x| sum + long::to_digits(x).iter().fold(0, |sum, &y| sum + y))
+        factorial.iter().fold(0, |sum, &x| sum + to_digits(x).iter().fold(0, |sum, &y| sum + y))
     }
 }

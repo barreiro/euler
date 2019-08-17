@@ -1,11 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::collections::HashSet;
-
-use euler::algorithm::long::int_sqrt;
-use euler::algorithm::long::pow;
-use euler::algorithm::long::square;
+use euler::algorithm::bit::bit_set;
+use euler::algorithm::long::{int_sqrt, pow, square};
 use euler::algorithm::prime::prime_factors;
 use euler::Solver;
 
@@ -24,16 +21,14 @@ pub struct Solver029 {
 
 impl Default for Solver029 {
     fn default() -> Self {
-        Solver029 {
-            n: 100,
-        }
+        Solver029 { n: 100 }
     }
 }
 
 impl Solver for Solver029 {
     fn solve(&self) -> isize {
         // a given number 2≤a≤N can only produce duplicates if 'a^n' can be expressed as '(b^i)^j' with n=i∗j and 2≤n,i,j≤N
-        let (mut duplicates, bound, mut unique) = (0, int_sqrt(self.n) + 1, HashSet::new());
+        let (mut duplicates, bound, mut unique) = (0, int_sqrt(self.n) + 1, bit_set());
         for b in 2..bound {
             for i in 2..bound {
                 let a = pow(b, i);
@@ -63,9 +58,9 @@ impl Solver for Solver029 {
 
 fn factored_power(base: isize, power: isize) -> (isize, isize) {
     let (mut factored_base, mut factored_exp, factors) = (1, 0, prime_factors(base));
-    for (k, v) in factors.iter() {
-        factored_base *= *k;
-        factored_exp += *v;
+    for (&k, &v) in &factors {
+        factored_base *= k;
+        factored_exp += v;
     }
     (factored_base, factored_exp * power / factors.len() as isize)
 }

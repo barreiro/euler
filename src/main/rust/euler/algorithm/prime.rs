@@ -16,7 +16,7 @@ pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
     for factor in generator_trial_division() {
         while if small { value as i32 % factor as i32 == 0 } else { value % factor == 0 } {
             value /= factor;
-            *factor_map.entry(factor).or_insert(0) += 1;
+            factor_map.entry(factor).and_modify(|e| *e += 1).or_insert(1);
         }
         if factor >= stop {
             // if the number is prime, or if there is still a remainder, add itself as a factor
@@ -33,59 +33,34 @@ pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
 
 /// closure that generates primes based on the method of trial division
 pub struct GeneratorTrialDivision {
-    cache: Option<Vec<isize>>
+    sieve: Vec<isize>
 }
 
 pub fn generator_trial_division() -> GeneratorTrialDivision {
-    GeneratorTrialDivision { cache: None }
+    GeneratorTrialDivision { sieve: vec![] }
 }
 
 impl Iterator for GeneratorTrialDivision {
     type Item = isize;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let next: isize = match &self.cache {
-            None => {
-                2
+        let next = match self.sieve.last() {
+            None => { 2 }
+            Some(2) => {
+                self.sieve.clear();
+                3
             }
-            Some(cache) => match cache.last() {
-                None => {
-                    3
-                }
-                Some(last) => {
-                    let (mut found, mut candidate, stop) = (false, *last, &int_sqrt(*last));
-                    loop {
-                        candidate += 2;
-
-                        let (mut i, small, len, cache_ptr) = (0 as isize, candidate <= i32::max_value() as isize, cache.len() as isize, cache.as_ptr());
-
-                        while i < len {
-                            // fast read of cache
-                            let factor = unsafe { *cache_ptr.offset(i) as isize };
-                            i += 1;
-
-                            if if small { candidate as i32 % factor as i32 == 0 } else { candidate % factor == 0 } {
-                                break;
-                            }
-
-                            if factor >= *stop {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if found {
-                            break candidate;
-                        }
-                    }
-                }
-            }
+            last => { (last.unwrap() + 2..).step_by(2).find(|&candidate| prime_sieve(candidate, &self.sieve)).unwrap() }
         };
-        match next {
-            2 => { self.cache = Some(vec![]) }
-            _ => { self.cache.get_or_insert(vec![]).push(next) }
-        }
+
+        self.sieve.push(next);
         Some(next)
     }
+}
+
+pub fn prime_sieve(n: isize, sieve: &[isize]) -> bool {
+    let (ceil, is_factor) = (int_sqrt(n), |&f| if n <= i32::max_value() as isize { n as i32 % f as i32 == 0 } else { n % f == 0 });
+    !sieve.iter().take_while(|&&factor| factor <= ceil).any(is_factor)
 }
 
 // --- //
@@ -106,7 +81,7 @@ impl Iterator for PrimesLessThan {
         loop {
             self.n -= 2;
             if miller_rabin(self.n) {
-                return Some(self.n);
+                return if self.n > 1 { Some(self.n) } else { None };
             }
         }
     }
@@ -116,13 +91,12 @@ pub fn miller_rabin(n: isize) -> bool {
     if n == 1 {
         return false;
     }
-    let base = if n < MILLER_RABIN_THRESHOLD { MILLER_RABIN_FAST } else { MILLER_RABIN_BASE };
-    for b in base {
-        if n > *b && !miller_rabin_pass(*b, n) {
+    for &b in if n < MILLER_RABIN_THRESHOLD { MILLER_RABIN_FAST } else { MILLER_RABIN_BASE } {
+        if n > b && !miller_rabin_pass(b, n) {
             return false;
         }
     }
-    return true;
+    true
 }
 
 fn miller_rabin_pass(b: isize, n: isize) -> bool {

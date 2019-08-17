@@ -16,16 +16,14 @@ pub struct Solver034 {
 
 impl Default for Solver034 {
     fn default() -> Self {
-        Solver034 {
-            n: factorial(9)
-        }
+        Solver034 { n: factorial(9) }
     }
 }
 
 impl Solver for Solver034 {
     fn solve(&self) -> isize {
-        let fast_factorial_sum = |l: &[isize]| l.iter().map(|&d| FACTORIAL_CACHE[d as usize]).sum();
+        let fast_factorial_sum = |l: Vec<_>| l.iter().map(|&d| FACTORIAL_CACHE[d as usize]).sum();
 
-        incrementing_digits(3).take(self.n as usize).enumerate().filter_map(|(n, digits)| if 4 + n as isize == fast_factorial_sum(&digits) { Some(4 + n as isize) } else { None }).sum()
+        incrementing_digits(3).take(self.n as _).enumerate().filter_map(|(n, digits)| if 4 + n as isize == fast_factorial_sum(digits) { Some(4 + n as isize) } else { None }).sum()
     }
 }

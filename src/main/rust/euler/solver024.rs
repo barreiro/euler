@@ -19,10 +19,7 @@ pub struct Solver024<'a> {
 
 impl<'a> Default for Solver024<'a> {
     fn default() -> Self {
-        Solver024 {
-            n: 1000000,
-            base: BASE,
-        }
+        Solver024 { n: 1000000, base: BASE }
     }
 }
 
@@ -31,7 +28,7 @@ impl<'a> Solver for Solver024<'a> {
         let (mut value, mut unplaced, mut sum) = (self.n as usize - 1, Vec::from(self.base), 0);
 
         // Use a kind of factorization of N over the factorials. In the end convert the digits to a number.
-        for l in (1..unplaced.len() as isize).rev() {
+        for l in (1..unplaced.len() as _).rev() {
             let f = factorial(l) as usize;
             sum += pow_10(l) * unplaced[value / f];
             unplaced.remove(value / f);

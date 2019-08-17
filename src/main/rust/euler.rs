@@ -1,12 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::time::Instant;
 pub use euler::*;
 
 fn solve(n: usize, solver: impl euler::Solver) {
-    let now = Instant::now();
-    println!("Solution for problem {:03} is {:12} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().subsec_nanos() as f64 / 1000000.0);
+    let now = std::time::Instant::now();
+    println!("Solution for problem {:03} is {:12} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_nanos() as f64 / 1000000.0);
 }
 
 fn main() {
@@ -50,6 +49,16 @@ fn main() {
     solve(038, Solver038::default());
     solve(039, Solver039::default());
     solve(040, Solver040::default());
+    solve(041, Solver041::default());
+    solve(042, Solver042::default());
+    solve(043, Solver043::default());
+    solve(044, Solver044::default());
+    solve(045, Solver045::default());
+    solve(046, Solver046::default());
+    solve(047, Solver047::default());
+    solve(048, Solver048::default());
+    solve(049, Solver049::default());
+    solve(050, Solver050::default());
 }
 
 mod euler {
@@ -65,6 +74,7 @@ mod euler {
         #[cfg(test)]
         mod algorithm_test;
 
+        pub mod bit;
         pub mod combinatorics;
         pub mod factor;
         pub mod long;
@@ -111,6 +121,16 @@ mod euler {
     pub mod solver038;
     pub mod solver039;
     pub mod solver040;
+    pub mod solver041;
+    pub mod solver042;
+    pub mod solver043;
+    pub mod solver044;
+    pub mod solver045;
+    pub mod solver046;
+    pub mod solver047;
+    pub mod solver048;
+    pub mod solver049;
+    pub mod solver050;
 
     pub use self::solver001::Solver001;
     pub use self::solver002::Solver002;
@@ -152,4 +172,14 @@ mod euler {
     pub use self::solver038::Solver038;
     pub use self::solver039::Solver039;
     pub use self::solver040::Solver040;
+    pub use self::solver041::Solver041;
+    pub use self::solver042::Solver042;
+    pub use self::solver043::Solver043;
+    pub use self::solver044::Solver044;
+    pub use self::solver045::Solver045;
+    pub use self::solver046::Solver046;
+    pub use self::solver047::Solver047;
+    pub use self::solver048::Solver048;
+    pub use self::solver049::Solver049;
+    pub use self::solver050::Solver050;
 }

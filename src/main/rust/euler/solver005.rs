@@ -25,7 +25,7 @@ impl Solver for Solver005 {
         let mut factors_of_smallest = HashMap::new();
         for l in 2..self.n {
             for (key, value) in prime_factors(l) {
-                *factors_of_smallest.entry(key).or_insert(0) = value.max(*factors_of_smallest.get(&key).unwrap_or(&0));
+                factors_of_smallest.entry(key).and_modify(|e| *e = value.max(*e)).or_insert(value);
             }
         }
         factor_composition(factors_of_smallest)

@@ -21,17 +21,15 @@ pub struct Solver038 {
 
 impl Default for Solver038 {
     fn default() -> Self {
-        Solver038 {
-            n: 9
-        }
+        Solver038 { n: 9 }
     }
 }
 
 impl Solver for Solver038 {
     fn solve(&self) -> isize {
         // generate the natural product concatenation and check if it's a pandigital. find the first according to the most significant digit ordering
-        let (product_concatenation, pandigital) = (|v| natural_product_concatenation(v, self.n), |d: &Vec<isize>| d.len() == self.n as usize && is_pandigital(d));
-        decrementing_by_most_significant(self.n, int_sqrt(self.n)).map(product_concatenation).find(pandigital).map_or(0, |d| from_digits(&d))
+        let (product_concatenation, pandigital) = (|v| natural_product_concatenation(v, self.n), |d: &Vec<_>| d.len() == self.n as usize && is_pandigital(d));
+        decrementing_by_most_significant(self.n, int_sqrt(self.n)).map(product_concatenation).find(pandigital).map_or(0, from_digits)
     }
 }
 
@@ -42,7 +40,7 @@ fn natural_product_concatenation(value: isize, size: isize) -> Vec<isize> {
             return digits;
         }
         n += value;
-        digits = concatenation(&mut digits, &mut to_digits(n));
+        digits = concatenation(&digits, &to_digits(n));
     }
 }
 

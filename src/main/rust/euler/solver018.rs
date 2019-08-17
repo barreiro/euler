@@ -51,13 +51,9 @@ impl<'a> Solver for Solver018<'a> {
     }
 }
 
-fn best_sum(level: isize, index: usize, heap: &Vec<isize>) -> isize {
-    let heap_index = arithmetic_sum(level) as usize + index;
-    if heap_index < heap.len() {
-        heap[heap_index] + best_sum(level + 1, index, &heap).max(best_sum(level + 1, index + 1, &heap))
-    } else {
-        0
-    }
+fn best_sum(level: isize, index: isize, heap: &[isize]) -> isize {
+    let heap_index = (arithmetic_sum(level) + index) as usize;
+    if heap_index >= heap.len() { 0 } else { heap[heap_index] + best_sum(level + 1, index, heap).max(best_sum(level + 1, index + 1, heap)) }
 }
 
 // --- //

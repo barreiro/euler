@@ -1,9 +1,6 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::alloc::{alloc_zeroed, dealloc, Layout};
-use std::mem;
-
 use euler::Solver;
 
 // The following iterative sequence is defined for the set of positive integers: n → n/2 (n is even) n → 3n + 1 (n is odd)
@@ -28,53 +25,35 @@ impl Default for Solver014 {
 
 impl Solver for Solver014 {
     fn solve(&self) -> isize {
-        let (mut i, mut max, mut max_length, collatz) = (self.n, 1, 1, CollatzMemoize::with_size(self.n));
-        while i > 1 {
-            i -= 1;
-            let collatz_length = collatz.length(i);
-            if collatz_length > max_length {
-                max_length = collatz_length;
-                max = i;
-            }
-        }
-        max
+        let mut collatz = collatz_memoize(self.n as _);
+        (3..self.n).step_by(2).max_by(|&x, &y| collatz.length(x).cmp(&collatz.length(y))).unwrap()
     }
 }
 
 // --- //
 
 struct CollatzMemoize {
-    size: isize,
-    cache: *mut isize,
+    size: usize,
+    cache: Vec<isize>,
+}
+
+fn collatz_memoize(size: usize) -> CollatzMemoize {
+    let mut cache = vec![0; size];
+    cache[1] = 1;
+    CollatzMemoize { size, cache }
 }
 
 impl CollatzMemoize {
-    fn with_size(size: isize) -> Self {
-        let cache = unsafe { alloc_zeroed(Layout::from_size_align_unchecked(mem::size_of::<isize>() * size as usize, mem::align_of::<isize>())) as *mut isize };
-        let instance = CollatzMemoize { size, cache };
-        unsafe { instance.cache.offset(1).write(1) }
-        instance
-    }
-
-    fn length(&self, i: isize) -> isize {
-        if i < self.size {
-            let cached = unsafe { self.cache.offset(i).read() };
-            if cached != 0 {
-                return cached;
-            }
+    fn length(&mut self, value: isize) -> isize {
+        let i = value as usize;
+        if i < self.size && self.cache[i] != 0 {
+            return self.cache[i];
         }
-
-        let collatz = self.length(if i & 1 == 0 { i / 2 } else { i * 3 + 1 }) + 1;
+        let collatz = 1 + self.length(if value & 1 == 0 { value / 2 } else { value * 3 + 1 });
 
         if i < self.size {
-            unsafe { self.cache.offset(i).write(collatz) }
+            self.cache[i] = collatz;
         }
         collatz
-    }
-}
-
-impl Drop for CollatzMemoize {
-    fn drop(&mut self) {
-        unsafe { dealloc(self.cache as *mut u8, Layout::from_size_align_unchecked(mem::size_of::<isize>() * self.size as usize, mem::align_of::<isize>())) };
     }
 }

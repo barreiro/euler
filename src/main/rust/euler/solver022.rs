@@ -20,17 +20,15 @@ pub struct Solver022 {
 impl Default for Solver022 {
     fn default() -> Self {
         let location = BASE_PATH.to_string() + "problem022-data.txt";
-        Solver022 {
-            n: 5163,
-            input: fs::read_to_string(Path::new(location.trim())).expect("Unable to read file"),
-        }
+        let path = Path::new(location.trim());
+        Solver022 { n: 5163, input: fs::read_to_string(path).expect("Unable to read file") }
     }
 }
 
 impl Solver for Solver022 {
     fn solve(&self) -> isize {
-        let mut names: Vec<&str> = self.input.split(',').map(|s| s.trim_matches('\"')).collect();
+        let mut names = self.input.split(',').map(|s| s.trim_matches('\"')).collect::<Vec<_>>();
         names.sort();
-        names.iter().take(self.n as usize).enumerate().map(|(i, name)| (i as isize + 1) * name.chars().map(|c| 1 + c as isize - 'A' as isize).sum::<isize>()).sum()
+        names.iter().take(self.n as _).enumerate().map(|(i, name)| (i as isize + 1) * name.chars().map(|c| 1 + c as isize - 'A' as isize).sum::<isize>()).sum()
     }
 }

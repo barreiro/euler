@@ -25,19 +25,13 @@ pub struct Solver019 {
 
 impl Default for Solver019 {
     fn default() -> Self {
-        Solver019 {
-            n: 100
-        }
+        Solver019 { n: 100 }
     }
 }
 
 impl Solver for Solver019 {
     fn solve(&self) -> isize {
-        let mut sum = 0;
-        for y in REFERENCE..REFERENCE + self.n {
-            sum += if is_leap(y) { sundays_leap(start_day(y)) } else { sundays_common(start_day(y)) }
-        }
-        sum
+        (REFERENCE..REFERENCE + self.n).map(|y| if is_leap(y) { sundays_leap(start_day(y)) } else { sundays_common(start_day(y)) }).sum()
     }
 }
 
@@ -48,25 +42,13 @@ fn is_leap(year: isize) -> bool {
 }
 
 fn start_day(year: isize) -> isize {
-    let mut sum = REFERENCE_START;
-    for y in REFERENCE..year {
-        sum += if is_leap(y) { 366 } else { 365 }
-    }
-    sum % 7
+    (REFERENCE_START + (REFERENCE..year).map(|y| if is_leap(y) { 366 } else { 365 }).sum::<isize>()) % 7
 }
 
 fn sundays_common(start: isize) -> isize {
-    let mut sum = 0;
-    for d in DAYS_COMMON {
-        sum += if (start + *d) % 7 == 0 { 1 } else { 0 }
-    }
-    sum
+    DAYS_COMMON.iter().filter(|&&d| (start + d) % 7 == 0).count() as isize
 }
 
 fn sundays_leap(start: isize) -> isize {
-    let mut sum = 0;
-    for d in DAYS_LEAP {
-        sum += if (start + *d) % 7 == 0 { 1 } else { 0 }
-    }
-    sum
+    DAYS_LEAP.iter().filter(|&&d| (start + d) % 7 == 0).count() as isize
 }

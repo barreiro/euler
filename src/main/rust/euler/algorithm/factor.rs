@@ -3,44 +3,39 @@
 
 use std::collections::HashMap;
 
-use euler::algorithm::long::{int_sqrt, pow, square};
+use euler::algorithm::long::{int_sqrt, is_perfect, pow};
 
 pub fn factor_composition(factor_map: HashMap<isize, isize>) -> isize {
-    factor_map.iter().map(|(base, exp)| -> isize { pow(*base, *exp) }).product()
+    factor_map.iter().map(|(&base, &exp)| pow(base, exp)).product()
 }
 
 pub fn has_factor_below(value: isize, roof: isize) -> bool {
-    for l in int_sqrt(value)..roof {
-        if value % l == 0 && value / l < roof {
-            return true;
-        }
-    }
-    false
+    (int_sqrt(value)..roof).any(|l| value % l == 0 && value / l < roof)
 }
 
 pub fn number_of_factors(value: isize) -> isize {
-    let (mut factors, mut i, small, perfect) = (0, int_sqrt(value), value <= std::i32::MAX as isize, square(int_sqrt(value)) == value);
-    while i > 0 {
-        if if small { value as i32 % i as i32 == 0 } else { value % i == 0 } {
-            factors += 1
+    let (mut f, mut factors) = (int_sqrt(value), 0);
+    while f > 0 {
+        if if value <= std::i32::MAX as isize { value as i32 % f as i32 == 0 } else { value % f == 0 } {
+            factors += 1;
         }
-        i -= 1;
+        f -= 1;
     }
     // need to adjust the number of divisors if the number is a perfect square
-    if perfect { 2 * factors - 1 } else { 2 * factors }
+    2 * factors - if is_perfect(value) { 1 } else { 0 }
 }
 
 // defined according to problem 21: numbers less than n which divide evenly into n
 pub fn sum_of_factors(value: isize) -> isize {
-    let (mut sum, ceiling, small, perfect) = (1, int_sqrt(value), value <= std::i32::MAX as isize, square(int_sqrt(value)) == value);
-    for i in (2..=ceiling).rev() {
-        if if small { value as i32 % i as i32 == 0 } else { value % i == 0 } {
-            sum += i + value / i;
+    let (mut f, mut sum) = (int_sqrt(value), 1);
+    while f > 1 {
+        if if value <= std::i32::MAX as isize { value as i32 % f as i32 == 0 } else { value % f == 0 } {
+            sum += f + value / f;
         }
+        f -= 1;
     }
-
     // need to adjust the number of divisors if the number is a perfect square
-    if perfect { sum - ceiling } else { sum }
+    if is_perfect(value) { sum - int_sqrt(value) } else { sum }
 }
 
 pub fn is_abundant(value: isize) -> bool {

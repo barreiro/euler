@@ -15,23 +15,19 @@ pub struct Solver021 {
 
 impl Default for Solver021 {
     fn default() -> Self {
-        Solver021 {
-            n: 10000
-        }
+        Solver021 { n: 10000 }
     }
 }
 
 impl Solver for Solver021 {
     fn solve(&self) -> isize {
-        let (mut factor_sum, mut amicable_sum) = (vec![0; self.n as usize], 0);
-        for i in 1..self.n {
-            let sum = sum_of_factors(i);
-            factor_sum[i as usize] = sum;
+        let mut factor_sum = Vec::with_capacity(self.n as _);
+        factor_sum.push(0);
 
-            if sum < i && factor_sum[sum as usize] == i {
-                amicable_sum += sum + i;
-            }
-        }
-        amicable_sum
+        (1..self.n).filter_map(|i| {
+            let sum = sum_of_factors(i);
+            factor_sum.push(sum);
+            if sum < i && factor_sum[sum as usize] == i { Some(sum + i) } else { None }
+        }).sum()
     }
 }

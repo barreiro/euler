@@ -1,7 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::combinatorics::permutation_array;
+use euler::algorithm::bit::bit_set;
+use euler::algorithm::combinatorics::permutations_with;
 use euler::algorithm::long::from_digits_index;
 use euler::Solver;
 
@@ -16,31 +17,24 @@ pub struct Solver032 {
 
 impl Default for Solver032 {
     fn default() -> Self {
-        Solver032 {
-            n: 9
-        }
+        Solver032 { n: 9 }
     }
 }
 
 impl Solver for Solver032 {
     fn solve(&self) -> isize {
-        // products are found together, so for deduplication just compare with the previous seen
-        let sum_deduplication = |state: &mut isize, a| {
-            let dup = *state == a;
-            *state = a;
-            if !dup { Some(a) } else { Some(0) }
-        };
+        let mut set = bit_set();
 
-        permutation_array((1..=self.n).collect::<Vec<_>>()).filter_map(|p| {
-            for i in 1..self.n as usize - 1 {
-                for j in i + 1..self.n as usize {
-                    let (a, b, c) = (from_digits_index(&p, 0, i), from_digits_index(&p, i, j), from_digits_index(&p, j, self.n as usize));
+        permutations_with(1, self.n, |p| {
+            for i in 1..p.len() - 1 {
+                for j in i + 1..p.len() {
+                    let (a, b, c) = (from_digits_index(p, 0, i), from_digits_index(p, i, j), from_digits_index(p, j, p.len()));
                     if a == b * c {
                         return Some(a);
                     }
                 }
             }
             return None;
-        }).scan(0, sum_deduplication).sum()
+        }).filter(|&a| set.insert(a)).sum()
     }
 }

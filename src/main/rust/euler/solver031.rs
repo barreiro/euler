@@ -17,10 +17,7 @@ pub struct Solver031<'a> {
 
 impl<'a> Default for Solver031<'a> {
     fn default() -> Self {
-        Solver031 {
-            n: 200,
-            currency: CURRENCY,
-        }
+        Solver031 { n: 200, currency: CURRENCY }
     }
 }
 

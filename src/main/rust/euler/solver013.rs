@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::{pow_10, DEFAULT_RADIX};
+use euler::algorithm::long::first_digits;
 use euler::Solver;
 
 // Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
@@ -121,10 +121,7 @@ impl<'a> Default for Solver013<'a> {
 
 impl<'a> Solver for Solver013<'a> {
     fn solve(&self) -> isize {
-        let mut sum = self.input.iter().map(|&s| s.get(..=self.n as usize).unwrap().parse::<isize>().unwrap()).sum();
-        while sum >= pow_10(self.n) {
-            sum /= DEFAULT_RADIX;
-        }
-        sum
+        let sum = self.input.iter().map(|&s| s.get(..=self.n as usize).unwrap().parse::<isize>().unwrap()).sum();
+        first_digits(sum, self.n)
     }
 }

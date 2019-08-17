@@ -19,23 +19,21 @@ pub struct Solver023 {
 
 impl Default for Solver023 {
     fn default() -> Self {
-        Solver023 {
-            n: 28123,
-        }
+        Solver023 { n: 28123 }
     }
 }
 
 impl Solver for Solver023 {
     fn solve(&self) -> isize {
-        let (mut abundant, mut list, mut sum) = (vec![false; self.n as usize], vec![], arithmetic_sum(self.n));
+        let (mut abundant, mut list, mut sum) = (vec![false; 1 + self.n as usize], Vec::with_capacity(self.n as _), arithmetic_sum(self.n));
         for i in 1..=self.n {
             if is_abundant(i) {
-                abundant.insert(i as usize, true);
+                abundant[i as usize] |= true;
                 list.push(i);
             }
 
-            for j in list.iter() {
-                if abundant[(i - *j) as usize] {
+            for &j in &list {
+                if abundant[(i - j) as usize] {
                     sum -= i;
                     break;
                 }

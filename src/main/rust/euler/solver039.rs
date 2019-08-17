@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::{int_sqrt, is_odd};
+use euler::algorithm::long::int_sqrt;
 use euler::Solver;
 
 // If p is the perimeter of a right angle triangle with integral length sides, {a,b,c}, there are exactly three solutions for p = 120.
@@ -14,9 +14,7 @@ pub struct Solver039 {
 
 impl Default for Solver039 {
     fn default() -> Self {
-        Solver039 {
-            n: 1000
-        }
+        Solver039 { n: 1000 }
     }
 }
 
@@ -35,7 +33,7 @@ fn pythagorean_triples(value: isize) -> isize {
     for m in 2..int_sqrt(value) {
         for n in 1..m {
             let sum = m * m - n * n + 2 * m * n + m * m + n * n;
-            if value == sum || value % sum == 0 && is_odd(&(value / sum)) {
+            if value == sum || value % sum == 0 && (value / sum) & 1 != 0 {
                 count += 1;
             }
         }

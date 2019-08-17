@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::{pow_10, nth_digit, DEFAULT_RADIX};
+use euler::algorithm::long::{DEFAULT_RADIX, nth_digit, pow, pow_10};
 use euler::Solver;
 
 // An irrational decimal fraction is created by concatenating the positive integers:
@@ -18,9 +18,7 @@ pub struct Solver040 {
 
 impl Default for Solver040 {
     fn default() -> Self {
-        Solver040 {
-            n: 7
-        }
+        Solver040 { n: 7 }
     }
 }
 
@@ -31,7 +29,7 @@ impl Solver for Solver040 {
             let (mut length, mut ledge) = (1, 0);
             loop {
                 let previous = ledge;
-                ledge += (DEFAULT_RADIX - 1) * length * pow_10(length - 1);
+                ledge += (DEFAULT_RADIX - 1) * length * pow(DEFAULT_RADIX, length - 1);
                 length += 1;
                 if position <= ledge {
                     return (length - 1, position - 1 - previous);
@@ -39,12 +37,12 @@ impl Solver for Solver040 {
             }
         };
 
-        let d = |position| {
+        let d_function = |position| {
             // Compute the size of the integer and it's offset from the ledge. From there calculate the number and the index of the digit.
             let (length, offset) = ledge(position);
             nth_digit(pow_10(length - 1) + offset / length, offset % length + 1)
         };
 
-        (0..self.n).map(|n| pow_10(n)).map(|n| d(n)).product()
+        (0..self.n).map(pow_10).map(d_function).product()
     }
 }

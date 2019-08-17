@@ -26,9 +26,7 @@ pub struct Solver025 {
 
 impl Default for Solver025 {
     fn default() -> Self {
-        Solver025 {
-            n: 1000,
-        }
+        Solver025 { n: 1000 }
     }
 }
 

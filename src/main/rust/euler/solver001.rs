@@ -23,8 +23,8 @@ impl<'a> Default for Solver001<'a> {
 impl<'a> Solver for Solver001<'a> {
     fn solve(&self) -> isize {
         // the contribution is the factor multiplied by the sum of the number of occurrences
-        let contribution = |factor| factor * arithmetic_sum((self.n - 1) / factor);
+        let contribution = |factor: isize| factor * arithmetic_sum((self.n - 1) / factor);
 
-        self.input.iter().map(|&factor| contribution(factor) - self.input.iter().filter(|&other| other < &factor).map(|&other| contribution(factor * other)).sum::<isize>()).sum()
+        self.input.iter().map(|&factor| contribution(factor) - self.input.iter().take_while(|&&f| f < factor).map(|&other| contribution(factor * other)).sum::<isize>()).sum()
     }
 }

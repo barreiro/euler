@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::factor::has_factor_below;
-use euler::algorithm::long::{is_palindrome, pow_10, square, decrementing};
+use euler::algorithm::long::{decrementing, is_palindrome, pow_10, square};
 use euler::Solver;
 
 // A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
@@ -20,6 +20,7 @@ impl Default for Solver004 {
 
 impl Solver for Solver004 {
     fn solve(&self) -> isize {
-        decrementing(square(pow_10(self.n))).find(|&p| is_palindrome(p) && has_factor_below(p, pow_10(self.n))).unwrap()
+        let scale = pow_10(self.n);
+        decrementing(square(scale)).find(|&p| is_palindrome(p) && has_factor_below(p, scale)).unwrap()
     }
 }

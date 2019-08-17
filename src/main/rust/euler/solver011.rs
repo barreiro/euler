@@ -43,20 +43,20 @@ impl<'a> Default for Solver011<'a> {
 
 impl<'a> Solver for Solver011<'a> {
     fn solve(&self) -> isize {
-        let (mut candidates, grid) = (vec![], grid_str(self.input));
+        let (mut greatest, grid) = (0, grid_str(self.input));
         for n in self.n as usize - 1..grid.len() {
             for m in self.n as usize - 1..grid[n].len() {
                 let (mut row, mut column, mut diag_a, mut diag_b) = (1, 1, 1, 1);
-                for i in 0..self.n as usize {
+                for i in 0..self.n as _ {
                     row *= grid[n][m - i];
                     column *= grid[n - i][m];
                     diag_a *= grid[n - i][m - i];
                     diag_b *= grid[n - i][m + i + 1 - self.n as usize]
                 }
-                candidates.push(row.max(column.max(diag_a.max(diag_b))));
+                greatest = greatest.max(row.max(column.max(diag_a.max(diag_b))));
             }
         }
-        *candidates.iter().max().unwrap()
+        greatest
     }
 }
 

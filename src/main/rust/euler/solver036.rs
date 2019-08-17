@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::combinatorics::palindrome_array;
+use euler::algorithm::combinatorics::palindromes;
 use euler::algorithm::long::{from_digits, is_palindrome_radix};
 use euler::Solver;
 
@@ -15,14 +15,12 @@ pub struct Solver036 {
 
 impl Default for Solver036 {
     fn default() -> Self {
-        Solver036 {
-            n: 1000000
-        }
+        Solver036 { n: 1000000 }
     }
 }
 
 impl Solver for Solver036 {
     fn solve(&self) -> isize {
-        palindrome_array().map(|array| from_digits(&array)).take_while(|&p| p < self.n).filter(|&p| is_palindrome_radix(p, 2)).sum()
+        palindromes().map(|array| from_digits(array)).take_while(|&p| p < self.n).filter(|&p| is_palindrome_radix(p, 2)).sum()
     }
 }

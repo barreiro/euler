@@ -2,14 +2,14 @@
 // Rust solvers for Project Euler problems
 
 use std::alloc::{alloc, Layout};
-use std::mem;
+use std::mem::{align_of, size_of};
 
-pub const fn is_even(l: &isize) -> bool {
-    *l % 2 == 0
+pub const fn is_even(&l: &isize) -> bool {
+    l % 2 == 0
 }
 
-pub const fn is_odd(l: &isize) -> bool {
-    *l % 2 != 0
+pub const fn is_odd(&l: &isize) -> bool {
+    l % 2 != 0
 }
 
 // --- //
@@ -40,13 +40,13 @@ const POW_10: [isize; 19] = [
 pub const DEFAULT_RADIX: isize = 10;
 
 /// Convenience method to calculate the power when in base 10.
-pub fn pow_10(exp: isize) -> isize {
+pub const fn pow_10(exp: isize) -> isize {
     POW_10[exp as usize]
 }
 
 /// Convenience method to calculate the integer logarithm in base 10.
 pub fn int_log_10(n: isize) -> isize {
-    (0..).find_map(|i| if n < POW_10[i] { Some(i as isize) } else { None }).unwrap()
+    POW_10.iter().take_while(|&&d| d <= n).count() as isize
 }
 
 /// calculates an approximate of the square root
@@ -73,15 +73,11 @@ pub fn int_sqrt(value: isize) -> isize {
     }
 
     // Rounding to nearest integer
-    if approx > result {
-        result as isize + 1
-    } else {
-        result as isize
-    }
+    result + if approx > result { 1 } else { 0 }
 }
 
 /// the sum of all the numbers up to value
-pub fn arithmetic_sum(value: isize) -> isize {
+pub const fn arithmetic_sum(value: isize) -> isize {
     value * (value + 1) / 2
 }
 
@@ -95,27 +91,21 @@ pub fn factorial(value: isize) -> isize {
 }
 
 pub fn pow(base: isize, exp: isize) -> isize {
-    if base == 0 && exp == 0 {
-        return 1;
-    }
-    if base == 0 {
-        return 0;
-    }
-    if base == 1 {
-        return base;
-    }
-    if base == 2 {
-        return 1 << exp;
-    }
     if base == 10 {
-        return pow_10(exp);
+        return POW_10[exp as usize];
     }
 
     if exp == 0 {
         return 1;
     }
-    if exp == 1 {
+    if base == 0 {
+        return 0;
+    }
+    if base == 1 || exp == 1 {
         return base;
+    }
+    if base == 2 {
+        return 1 << exp;
     }
     if exp == 2 {
         return base * base;
@@ -137,8 +127,32 @@ fn squaring(base: isize, exp: isize) -> isize {
     }
 }
 
-pub fn square(base: isize) -> isize {
+pub const fn square(base: isize) -> isize {
     base * base
+}
+
+pub fn is_perfect(value: isize) -> bool {
+    square(int_sqrt(value)) == value
+}
+
+// --- //
+
+// triangle == arithmetic_sum
+
+pub fn is_triangle(&value: &isize) -> bool {
+    value == arithmetic_sum(int_sqrt(2 * value))
+}
+
+pub const fn pentagonal(value: isize) -> isize {
+    value * (3 * value - 1) / 2
+}
+
+pub fn is_pentagonal(&value: &isize) -> bool {
+    value == pentagonal(int_sqrt(2 * (value + 1) / 3))
+}
+
+pub const fn hexagonal(value: isize) -> isize {
+    value * (2 * value - 1)
 }
 
 // --- //
@@ -151,7 +165,7 @@ pub fn is_palindrome_radix(value: isize, radix: isize) -> bool {
     is_palindrome_digits(&to_digits_radix(value, radix))
 }
 
-fn is_palindrome_digits(digits: &Vec<isize>) -> bool {
+fn is_palindrome_digits(digits: &[isize]) -> bool {
     let (mut l, len, digits_ptr) = (digits.len() as isize / 2, digits.len() as isize, digits.as_ptr());
     while l != 0 {
         // fast read of digits
@@ -164,7 +178,7 @@ fn is_palindrome_digits(digits: &Vec<isize>) -> bool {
 }
 
 /// Tests if a given number is pandigital, i.e. it has all the digits one and only once (excluding zero)
-pub fn is_pandigital(digits: &Vec<isize>) -> bool {
+pub fn is_pandigital(digits: &[isize]) -> bool {
     for i in 0..digits.len() as isize {
         if !digits.contains(&(i + 1)) {
             return false;
@@ -174,17 +188,25 @@ pub fn is_pandigital(digits: &Vec<isize>) -> bool {
 }
 
 /// Concatenates two digits into a new one. First argument becomes more significant and second argument becomes less significant.
-pub fn concatenation(digit1: &mut Vec<isize>, digit2: &mut Vec<isize>) -> Vec<isize> {
+pub fn concatenation(digit1: &[isize], digit2: &[isize]) -> Vec<isize> {
     let mut array = Vec::with_capacity(digit1.len() + digit2.len());
-    array.append(digit2);
-    array.append(digit1);
+    array.extend_from_slice(digit2);
+    array.extend_from_slice(digit1);
     array
 }
 
 // --- //
 
+pub fn last_digits(value: isize, n: isize) -> isize {
+    value % POW_10[n as usize]
+}
+
+pub fn first_digits(value: isize, n: isize) -> isize {
+    value / POW_10[(int_log_10(value).max(n) - n) as usize]
+}
+
 pub fn nth_digit(value: isize, n: isize) -> isize {
-    value / pow_10(int_log_10(value) - n) % DEFAULT_RADIX
+    value / POW_10[(int_log_10(value) - n) as usize] % DEFAULT_RADIX
 }
 
 pub fn to_digits(value: isize) -> Vec<isize> {
@@ -194,7 +216,7 @@ pub fn to_digits(value: isize) -> Vec<isize> {
 fn to_digits_radix(mut value: isize, radix: isize) -> Vec<isize> {
     // fast write of digits
     let (mut len, size) = (0, 32 / int_sqrt(radix) as usize);
-    let digits_ptr = unsafe { alloc(Layout::from_size_align_unchecked(mem::size_of::<isize>() * size, mem::align_of::<isize>())) as *mut isize };
+    let digits_ptr = unsafe { alloc(Layout::from_size_align_unchecked(size_of::<isize>() * size, align_of::<isize>())) as *mut isize };
 
     while value >= radix {
         unsafe { *digits_ptr.offset(len) = value % radix };
@@ -210,18 +232,20 @@ fn to_digits_radix(mut value: isize, radix: isize) -> Vec<isize> {
 
 // --- //
 
-pub fn from_digits(digits: &Vec<isize>) -> isize {
-    from_digits_index_radix(digits, 0, digits.len(), DEFAULT_RADIX)
+// this consumes the digits. others only borrow them.
+pub fn from_digits(digits: Vec<isize>) -> isize {
+    from_digits_index_radix(&digits, 0, digits.len(), DEFAULT_RADIX)
 }
 
-pub fn from_digits_index(digits: &Vec<isize>, from: usize, to: usize) -> isize {
-    from_digits_index_radix(digits, from, to, DEFAULT_RADIX)
+pub fn from_digits_index(digits: &[isize], from: usize, to: usize) -> isize {
+    from_digits_index_radix(digits, digits.len() - to, digits.len() - from, DEFAULT_RADIX)
 }
 
-fn from_digits_index_radix(digits: &Vec<isize>, from: usize, to: usize, radix: isize) -> isize {
-    let mut result = 0;
-    for i in from..to {
-        result += digits[i] * pow(radix, (i - from) as isize);
+fn from_digits_index_radix(digits: &[isize], from: usize, to: usize, radix: isize) -> isize {
+    let (mut result, mut i, base_10) = (0, from, radix == DEFAULT_RADIX);
+    while i < to {
+        result += digits[i] * if base_10 { POW_10[i - from] } else { pow(radix, (i - from) as isize) };
+        i += 1;
     }
     result
 }
@@ -263,37 +287,39 @@ impl Iterator for IncrementingDigits {
     type Item = Vec<isize>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if !increase(&mut self.array) && !rotate(&mut self.array) {
-            expand(&mut self.array);
+        if !self.increase() && !self.rotate() {
+            self.expand();
         }
-        Some(self.array.to_owned())
+        Some(self.array.to_vec())
     }
 }
 
-fn increase(array: &mut Vec<isize>) -> bool {
-    if array[0] < 9 {
-        array[0] = array[0] + 1;
-        return true;
-    }
-    return false;
-}
-
-fn rotate(array: &mut Vec<isize>) -> bool {
-    for i in 1..array.len() {
-        array[i - 1] = 0;
-        if array[i] != 9 {
-            array[i] = array[i] + 1;
+impl IncrementingDigits {
+    fn increase(&mut self) -> bool {
+        if self.array[0] < 9 {
+            self.array[0] = self.array[0] + 1;
             return true;
         }
+        return false;
     }
-    return false;
-}
 
-fn expand(array: &mut Vec<isize>) {
-    let size = array.len();
-    array.clear();
-    array.resize(size + 1, 0);
-    array[size] = 1;
+    fn rotate(&mut self) -> bool {
+        for i in 1..self.array.len() {
+            self.array[i - 1] = 0;
+            if self.array[i] != 9 {
+                self.array[i] = self.array[i] + 1;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    fn expand(&mut self) {
+        let size = self.array.len();
+        self.array.clear();
+        self.array.resize(size + 1, 0);
+        self.array[size] = 1;
+    }
 }
 
 // --- //
