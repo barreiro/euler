@@ -26,6 +26,6 @@ impl Default for Solver045 {
 impl Solver for Solver045 {
     fn solve(&self) -> isize {
         // all hexagonal numbers are also triangle numbers
-        (self.n..).map(hexagonal).find(is_pentagonal).unwrap()
+        (self.n..).map(hexagonal).find(|&h| is_pentagonal(h)).unwrap()
     }
 }

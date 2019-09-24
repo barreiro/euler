@@ -32,8 +32,8 @@ impl Default for Solver017 {
 impl Solver for Solver017 {
     fn solve(&self) -> isize {
         let mut sum = 0;
-        for i in 0..self.n {
-            sum += letter_count(1 + i as usize);
+        for i in 0..self.n as usize{
+            sum += letter_count(1 + i);
         }
         sum
     }

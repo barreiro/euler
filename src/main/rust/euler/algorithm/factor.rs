@@ -2,10 +2,11 @@
 // Rust solvers for Project Euler problems
 
 use std::collections::HashMap;
+use std::hash::BuildHasher;
 
-use euler::algorithm::long::{int_sqrt, is_perfect, pow};
+use euler::algorithm::long::{int_sqrt, is_perfect_square, pow};
 
-pub fn factor_composition(factor_map: HashMap<isize, isize>) -> isize {
+pub fn factor_composition<S: BuildHasher>(factor_map: HashMap<isize, isize, S>) -> isize {
     factor_map.iter().map(|(&base, &exp)| pow(base, exp)).product()
 }
 
@@ -22,7 +23,7 @@ pub fn number_of_factors(value: isize) -> isize {
         f -= 1;
     }
     // need to adjust the number of divisors if the number is a perfect square
-    2 * factors - if is_perfect(value) { 1 } else { 0 }
+    2 * factors - if is_perfect_square(value) { 1 } else { 0 }
 }
 
 // defined according to problem 21: numbers less than n which divide evenly into n
@@ -35,7 +36,7 @@ pub fn sum_of_factors(value: isize) -> isize {
         f -= 1;
     }
     // need to adjust the number of divisors if the number is a perfect square
-    if is_perfect(value) { sum - int_sqrt(value) } else { sum }
+    if is_perfect_square(value) { sum - int_sqrt(value) } else { sum }
 }
 
 pub fn is_abundant(value: isize) -> bool {

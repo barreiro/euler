@@ -2,30 +2,18 @@
 // Rust solvers for Project Euler problems
 
 /// Method for calculation the combinations of a certain number of elements in a total number of places.
-/// Uses recursion instead of the formula with factorials.
+/// Uses iteration instead of the formula with factorials.
 pub fn choose(total: isize, elements: isize) -> isize {
-    // Take full advantage of symmetry
-    let min_elements = elements.min(total - elements);
-    if min_elements < 0 {
+    if elements <= 0 || elements >= total {
         return 0;
     }
-    if min_elements == 0 {
-        return 1;
+    let (mut n, mut result) = (total, 1);
+    for d in 1..=elements.min(total - elements) {
+        result *= n;
+        result /= d;
+        n -= 1;
     }
-    choose_memoize(total as _, min_elements as _, vec![vec![0; min_elements as usize + 1]; total as usize + 1].as_mut())
-}
-
-pub fn choose_memoize(total: usize, elements: usize, cache: &mut Vec<Vec<isize>>) -> isize {
-    let min_elements = elements.min(total - elements);
-    if min_elements == 1 {
-        return total as _;
-    }
-    if cache.as_slice()[total].as_slice()[min_elements] != 0 {
-        return cache[total][min_elements];
-    }
-    let value = choose_memoize(total - 1, min_elements - 1, cache) + choose_memoize(total - 1, min_elements, cache);
-    cache.as_mut_slice()[total].as_mut_slice()[min_elements] = value;
-    return value;
+    result
 }
 
 // --- //
@@ -145,7 +133,7 @@ impl Palindromes {
             self.digits[middle - 1] += 1;
         }
         self.digits[middle] += 1;
-        return true;
+        true
     }
 
     fn palindrome_rotate(&mut self) -> bool {
@@ -160,7 +148,7 @@ impl Palindromes {
                 return true;
             }
         }
-        return false;
+        false
     }
 
     fn palindrome_expand(&mut self) {

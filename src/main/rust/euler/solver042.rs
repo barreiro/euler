@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::fs;
+use std::fs::read_to_string;
 use std::path::Path;
 
 use euler::algorithm::long::is_triangle;
@@ -27,13 +27,13 @@ impl Default for Solver042 {
     fn default() -> Self {
         let location = BASE_PATH.to_string() + "problem042-data.txt";
         let path = Path::new(location.trim());
-        Solver042 { n: 1786, input: fs::read_to_string(path).expect("Unable to read file") }
+        Solver042 { n: 1786, input: read_to_string(path).expect("Unable to read file") }
     }
 }
 
 impl Solver for Solver042 {
     fn solve(&self) -> isize {
-        let char_sum = |name: &str| name.chars().map(|c| 1 + c as isize - 'A' as isize).sum::<isize>();
-        self.input.split(',').map(|s| s.trim_matches('\"')).take(self.n as _).map(char_sum).filter(is_triangle).count() as isize
+        let char_sum = |name: &str| name.chars().map(|c| 1 + c as isize - 'A' as isize).sum::<_>();
+        self.input.split(',').map(|s| s.trim_matches('\"')).take(self.n as _).map(char_sum).filter(|&sum| is_triangle(sum)).count() as _
     }
 }

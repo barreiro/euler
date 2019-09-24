@@ -23,7 +23,7 @@ impl Solver for Solver044 {
     fn solve(&self) -> isize {
         let predicate = |j, k| {
             let (p_j, p_k) = (pentagonal(j), pentagonal(k));
-            if is_pentagonal(&(p_j + p_k)) && is_pentagonal(&(p_j - p_k)) { Some(p_j - p_k) } else { None }
+            if is_pentagonal(p_j + p_k) && is_pentagonal(p_j - p_k) { Some(p_j - p_k) } else { None }
         };
 
         (2..).filter_map(|j| (1..j).find_map(|k| predicate(j, k))).nth(self.n as _).unwrap()

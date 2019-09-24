@@ -13,7 +13,7 @@ pub struct Solver003 {
 
 impl Default for Solver003 {
     fn default() -> Self {
-        Solver003 { n: 600851475143 }
+        Solver003 { n: 600_851_475_143 }
     }
 }
 

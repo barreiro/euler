@@ -34,7 +34,7 @@ impl Solver for Solver032 {
                     }
                 }
             }
-            return None;
+            None
         }).filter(|&a| set.insert(a)).sum()
     }
 }

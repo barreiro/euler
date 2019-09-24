@@ -15,12 +15,12 @@ pub struct Solver036 {
 
 impl Default for Solver036 {
     fn default() -> Self {
-        Solver036 { n: 1000000 }
+        Solver036 { n: 1_000_000 }
     }
 }
 
 impl Solver for Solver036 {
     fn solve(&self) -> isize {
-        palindromes().map(|array| from_digits(array)).take_while(|&p| p < self.n).filter(|&p| is_palindrome_radix(p, 2)).sum()
+        palindromes().map(from_digits).take_while(|&p| p < self.n).filter(|&p| is_palindrome_radix(p, 2)).sum()
     }
 }

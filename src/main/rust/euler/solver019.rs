@@ -46,9 +46,9 @@ fn start_day(year: isize) -> isize {
 }
 
 fn sundays_common(start: isize) -> isize {
-    DAYS_COMMON.iter().filter(|&&d| (start + d) % 7 == 0).count() as isize
+    DAYS_COMMON.iter().filter(|&&d| (start + d) % 7 == 0).count() as _
 }
 
 fn sundays_leap(start: isize) -> isize {
-    DAYS_LEAP.iter().filter(|&&d| (start + d) % 7 == 0).count() as isize
+    DAYS_LEAP.iter().filter(|&&d| (start + d) % 7 == 0).count() as _
 }

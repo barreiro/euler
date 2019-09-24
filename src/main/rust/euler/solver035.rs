@@ -15,13 +15,13 @@ pub struct Solver035 {
 
 impl Default for Solver035 {
     fn default() -> Self {
-        Solver035 { n: 1000000 }
+        Solver035 { n: 1_000_000 }
     }
 }
 
 impl Solver for Solver035 {
     fn solve(&self) -> isize {
-        generator_trial_division().take_while(|&p| p < self.n).filter(|&p| is_circular_prime(p)).count() as isize
+        generator_trial_division().take_while(|&p| p < self.n).filter(|&p| is_circular_prime(p)).count() as _
     }
 }
 

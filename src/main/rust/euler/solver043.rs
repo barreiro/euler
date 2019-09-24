@@ -32,7 +32,7 @@ impl Default for Solver043 {
 impl Solver for Solver043 {
     fn solve(&self) -> isize {
         let primes = generator_trial_division().take(self.n as usize - DIM + 1).collect::<Vec<_>>();
-        let predicate = |d: &[isize]| {
+        let predicate = |d: &[_]| {
             for n in (1..=primes.len()).rev() {
                 if from_digits_index(&d, n, n + DIM) % primes[n - 1] != 0 {
                     return None;

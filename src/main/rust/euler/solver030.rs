@@ -27,7 +27,7 @@ impl Default for Solver030 {
 impl Solver for Solver030 {
     fn solve(&self) -> isize {
         let (lower, upper) = (pow(9, self.n / 2), self.n * pow(9, self.n));
-        let sum_of_digit_powers = |n| to_digits(n).iter().map(|&digit| pow(digit, self.n)).sum::<isize>();
+        let sum_of_digit_powers = |n| to_digits(n).iter().map(|&digit| pow(digit, self.n)).sum::<_>();
 
         (lower..upper).filter(|&n| n == sum_of_digit_powers(n)).sum()
     }

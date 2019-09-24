@@ -60,11 +60,12 @@ fn best_sum(level: isize, index: isize, heap: &[isize]) -> isize {
 
 fn str_to_heap(level: isize, data: &[&str]) -> Vec<isize> {
     let mut parsed = vec![];
-    for line in 0..data.len() {
-        for s in data[line].split_whitespace() {
-            let value = s.parse();
-            if value.is_ok() && line < level as usize {
-                parsed.push(value.unwrap());
+    for (l, line) in data.iter().enumerate() {
+        if l < level as usize {
+            for s in line.split_whitespace() {
+                if let Ok(value) = s.parse() {
+                    parsed.push(value);
+                }
             }
         }
     }

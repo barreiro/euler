@@ -26,6 +26,6 @@ impl Default for Solver028 {
 impl Solver for Solver028 {
     fn solve(&self) -> isize {
         // sum of the left corners == right corners == 2*i*i - 3*(i-1)
-        1 + (3..=self.n).filter(is_odd).map(|i| 4 * square(i) - 6 * (i - 1)).sum::<isize>()
+        1 + (3..=self.n).filter(|&n| is_odd(n)).map(|i| 4 * square(i) - 6 * (i - 1)).sum::<isize>()
     }
 }

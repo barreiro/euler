@@ -6,9 +6,9 @@ use std::collections::HashMap;
 use euler::algorithm::long::{int_sqrt, is_even};
 use euler::algorithm::long::power_modulo;
 
-const MILLER_RABIN_THRESHOLD: isize = 4759123141;
+const MILLER_RABIN_THRESHOLD: isize = 4_759_123_141;
 const MILLER_RABIN_FAST: &[isize] = &[2, 7, 61];
-const MILLER_RABIN_BASE: &[isize] = &[2, 325, 9375, 28178, 450775, 9780504, 1795265022];
+const MILLER_RABIN_BASE: &[isize] = &[2, 325, 9_375, 28_178, 450_775, 9_780_504, 1_795_265_022];
 
 /// calculates the prime factors of a given number. The result is a map where the keys are primes and the values are the occurrences
 pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
@@ -71,7 +71,7 @@ pub struct PrimesLessThan {
 }
 
 pub fn primes_less_than(n: isize) -> PrimesLessThan {
-    PrimesLessThan { n: if is_even(&n) { n - 1 } else { n } }
+    PrimesLessThan { n: if is_even(n) { n - 1 } else { n } }
 }
 
 impl Iterator for PrimesLessThan {
@@ -87,34 +87,34 @@ impl Iterator for PrimesLessThan {
     }
 }
 
-pub fn miller_rabin(n: isize) -> bool {
-    if n == 1 {
+pub fn miller_rabin(value: isize) -> bool {
+    if value == 1 {
         return false;
     }
-    for &b in if n < MILLER_RABIN_THRESHOLD { MILLER_RABIN_FAST } else { MILLER_RABIN_BASE } {
-        if n > b && !miller_rabin_pass(b, n) {
+    for &b in if value < MILLER_RABIN_THRESHOLD { MILLER_RABIN_FAST } else { MILLER_RABIN_BASE } {
+        if value > b && !miller_rabin_pass(b, value) {
             return false;
         }
     }
     true
 }
 
-fn miller_rabin_pass(b: isize, n: isize) -> bool {
-    let s = (n - 1).trailing_zeros() as isize;
-    let d = (n - 1) >> s;
-    let mut a = power_modulo(b, d, n);
+fn miller_rabin_pass(b: isize, value: isize) -> bool {
+    let s = (value - 1).trailing_zeros() as isize;
+    let d = (value - 1) >> s;
+    let mut a = power_modulo(b, d, value);
 
     if a == 1 {
         return true;
     }
     for _ in 0..s - 1 {
-        if a == n - 1 {
+        if a == value - 1 {
             return true;
         }
         if a == 1 {
             return false;
         }
-        a = power_modulo(a, 2, n);
+        a = power_modulo(a, 2, value);
     }
-    a == n - 1
+    a == value - 1
 }

@@ -8,7 +8,7 @@ use euler::Solver;
 // Find the sum of all numbers which are equal to the sum of the factorial of their digits.
 // Note: as 1! = 1 and 2! = 2 are not sums they are not included.
 
-const FACTORIAL_CACHE: &[isize] = &[1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
+const FACTORIAL_CACHE: &[usize] = &[1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880];
 
 pub struct Solver034 {
     pub n: isize,
@@ -22,8 +22,7 @@ impl Default for Solver034 {
 
 impl Solver for Solver034 {
     fn solve(&self) -> isize {
-        let fast_factorial_sum = |l: Vec<_>| l.iter().map(|&d| FACTORIAL_CACHE[d as usize]).sum();
-
-        incrementing_digits(3).take(self.n as _).enumerate().filter_map(|(n, digits)| if 4 + n as isize == fast_factorial_sum(digits) { Some(4 + n as isize) } else { None }).sum()
+        let fast_factorial_sum = |l: &Vec<_>| l.iter().map(|&d| FACTORIAL_CACHE[d as usize]).sum();
+        incrementing_digits(0).enumerate().skip(3).take(self.n as _).filter(|(n, digits)| *n == fast_factorial_sum(digits)).map(|(n, _)| n as isize).sum()
     }
 }

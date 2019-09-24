@@ -23,7 +23,7 @@ impl Default for Solver050 {
 
 impl Solver for Solver050 {
     fn solve(&self) -> isize {
-        let (sum, is_prime, ceil) = (|arr: &[isize]| arr.iter().sum(), |&candidate: &isize| miller_rabin(candidate), pow_10(self.n));
+        let (sum, is_prime, ceil) = (|arr: &[_]| arr.iter().sum(), |&candidate: &_| miller_rabin(candidate), pow_10(self.n));
 
         // the list of primes which sum is below the limit, then starting on the greater window sizes try to find a sum that is prime
         let primes = generator_trial_division().scan(0, |acc, p| {

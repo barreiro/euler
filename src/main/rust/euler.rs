@@ -1,64 +1,71 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+extern crate core;
+
 pub use euler::*;
 
 fn solve(n: usize, solver: impl euler::Solver) {
     let now = std::time::Instant::now();
-    println!("Solution for problem {:03} is {:12} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_nanos() as f64 / 1000000.0);
+    println!("Solution for problem {:03} is {:12} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_nanos() as f64 / 1_000_000.0);
 }
 
 fn main() {
-    solve(001, Solver001::default());
-    solve(002, Solver002::default());
-    solve(003, Solver003::default());
-    solve(004, Solver004::default());
-    solve(005, Solver005::default());
-    solve(006, Solver006::default());
-    solve(007, Solver007::default());
-    solve(008, Solver008::default());
-    solve(009, Solver009::default());
-    solve(010, Solver010::default());
-    solve(011, Solver011::default());
-    solve(012, Solver012::default());
-    solve(013, Solver013::default());
-    solve(014, Solver014::default());
-    solve(015, Solver015::default());
-    solve(016, Solver016::default());
-    solve(017, Solver017::default());
-    solve(018, Solver018::default());
-    solve(019, Solver019::default());
-    solve(020, Solver020::default());
-    solve(021, Solver021::default());
-    solve(022, Solver022::default());
-    solve(023, Solver023::default());
-    solve(024, Solver024::default());
-    solve(025, Solver025::default());
-    solve(026, Solver026::default());
-    solve(027, Solver027::default());
-    solve(028, Solver028::default());
-    solve(029, Solver029::default());
-    solve(030, Solver030::default());
-    solve(031, Solver031::default());
-    solve(032, Solver032::default());
-    solve(033, Solver033::default());
-    solve(034, Solver034::default());
-    solve(035, Solver035::default());
-    solve(036, Solver036::default());
-    solve(037, Solver037::default());
-    solve(038, Solver038::default());
-    solve(039, Solver039::default());
-    solve(040, Solver040::default());
-    solve(041, Solver041::default());
-    solve(042, Solver042::default());
-    solve(043, Solver043::default());
-    solve(044, Solver044::default());
-    solve(045, Solver045::default());
-    solve(046, Solver046::default());
-    solve(047, Solver047::default());
-    solve(048, Solver048::default());
-    solve(049, Solver049::default());
-    solve(050, Solver050::default());
+    solve(1, Solver001::default());
+    solve(2, Solver002::default());
+    solve(3, Solver003::default());
+    solve(4, Solver004::default());
+    solve(5, Solver005::default());
+    solve(6, Solver006::default());
+    solve(7, Solver007::default());
+    solve(8, Solver008::default());
+    solve(9, Solver009::default());
+    solve(10, Solver010::default());
+    solve(11, Solver011::default());
+    solve(12, Solver012::default());
+    solve(13, Solver013::default());
+    solve(14, Solver014::default());
+    solve(15, Solver015::default());
+    solve(16, Solver016::default());
+    solve(17, Solver017::default());
+    solve(18, Solver018::default());
+    solve(19, Solver019::default());
+    solve(20, Solver020::default());
+    solve(21, Solver021::default());
+    solve(22, Solver022::default());
+    solve(23, Solver023::default());
+    solve(24, Solver024::default());
+    solve(25, Solver025::default());
+    solve(26, Solver026::default());
+    solve(27, Solver027::default());
+    solve(28, Solver028::default());
+    solve(29, Solver029::default());
+    solve(30, Solver030::default());
+    solve(31, Solver031::default());
+    solve(32, Solver032::default());
+    solve(33, Solver033::default());
+    solve(34, Solver034::default());
+    solve(35, Solver035::default());
+    solve(36, Solver036::default());
+    solve(37, Solver037::default());
+    solve(38, Solver038::default());
+    solve(39, Solver039::default());
+    solve(40, Solver040::default());
+    solve(41, Solver041::default());
+    solve(42, Solver042::default());
+    solve(43, Solver043::default());
+    solve(44, Solver044::default());
+    solve(45, Solver045::default());
+    solve(46, Solver046::default());
+    solve(47, Solver047::default());
+    solve(48, Solver048::default());
+    solve(49, Solver049::default());
+    solve(50, Solver050::default());
+    solve(51, Solver051::default());
+    solve(52, Solver052::default());
+    solve(53, Solver053::default());
+    solve(54, Solver054::default());
+    solve(55, Solver055::default());
 }
 
 mod euler {
@@ -131,6 +138,11 @@ mod euler {
     pub mod solver048;
     pub mod solver049;
     pub mod solver050;
+    pub mod solver051;
+    pub mod solver052;
+    pub mod solver053;
+    pub mod solver054;
+    pub mod solver055;
 
     pub use self::solver001::Solver001;
     pub use self::solver002::Solver002;
@@ -182,4 +194,9 @@ mod euler {
     pub use self::solver048::Solver048;
     pub use self::solver049::Solver049;
     pub use self::solver050::Solver050;
+    pub use self::solver051::Solver051;
+    pub use self::solver052::Solver052;
+    pub use self::solver053::Solver053;
+    pub use self::solver054::Solver054;
+    pub use self::solver055::Solver055;
 }

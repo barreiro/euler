@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::is_perfect;
+use euler::algorithm::long::is_perfect_square;
 use euler::algorithm::prime::prime_sieve;
 use euler::Solver;
 
@@ -33,9 +33,9 @@ impl Solver for Solver046 {
         (3..).step_by(2).filter(|&i| {
             if prime_sieve(i, &primes) {
                 primes.push(i);
-                false;
+                return false;
             }
-            !primes.iter().rev().any(|&p| is_perfect((i - p) / 2))
+            !primes.iter().rev().any(|&p| is_perfect_square((i - p) / 2))
         }).nth(self.n as usize - 1).unwrap()
     }
 }

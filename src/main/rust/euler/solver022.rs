@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::fs;
+use std::fs::read_to_string;
 use std::path::Path;
 
 use euler::Solver;
@@ -21,14 +21,14 @@ impl Default for Solver022 {
     fn default() -> Self {
         let location = BASE_PATH.to_string() + "problem022-data.txt";
         let path = Path::new(location.trim());
-        Solver022 { n: 5163, input: fs::read_to_string(path).expect("Unable to read file") }
+        Solver022 { n: 5163, input: read_to_string(path).expect("Unable to read file") }
     }
 }
 
 impl Solver for Solver022 {
     fn solve(&self) -> isize {
         let mut names = self.input.split(',').map(|s| s.trim_matches('\"')).collect::<Vec<_>>();
-        names.sort();
+        names.sort_unstable();
         names.iter().take(self.n as _).enumerate().map(|(i, name)| (i as isize + 1) * name.chars().map(|c| 1 + c as isize - 'A' as isize).sum::<isize>()).sum()
     }
 }

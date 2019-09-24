@@ -31,7 +31,7 @@ impl Default for Solver026 {
 impl Solver for Solver026 {
     fn solve(&self) -> isize {
         // For primes: if 10 is a primitive root modulo p, the recurring cycle is equal to p − 1; if not is a factor of p − 1 (thus smaller)
-        let is_prime_root_ten = |p: &isize| prime_factors(p - 1).keys().all(|&f| power_modulo(10, (p - 1) / f, *p) != 1);
+        let is_prime_root_ten = |p: &_| prime_factors(p - 1).keys().all(|&f| power_modulo(10, (p - 1) / f, *p) != 1);
 
         primes_less_than(self.n).find(is_prime_root_ten).unwrap()
     }

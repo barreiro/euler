@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 
-use euler::algorithm::long::{concatenation, from_digits, pow_10, to_digits};
+use euler::algorithm::long::{from_digits, pow_10, to_digits};
 use euler::algorithm::prime::generator_trial_division;
 use euler::Solver;
 
@@ -29,29 +29,30 @@ impl Solver for Solver049 {
     fn solve(&self) -> isize {
         // group together primes based on their permutation --- using their sorted digits as the key on a map
         let mut grouped_primes = HashMap::with_capacity(pow_10(self.n) as _);
-        generator_trial_division().skip_while(|&p| p < pow_10(self.n - 1)).take_while(|&p| p < pow_10(self.n)).for_each(|d| {
-            let mut digits = to_digits(d);
+        generator_trial_division().skip_while(|&p| p < pow_10(self.n - 1)).take_while(|&p| p < pow_10(self.n)).for_each(|prime| {
+            let mut digits = to_digits(prime);
             if !digits.contains(&0) {
                 digits.sort_unstable();
-                grouped_primes.entry(from_digits(digits)).or_insert(Vec::new()).push(d);
+                grouped_primes.entry(from_digits(digits)).or_insert_with(Vec::new).push(prime);
             }
         });
         let mut permutations = grouped_primes.values().filter(|&p| p.len() >= 3).collect::<Vec<_>>();
         permutations.sort_unstable();
 
         // given a list of primes, finds if there is one that is in between two others
-        let condition = |&p: &&Vec<isize>| {
+        let predicate = |&p: &&Vec<_>| {
             for i in 0..p.len() - 2 {
                 for j in i + 2..p.len() {
-                    if p.contains(&(p[j] + p[i] >> 1)) {
-                        return Some([p[i], (p[j] + p[i]) >> 1, p[j]]);
+                    if p.contains(&((p[j] + p[i]) >> 1)) {
+                        // convert the primes to digits and concatenate
+                        let concatenation = [p[i], (p[j] + p[i]) >> 1, p[j]].iter().rev().flat_map(|&a| to_digits(a)).collect();
+                        return Some(from_digits(concatenation));
                     }
                 }
             }
             None
         };
 
-        let sequence = permutations.iter().filter_map(condition).nth(SEQ).unwrap();
-        from_digits(sequence.iter().fold(Vec::new(), |acc, &p| concatenation(&acc, &to_digits(p))))
+        permutations.iter().filter_map(predicate).nth(SEQ).unwrap()
     }
 }

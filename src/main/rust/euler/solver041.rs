@@ -22,9 +22,9 @@ impl Default for Solver041 {
 
 impl Solver for Solver041 {
     fn solve(&self) -> isize {
-        let predicate = |d: &[isize]| {
+        let predicate = |d: &[_]| {
             // Assume the largest prime also start with the biggest digit
-            if d.last().filter(|&&last| last == d.len() as isize).is_some() {
+            if d.last().map_or(false, |&last| last == d.len() as _) {
                 let candidate = from_digits_index(d, 0, d.len());
                 if miller_rabin(candidate) { Some(candidate) } else { None }
             } else { None }

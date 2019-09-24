@@ -28,7 +28,7 @@ impl Solver for Solver016 {
                 values[j] *= 2;
                 if values[j] >= DEFAULT_RADIX {
                     // with radix > 2 can use increment and subtract instead of divide and take the remainder
-                    values[j] = values[j] - DEFAULT_RADIX;
+                    values[j] -= DEFAULT_RADIX;
                     if j == values.len() - 1 { values.push(1) } else { values[j + 1] += 1 }
                 }
             }

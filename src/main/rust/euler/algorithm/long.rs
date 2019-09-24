@@ -1,14 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::alloc::{alloc, Layout};
-use std::mem::{align_of, size_of};
-
-pub const fn is_even(&l: &isize) -> bool {
+pub const fn is_even(l: isize) -> bool {
     l % 2 == 0
 }
 
-pub const fn is_odd(&l: &isize) -> bool {
+pub const fn is_odd(l: isize) -> bool {
     l % 2 != 0
 }
 
@@ -19,22 +16,22 @@ const POW_10: [isize; 19] = [
     1,
     10,
     100,
-    1000,
-    10000,
-    100000,
-    1000000,
-    10000000,
-    100000000,
-    1000000000,
-    10000000000,
-    100000000000,
-    1000000000000,
-    10000000000000,
-    100000000000000,
-    1000000000000000,
-    10000000000000000,
-    100000000000000000,
-    1000000000000000000,
+    1_000,
+    10_000,
+    100_000,
+    1_000_000,
+    10_000_000,
+    100_000_000,
+    1_000_000_000,
+    10_000_000_000,
+    100_000_000_000,
+    1_000_000_000_000,
+    10_000_000_000_000,
+    100_000_000_000_000,
+    1_000_000_000_000_000,
+    10_000_000_000_000_000,
+    100_000_000_000_000_000,
+    1_000_000_000_000_000_000,
 ];
 
 pub const DEFAULT_RADIX: isize = 10;
@@ -66,7 +63,7 @@ pub fn int_sqrt(value: isize) -> isize {
     while one != 0 {
         if approx >= result + one {
             approx -= result + one;
-            result = result + (one << 1);
+            result += one << 1;
         }
         one >>= 2;
         result >>= 1;
@@ -122,8 +119,8 @@ fn squaring(base: isize, exp: isize) -> isize {
         if sqr_exp % 2 != 0 {
             result *= sqr_base;
         }
-        sqr_base = square(sqr_base);
-        sqr_exp = sqr_exp / 2;
+        sqr_base *= sqr_base;
+        sqr_exp /= 2;
     }
 }
 
@@ -131,7 +128,7 @@ pub const fn square(base: isize) -> isize {
     base * base
 }
 
-pub fn is_perfect(value: isize) -> bool {
+pub fn is_perfect_square(value: isize) -> bool {
     square(int_sqrt(value)) == value
 }
 
@@ -139,7 +136,7 @@ pub fn is_perfect(value: isize) -> bool {
 
 // triangle == arithmetic_sum
 
-pub fn is_triangle(&value: &isize) -> bool {
+pub fn is_triangle(value: isize) -> bool {
     value == arithmetic_sum(int_sqrt(2 * value))
 }
 
@@ -147,7 +144,7 @@ pub const fn pentagonal(value: isize) -> isize {
     value * (3 * value - 1) / 2
 }
 
-pub fn is_pentagonal(&value: &isize) -> bool {
+pub fn is_pentagonal(value: isize) -> bool {
     value == pentagonal(int_sqrt(2 * (value + 1) / 3))
 }
 
@@ -165,16 +162,8 @@ pub fn is_palindrome_radix(value: isize, radix: isize) -> bool {
     is_palindrome_digits(&to_digits_radix(value, radix))
 }
 
-fn is_palindrome_digits(digits: &[isize]) -> bool {
-    let (mut l, len, digits_ptr) = (digits.len() as isize / 2, digits.len() as isize, digits.as_ptr());
-    while l != 0 {
-        // fast read of digits
-        if unsafe { *digits_ptr.offset(l) != *digits_ptr.offset(len - l - 1) } {
-            return false;
-        }
-        l -= 1;
-    }
-    unsafe { *digits_ptr == *digits_ptr.offset(len - 1) }
+pub fn is_palindrome_digits(digits: &[isize]) -> bool {
+    (0..=digits.len()/2).all(|i| digits[i] == digits[digits.len() - i - 1])
 }
 
 /// Tests if a given number is pandigital, i.e. it has all the digits one and only once (excluding zero)
@@ -184,7 +173,7 @@ pub fn is_pandigital(digits: &[isize]) -> bool {
             return false;
         }
     }
-    return true;
+    true
 }
 
 /// Concatenates two digits into a new one. First argument becomes more significant and second argument becomes less significant.
@@ -196,6 +185,15 @@ pub fn concatenation(digit1: &[isize], digit2: &[isize]) -> Vec<isize> {
 }
 
 // --- //
+
+pub fn digits_sum(mut value: isize) -> isize {
+    let mut sum = 0;
+    while value >= DEFAULT_RADIX {
+        sum += value % DEFAULT_RADIX;
+        value /= DEFAULT_RADIX;
+    }
+    sum + value
+}
 
 pub fn last_digits(value: isize, n: isize) -> isize {
     value % POW_10[n as usize]
@@ -214,20 +212,13 @@ pub fn to_digits(value: isize) -> Vec<isize> {
 }
 
 fn to_digits_radix(mut value: isize, radix: isize) -> Vec<isize> {
-    // fast write of digits
-    let (mut len, size) = (0, 32 / int_sqrt(radix) as usize);
-    let digits_ptr = unsafe { alloc(Layout::from_size_align_unchecked(size_of::<isize>() * size, align_of::<isize>())) as *mut isize };
-
+    let mut digits = Vec::with_capacity(12);
     while value >= radix {
-        unsafe { *digits_ptr.offset(len) = value % radix };
-        len += 1;
-
+        digits.push(value % radix);
         value /= radix;
     }
-    unsafe {
-        *digits_ptr.offset(len) = value;
-        Vec::from_raw_parts(digits_ptr, len as usize + 1, size)
-    }
+    digits.push(value);
+    digits
 }
 
 // --- //
@@ -252,35 +243,12 @@ fn from_digits_index_radix(digits: &[isize], from: usize, to: usize, radix: isiz
 
 // --- //
 
-pub struct Decrementing {
-    value: isize
-}
-
-pub fn decrementing(initial: isize) -> Decrementing {
-    Decrementing { value: initial }
-}
-
-impl Iterator for Decrementing {
-    type Item = isize;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.value -= 1;
-        if self.value > 0 {
-            Some(self.value)
-        } else {
-            None
-        }
-    }
-}
-
-// --- //
-
 pub struct IncrementingDigits {
     array: Vec<isize>
 }
 
 pub fn incrementing_digits(initial: isize) -> IncrementingDigits {
-    IncrementingDigits { array: to_digits(initial) }
+    IncrementingDigits { array: to_digits(initial - 1) }
 }
 
 impl Iterator for IncrementingDigits {
@@ -297,21 +265,21 @@ impl Iterator for IncrementingDigits {
 impl IncrementingDigits {
     fn increase(&mut self) -> bool {
         if self.array[0] < 9 {
-            self.array[0] = self.array[0] + 1;
+            self.array[0] += 1;
             return true;
         }
-        return false;
+        false
     }
 
     fn rotate(&mut self) -> bool {
         for i in 1..self.array.len() {
             self.array[i - 1] = 0;
             if self.array[i] != 9 {
-                self.array[i] = self.array[i] + 1;
+                self.array[i] += 1;
                 return true;
             }
         }
-        return false;
+        false
     }
 
     fn expand(&mut self) {
@@ -332,10 +300,12 @@ pub fn power_modulo(base: isize, exp: isize, modulo: isize) -> isize {
 
     while e > 0 {
         if e & 1 != 0 {
-            result = result * b % modulo;
+            result *= b;
+            result %= modulo;
         }
-        e = e >> 1;
-        b = b * b % modulo;
+        e >>= 1;
+        b *= b;
+        b %= modulo;
     }
     if result < 0 { result + modulo } else { result }
 }
