@@ -15,9 +15,17 @@ pub fn bit_set() -> BitSet {
 
 impl BitSet {
 
+    fn locate(& self, n:isize) -> (usize, usize) {
+        if n < i32::max_value() as isize {
+            ((n as i32 / self.step as i32) as usize, (n as i32 % self.step as i32) as usize)
+        } else {
+            (n as usize / self.step, n as usize % self.step)
+        }
+    }
+
     /// Adds a value to the set. If the set did not have this value present, `true` is returned.
     pub fn insert(&mut self, n: isize) -> bool {
-        let (index, position) = (n as usize / self.step, n as usize % self.step);
+        let (index, position) = self.locate(n);
         if index >= self.bits.len() {
             self.bits.resize(index + 1, 0);
         }
@@ -27,7 +35,7 @@ impl BitSet {
     }
 
     pub fn contains(&self, n: isize) -> bool {
-        let (index, position) = (n as usize / self.step, n as usize % self.step);
+        let (index, position) = self.locate(n);
         index < self.bits.len() && self.bits[index] & (1 << position) != 0
     }
 }

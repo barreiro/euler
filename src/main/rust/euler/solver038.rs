@@ -4,7 +4,7 @@
 use std::iter::Rev;
 use std::ops::Range;
 
-use euler::algorithm::long::{concatenation, from_digits, int_sqrt, is_pandigital, pow_10, to_digits};
+use euler::algorithm::long::{concatenation, from_digits, int_log_10, int_sqrt, is_pandigital, pow_10, to_digits};
 use euler::Solver;
 
 // Take the number 192 and multiply it by each of 1, 2, and 3:
@@ -34,13 +34,13 @@ impl Solver for Solver038 {
 }
 
 fn natural_product_concatenation(value: isize, size: isize) -> Vec<isize> {
-    let (mut n, mut digits) = (value, to_digits(value));
+    let (mut n, mut result) = (value, value);
     loop {
-        if digits.len() >= size as _ {
-            return digits;
+        if int_log_10(result) >= size {
+            return to_digits(result);
         }
         n += value;
-        digits = concatenation(&digits, &to_digits(n));
+        result = concatenation(result, n);
     }
 }
 

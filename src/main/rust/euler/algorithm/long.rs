@@ -2,14 +2,50 @@
 // Rust solvers for Project Euler problems
 
 pub const fn is_even(l: isize) -> bool {
-    l % 2 == 0
+    l & 1 == 0
 }
 
 pub const fn is_odd(l: isize) -> bool {
-    l % 2 != 0
+    l & 1 == 1
 }
 
 // --- //
+
+// Table for fast lookup of powers of 4
+const POW_4: [isize; 32] = [
+    0x0001,
+    0x0004,
+    0x0010,
+    0x0040,
+    0x0100,
+    0x0400,
+    0x1000,
+    0x4000,
+    0x0001_0000,
+    0x0004_0000,
+    0x0010_0000,
+    0x0040_0000,
+    0x0100_0000,
+    0x0400_0000,
+    0x1000_0000,
+    0x4000_0000,
+    0x0001_0000_0000,
+    0x0004_0000_0000,
+    0x0010_0000_0000,
+    0x0040_0000_0000,
+    0x0100_0000_0000,
+    0x0400_0000_0000,
+    0x1000_0000_0000,
+    0x4000_0000_0000,
+    0x0001_0000_0000_0000,
+    0x0004_0000_0000_0000,
+    0x0010_0000_0000_0000,
+    0x0040_0000_0000_0000,
+    0x0100_0000_0000_0000,
+    0x0400_0000_0000_0000,
+    0x1000_0000_0000_0000,
+    0x4000_0000_0000_0000,
+];
 
 // Table for fast lookup of powers of 10
 const POW_10: [isize; 19] = [
@@ -53,24 +89,22 @@ pub fn int_sqrt(value: isize) -> isize {
         return 3;
     }
 
-    let (mut approx, mut one, mut result) = (value, 1 << 30, 0);
+    // "place" starts at the highest power of four <= than the argument
+    let (mut remainder, mut place, mut root) = (value, *POW_4.iter().take_while(|&&d| d <= value).last().unwrap(), 0);
 
-    // "one" starts at the highest power of four <= than the argument
-    while one > value {
-        one >>= 2
-    }
-
-    while one != 0 {
-        if approx >= result + one {
-            approx -= result + one;
-            result += one << 1;
+    while place != 0 {
+        let term = root + place;
+        if remainder >= term {
+            remainder -= term;
+            root = (root >> 1) + place;
+        } else {
+            root >>= 1;
         }
-        one >>= 2;
-        result >>= 1;
+        place >>= 2;
     }
 
     // Rounding to nearest integer
-    result + if approx > result { 1 } else { 0 }
+    if remainder > root { root + 1 } else { root }
 }
 
 /// the sum of all the numbers up to value
@@ -80,11 +114,7 @@ pub const fn arithmetic_sum(value: isize) -> isize {
 
 /// Simple method to calculate the factorial of small values. No checks are performed. Use with caution.
 pub fn factorial(value: isize) -> isize {
-    let mut prod = 1;
-    for l in 1..=value {
-        prod *= l
-    }
-    prod
+    (2..=value).product()
 }
 
 pub fn pow(base: isize, exp: isize) -> isize {
@@ -116,7 +146,7 @@ fn squaring(base: isize, exp: isize) -> isize {
         if sqr_exp == 0 {
             return result;
         }
-        if sqr_exp % 2 != 0 {
+        if sqr_exp & 1 != 0 {
             result *= sqr_base;
         }
         sqr_base *= sqr_base;
@@ -155,7 +185,8 @@ pub const fn hexagonal(value: isize) -> isize {
 // --- //
 
 pub fn is_palindrome(value: isize) -> bool {
-    is_palindrome_digits(&to_digits(value))
+    let (size, nth) = (int_log_10(value), |n| value / POW_10[n as usize] % DEFAULT_RADIX);
+    (0..size / 2).all(|i| nth(i) == nth(size - i - 1))
 }
 
 pub fn is_palindrome_radix(value: isize, radix: isize) -> bool {
@@ -163,7 +194,7 @@ pub fn is_palindrome_radix(value: isize, radix: isize) -> bool {
 }
 
 pub fn is_palindrome_digits(digits: &[isize]) -> bool {
-    (0..=digits.len()/2).all(|i| digits[i] == digits[digits.len() - i - 1])
+    (0..=digits.len() / 2).all(|i| digits[i] == digits[digits.len() - i - 1])
 }
 
 /// Tests if a given number is pandigital, i.e. it has all the digits one and only once (excluding zero)
@@ -176,12 +207,8 @@ pub fn is_pandigital(digits: &[isize]) -> bool {
     true
 }
 
-/// Concatenates two digits into a new one. First argument becomes more significant and second argument becomes less significant.
-pub fn concatenation(digit1: &[isize], digit2: &[isize]) -> Vec<isize> {
-    let mut array = Vec::with_capacity(digit1.len() + digit2.len());
-    array.extend_from_slice(digit2);
-    array.extend_from_slice(digit1);
-    array
+pub fn concatenation(one: isize, two: isize) -> isize {
+    one * pow_10(int_log_10(two)) + two
 }
 
 // --- //

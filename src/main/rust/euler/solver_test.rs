@@ -422,7 +422,7 @@ fn solver_038_test() {
     assert_eq!(Solver038 { n: 7 }.solve(), 0);
     assert_eq!(Solver038 { n: 8 }.solve(), 78156234);
     assert_eq!(Solver038 { n: 10 }.solve(), 0);
-    assert_eq!(Solver038 { n: 15 }.solve(), 0);
+    assert_eq!(Solver038 { n: 14 }.solve(), 0);
 }
 
 #[test]
@@ -595,4 +595,56 @@ fn solver_055_test() {
     assert_eq!(Solver055 { n: 100 }.solve(), 0);
     assert_eq!(Solver055 { n: 1000 }.solve(), 13);
     assert_eq!(Solver055 { n: 100_000 }.solve(), 6208); // THRESHOLD = 50
+}
+
+#[test]
+fn solver_056_test() {
+    assert_eq!(Solver056::default().solve(), 972);
+
+    assert_eq!(Solver056 { n: 5 }.solve(), 13);
+    assert_eq!(Solver056 { n: 10 }.solve(), 45);
+    assert_eq!(Solver056 { n: 50 }.solve(), 406);
+    assert_eq!(Solver056 { n: 500 }.solve(), 6310);
+    assert_eq!(Solver056 { n: 1000 }.solve(), 13888);
+}
+
+#[test]
+fn solver_057_test() {
+    assert_eq!(Solver057::default().solve(), 153);
+
+    assert_eq!(Solver057 { n: 8 }.solve(), 1);
+    assert_eq!(Solver057 { n: 100 }.solve(), 15);
+    assert_eq!(Solver057 { n: 10_000 }.solve(), 1508);
+    assert_eq!(Solver057 { n: 100_000 }.solve(), 15052);
+    assert_eq!(Solver057 { n: 1_000_000 }.solve(), 150520);
+}
+
+#[test]
+fn solver_058_test() {
+    assert_eq!(Solver058::default().solve(), 26241);
+
+    assert_eq!(Solver058 { n: 55 }.solve(), 9);
+    assert_eq!(Solver058 { n: 50 }.solve(), 11);
+    assert_eq!(Solver058 { n: 44 }.solve(), 13);
+    assert_eq!(Solver058 { n: 30 }.solve(), 49);
+    assert_eq!(Solver058 { n: 20 }.solve(), 309);
+    assert_eq!(Solver058 { n: 15 }.solve(), 981);
+    assert_eq!(Solver058 { n: 6 }.solve(), 85119);
+}
+
+#[test]
+fn solver_059_test() {
+    assert_eq!(Solver059::default().solve(), 129448);
+
+    assert_eq!(Solver059 { n: 1, ..Default::default() }.solve(), 65);
+    assert_eq!(Solver059 { n: 3, ..Default::default() }.solve(), 207);
+}
+
+#[test]
+fn solver_060_test() {
+    assert_eq!(Solver060::default().solve(), 26033);
+
+    assert_eq!(Solver060 { n: 2 }.solve(), 10);
+    assert_eq!(Solver060 { n: 3 }.solve(), 107);
+    assert_eq!(Solver060 { n: 4 }.solve(), 792);
 }

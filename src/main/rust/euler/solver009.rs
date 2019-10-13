@@ -23,15 +23,9 @@ impl Default for Solver009 {
 impl Solver for Solver009 {
     fn solve(&self) -> isize {
         // solved with Euclides Formula --- a=m^2-n^2 --- b=2nm --- c=m^2+n^2 --- with m>n
-
-        for m in 2..int_sqrt(self.n) {
-            for n in 1..m {
-                let (a, b, c) = (square(m) - square(n), 2 * m * n, square(m) + square(n));
-                if a + b + c == self.n {
-                    return a * b * c;
-                }
-            }
-        }
-        0
+        (2..int_sqrt(self.n)).find_map(|m| (1..m).find_map(|n| {
+            let (a, b, c) = (square(m) - square(n), 2 * m * n, square(m) + square(n));
+            if self.n == a + b + c { Some(a * b * c) } else { None }
+        })).unwrap_or_default()
     }
 }

@@ -23,6 +23,7 @@ impl Default for Solver006 {
 impl Solver for Solver006 {
     fn solve(&self) -> isize {
         // using Faulhaber's Formula for the square of the sum and Gauss's Formula for the sum of the squares
-        (pow(self.n, 4) + 2 * pow(self.n, 3) + pow(self.n, 2)) / 4 - self.n * (self.n + 1) * (2 * self.n + 1) / 6
+        let (faulhaber, gauss) = (|n| (pow(n, 4) + 2 * pow(n, 3) + pow(n, 2)) / 4, |n| n * (n + 1) * (2 * n + 1) / 6);
+        faulhaber(self.n) - gauss(self.n)
     }
 }

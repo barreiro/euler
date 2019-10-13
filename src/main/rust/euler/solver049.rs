@@ -39,18 +39,10 @@ impl Solver for Solver049 {
         let mut permutations = grouped_primes.values().filter(|&p| p.len() >= 3).collect::<Vec<_>>();
         permutations.sort_unstable();
 
-        // given a list of primes, finds if there is one that is in between two others
+        // given a list of primes, finds if the average of two others is in the list as well, then convert to digits an concatenate
         let predicate = |&p: &&Vec<_>| {
-            for i in 0..p.len() - 2 {
-                for j in i + 2..p.len() {
-                    if p.contains(&((p[j] + p[i]) >> 1)) {
-                        // convert the primes to digits and concatenate
-                        let concatenation = [p[i], (p[j] + p[i]) >> 1, p[j]].iter().rev().flat_map(|&a| to_digits(a)).collect();
-                        return Some(from_digits(concatenation));
-                    }
-                }
-            }
-            None
+            let sequence = (0..p.len() - 2).find_map(|i| (i + 2..p.len()).find_map(|j| p.binary_search(&((p[i] + p[j]) >> 1)).ok().map(|k| [p[j], p[k], p[i]])));
+            sequence.map(|s| from_digits(s.iter().flat_map(|&a| to_digits(a)).collect()))
         };
 
         permutations.iter().filter_map(predicate).nth(SEQ).unwrap()

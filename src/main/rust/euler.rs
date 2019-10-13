@@ -1,8 +1,6 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-extern crate core;
-
 pub use euler::*;
 
 fn solve(n: usize, solver: impl euler::Solver) {
@@ -66,9 +64,75 @@ fn main() {
     solve(53, Solver053::default());
     solve(54, Solver054::default());
     solve(55, Solver055::default());
+    solve(56, Solver056::default());
+    solve(57, Solver057::default());
+    solve(58, Solver058::default());
+    solve(59, Solver059::default());
+    solve(60, Solver060::default());
 }
 
 mod euler {
+    pub use self::solver001::Solver001;
+    pub use self::solver002::Solver002;
+    pub use self::solver003::Solver003;
+    pub use self::solver004::Solver004;
+    pub use self::solver005::Solver005;
+    pub use self::solver006::Solver006;
+    pub use self::solver007::Solver007;
+    pub use self::solver008::Solver008;
+    pub use self::solver009::Solver009;
+    pub use self::solver010::Solver010;
+    pub use self::solver011::Solver011;
+    pub use self::solver012::Solver012;
+    pub use self::solver013::Solver013;
+    pub use self::solver014::Solver014;
+    pub use self::solver015::Solver015;
+    pub use self::solver016::Solver016;
+    pub use self::solver017::Solver017;
+    pub use self::solver018::Solver018;
+    pub use self::solver019::Solver019;
+    pub use self::solver020::Solver020;
+    pub use self::solver021::Solver021;
+    pub use self::solver022::Solver022;
+    pub use self::solver023::Solver023;
+    pub use self::solver024::Solver024;
+    pub use self::solver025::Solver025;
+    pub use self::solver026::Solver026;
+    pub use self::solver027::Solver027;
+    pub use self::solver028::Solver028;
+    pub use self::solver029::Solver029;
+    pub use self::solver030::Solver030;
+    pub use self::solver031::Solver031;
+    pub use self::solver032::Solver032;
+    pub use self::solver033::Solver033;
+    pub use self::solver034::Solver034;
+    pub use self::solver035::Solver035;
+    pub use self::solver036::Solver036;
+    pub use self::solver037::Solver037;
+    pub use self::solver038::Solver038;
+    pub use self::solver039::Solver039;
+    pub use self::solver040::Solver040;
+    pub use self::solver041::Solver041;
+    pub use self::solver042::Solver042;
+    pub use self::solver043::Solver043;
+    pub use self::solver044::Solver044;
+    pub use self::solver045::Solver045;
+    pub use self::solver046::Solver046;
+    pub use self::solver047::Solver047;
+    pub use self::solver048::Solver048;
+    pub use self::solver049::Solver049;
+    pub use self::solver050::Solver050;
+    pub use self::solver051::Solver051;
+    pub use self::solver052::Solver052;
+    pub use self::solver053::Solver053;
+    pub use self::solver054::Solver054;
+    pub use self::solver055::Solver055;
+    pub use self::solver056::Solver056;
+    pub use self::solver057::Solver057;
+    pub use self::solver058::Solver058;
+    pub use self::solver059::Solver059;
+    pub use self::solver060::Solver060;
+
     pub trait Solver {
         fn solve(&self) -> isize;
     }
@@ -77,7 +141,6 @@ mod euler {
     mod solver_test;
 
     pub mod algorithm {
-
         #[cfg(test)]
         mod algorithm_test;
 
@@ -143,60 +206,9 @@ mod euler {
     pub mod solver053;
     pub mod solver054;
     pub mod solver055;
-
-    pub use self::solver001::Solver001;
-    pub use self::solver002::Solver002;
-    pub use self::solver003::Solver003;
-    pub use self::solver004::Solver004;
-    pub use self::solver005::Solver005;
-    pub use self::solver006::Solver006;
-    pub use self::solver007::Solver007;
-    pub use self::solver008::Solver008;
-    pub use self::solver009::Solver009;
-    pub use self::solver010::Solver010;
-    pub use self::solver011::Solver011;
-    pub use self::solver012::Solver012;
-    pub use self::solver013::Solver013;
-    pub use self::solver014::Solver014;
-    pub use self::solver015::Solver015;
-    pub use self::solver016::Solver016;
-    pub use self::solver017::Solver017;
-    pub use self::solver018::Solver018;
-    pub use self::solver019::Solver019;
-    pub use self::solver020::Solver020;
-    pub use self::solver021::Solver021;
-    pub use self::solver022::Solver022;
-    pub use self::solver023::Solver023;
-    pub use self::solver024::Solver024;
-    pub use self::solver025::Solver025;
-    pub use self::solver026::Solver026;
-    pub use self::solver027::Solver027;
-    pub use self::solver028::Solver028;
-    pub use self::solver029::Solver029;
-    pub use self::solver030::Solver030;
-    pub use self::solver031::Solver031;
-    pub use self::solver032::Solver032;
-    pub use self::solver033::Solver033;
-    pub use self::solver034::Solver034;
-    pub use self::solver035::Solver035;
-    pub use self::solver036::Solver036;
-    pub use self::solver037::Solver037;
-    pub use self::solver038::Solver038;
-    pub use self::solver039::Solver039;
-    pub use self::solver040::Solver040;
-    pub use self::solver041::Solver041;
-    pub use self::solver042::Solver042;
-    pub use self::solver043::Solver043;
-    pub use self::solver044::Solver044;
-    pub use self::solver045::Solver045;
-    pub use self::solver046::Solver046;
-    pub use self::solver047::Solver047;
-    pub use self::solver048::Solver048;
-    pub use self::solver049::Solver049;
-    pub use self::solver050::Solver050;
-    pub use self::solver051::Solver051;
-    pub use self::solver052::Solver052;
-    pub use self::solver053::Solver053;
-    pub use self::solver054::Solver054;
-    pub use self::solver055::Solver055;
+    pub mod solver056;
+    pub mod solver057;
+    pub mod solver058;
+    pub mod solver059;
+    pub mod solver060;
 }

@@ -42,12 +42,7 @@ impl<'a> Default for Solver008<'a> {
 
 impl<'a> Solver for Solver008<'a> {
     fn solve(&self) -> isize {
-        let (mut greatest, count) = (0, self.n as usize);
-        let to_digit = |c: char| c.to_digit(DEFAULT_RADIX as u32).unwrap() as isize;
-
-        for i in 0..self.input.len() - count {
-            greatest = greatest.max(self.input[i..i + count].chars().map(to_digit).product());
-        }
-        greatest
+        let digits = self.input.chars().map(|c| c.to_digit(DEFAULT_RADIX as _).unwrap() as _).collect::<Vec<_>>();
+        digits.windows(self.n as _).max_by_key(|w| w.iter().product::<isize>()).map(|w| w.iter().product()).unwrap()
     }
 }

@@ -23,11 +23,9 @@ impl Default for Solver005 {
 impl Solver for Solver005 {
     fn solve(&self) -> isize {
         let mut factors_of_smallest = HashMap::new();
-        for l in 2..self.n {
-            for (key, value) in prime_factors(l) {
-                factors_of_smallest.entry(key).and_modify(|e| *e = value.max(*e)).or_insert(value);
-            }
-        }
+        (2..self.n).for_each(|l| prime_factors(l).iter().for_each(|(&key, &value)| {
+            factors_of_smallest.entry(key).and_modify(|e| *e = value.max(*e)).or_insert(value);
+        }));
         factor_composition(factors_of_smallest)
     }
 }

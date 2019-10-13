@@ -15,7 +15,7 @@ use euler::Solver;
 const REFERENCE: isize = 1901;
 const REFERENCE_START: isize = 2;
 
-//// Number of elapsed days in the first referenceStart of each month
+// Number of elapsed days in the first day of each month
 const DAYS_COMMON: &[isize] = &[0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 const DAYS_LEAP: &[isize] = &[0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
 

@@ -38,7 +38,7 @@ impl Default for Solver055 {
 impl Solver for Solver055 {
     fn solve(&self) -> isize {
         // Sums two numbers in the digit representation provided by incrementing_digits
-        let digits_sum = |a: Vec<_>, b: Vec<_>| {
+        let digits_sum = |a: &Vec<_>, b: &Vec<_>| {
             let (dim, mut carry) = (a.len().max(b.len()), 0);
             let mut result = Vec::with_capacity(dim + 1);
             for i in 0..dim {
@@ -54,17 +54,14 @@ impl Solver for Solver055 {
 
         let is_lychrel = |value: &Vec<_>| {
             let mut a = value.to_vec();
-            for _ in 1..THRESHOLD {
+            (1..THRESHOLD).all(|_| {
                 let b = a.clone();
                 a.reverse();
-                a = digits_sum(a, b);
-                if is_palindrome_digits(&a) {
-                    return false;
-                }
-            }
-            true
+                a = digits_sum(&a, &b);
+                !is_palindrome_digits(&a)
+            })
         };
 
-        incrementing_digits(1).take(self.n as usize).filter(is_lychrel).count() as _
+        incrementing_digits(1).take(self.n as _).filter(is_lychrel).count() as _
     }
 }

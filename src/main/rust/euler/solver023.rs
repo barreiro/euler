@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::factor::is_abundant;
-use euler::algorithm::long::arithmetic_sum;
+use euler::algorithm::long::{arithmetic_sum, is_even};
 use euler::Solver;
 
 // A perfect number is a number for which the sum of its proper divisors is exactly equal to the number.
@@ -19,7 +19,7 @@ pub struct Solver023 {
 
 impl Default for Solver023 {
     fn default() -> Self {
-        Solver023 { n: 28123 }
+        Solver023 { n: 28_123 }
     }
 }
 
@@ -27,16 +27,13 @@ impl Solver for Solver023 {
     fn solve(&self) -> isize {
         let (mut abundant, mut list, mut sum) = (vec![false; 1 + self.n as usize], Vec::with_capacity(self.n as _), arithmetic_sum(self.n));
         for i in 1..=self.n {
-            if is_abundant(i) {
+            // Abundant numbers are even or multiples of 5. The boolean array is faster than a bit_set() as long is the size is known upfront.
+            if (is_even(i) || i % 5 == 0) && is_abundant(i) {
                 abundant[i as usize] |= true;
                 list.push(i);
             }
-
-            for &j in &list {
-                if abundant[(i - j) as usize] {
-                    sum -= i;
-                    break;
-                }
+            if list.iter().take_while(|&&j| j <= i/2).any(|&j| abundant[(i - j) as usize]) {
+                sum -= i;
             }
         }
         sum

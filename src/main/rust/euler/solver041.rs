@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::combinatorics::permutations_with;
-use euler::algorithm::long::from_digits_index;
+use euler::algorithm::long::{from_digits_index, is_even};
 use euler::algorithm::prime::miller_rabin;
 use euler::Solver;
 
@@ -22,12 +22,10 @@ impl Default for Solver041 {
 
 impl Solver for Solver041 {
     fn solve(&self) -> isize {
-        let predicate = |d: &[_]| {
-            // Assume the largest prime also start with the biggest digit
-            if d.last().map_or(false, |&last| last == d.len() as _) {
-                let candidate = from_digits_index(d, 0, d.len());
-                if miller_rabin(candidate) { Some(candidate) } else { None }
-            } else { None }
+        // Assume the largest prime also start with the biggest digit
+        let predicate = |d: &[_]| if *d.last().unwrap() != d.len() as _ || is_even(*d.first().unwrap()) { None } else {
+            let candidate = from_digits_index(d, 0, d.len());
+            if miller_rabin(candidate) { Some(candidate) } else { None }
         };
 
         // If the sum of the digits of the permutation is multiple of three, all permutations are multiple of three as well

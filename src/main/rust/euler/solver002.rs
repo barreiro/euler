@@ -19,13 +19,29 @@ impl Default for Solver002 {
 
 impl Solver for Solver002 {
     fn solve(&self) -> isize {
-        let (mut previous, mut last, mut sum) = (1, 2, 2);
-        while last < self.n {
-            // previous moves to two terms ahead of last. last gets the next after the new previous. it's even by definition!
-            previous = previous + last + last;
-            last = previous + previous - last;
-            sum += last
-        }
-        sum - last
+        even_fibonacci().take_while(|&f| f < self.n).sum()
+    }
+}
+
+// --- //
+
+struct EvenFibonacci {
+    previous: isize,
+    last: isize,
+}
+
+fn even_fibonacci() -> EvenFibonacci {
+    EvenFibonacci { previous: 1, last: 2 }
+}
+
+impl Iterator for EvenFibonacci {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let next = Some(self.last);
+        // previous moves to two terms ahead of last. last gets the term after the new previous. it's even by definition!
+        self.previous = self.previous + self.last + self.last;
+        self.last = self.previous + self.previous - self.last;
+        next
     }
 }

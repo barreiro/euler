@@ -121,7 +121,7 @@ impl<'a> Default for Solver013<'a> {
 
 impl<'a> Solver for Solver013<'a> {
     fn solve(&self) -> isize {
-        let sum = self.input.iter().map(|&s| s.get(..=self.n as usize).unwrap().parse::<isize>().unwrap()).sum();
+        let sum = self.input.iter().map(|&s| s.get(..=self.n as _).unwrap().parse::<isize>().unwrap()).sum();
         first_digits(sum, self.n)
     }
 }

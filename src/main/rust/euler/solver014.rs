@@ -26,7 +26,7 @@ impl Default for Solver014 {
 impl Solver for Solver014 {
     fn solve(&self) -> isize {
         let mut collatz = collatz_memoize(self.n as _);
-        (3..self.n).step_by(2).max_by(|&x, &y| collatz.length(x).cmp(&collatz.length(y))).unwrap()
+        (3..self.n).step_by(2).max_by_key(|&x| collatz.length(x)).unwrap()
     }
 }
 
