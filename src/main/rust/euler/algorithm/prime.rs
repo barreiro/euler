@@ -13,7 +13,7 @@ const MR_BASE: &[isize] = &[2, 325, 9_375, 28_178, 450_775, 9_780_504, 1_795_265
 
 /// calculates the prime factors of a given number. The result is a map where the keys are primes and the values are the occurrences
 pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
-    let (mut factor_map, mut value, small, stop) = (HashMap::new(), n, n <= i32::max_value() as isize, int_sqrt(n));
+    let (mut factor_map, mut value, small, stop) = (HashMap::new(), n, n <= i32::max_value() as _, int_sqrt(n));
     for factor in generator_trial_division() {
         while if small { value as i32 % factor as i32 == 0 } else { value % factor == 0 } {
             value = if small { (value as i32 / factor as i32) as _ } else { value / factor };
@@ -61,8 +61,66 @@ impl Iterator for GeneratorTrialDivision {
 }
 
 pub fn prime_sieve(n: isize, sieve: &[isize]) -> bool {
-    let is_factor = |&f| if n <= i32::max_value() as isize { n as i32 % f as i32 == 0 } else { n % f == 0 };
-    !sieve.iter().take_while(|&&factor| factor * factor <= n).any(is_factor)
+    let ceil = int_sqrt(n);
+    if n <= i32::max_value() as _ {
+        !sieve.iter().take_while(|&&factor| factor <= ceil).any(|&f| n as i32 % f as i32 == 0)
+    } else {
+        !sieve.iter().take_while(|&&factor| factor <= ceil).any(|&f| n % f == 0)
+    }
+}
+
+// --- //
+
+/// closure that generates primes based on the method of wheel factorization
+pub struct GeneratorWheel {
+    size: isize,
+    increments: Vec<isize>,
+    sieve: Vec<isize>,
+}
+
+pub fn generator_wheel() -> GeneratorWheel {
+    generator_custom_wheel(&[2, 3, 5, 7, 11])
+}
+
+pub fn generator_custom_wheel(primes: &[isize]) -> GeneratorWheel {
+    let size = primes.iter().product();
+    let buckets = (size..=1 + size * 2).filter(|n| primes.iter().all(|p| n % p != 0)).map(|n| n - size).collect::<Vec<_>>();
+    let mut increments = vec![0; *buckets.last().unwrap() as usize];
+    (0..buckets.len() - 1).for_each(|i| increments[buckets[i] as usize] = buckets[i + 1] - buckets[i]);
+    GeneratorWheel { size, increments, sieve: vec![] }
+}
+
+impl Iterator for GeneratorWheel {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let next = match self.sieve.last() {
+            None => { 2 }
+            Some(2) => {
+                self.sieve.clear();
+                3
+            }
+            last => {
+                if *last.unwrap() < self.size {
+                    (last.unwrap() + 2..).step_by(2).find(|&candidate| prime_sieve(candidate, &self.sieve)).unwrap()
+                } else {
+                    let (mut candidate, mut index) = (*last.unwrap(), (last.unwrap() % self.size));
+                    loop {
+                        let increment = self.increments[index as usize];
+                        candidate += increment;
+                        if prime_sieve(candidate, &self.sieve) {
+                            break candidate;
+                        }
+                        index += increment;
+                        if index > self.size { index = 1 }
+                    }
+                }
+            }
+        };
+
+        self.sieve.push(next);
+        Some(next)
+    }
 }
 
 // --- //

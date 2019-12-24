@@ -3,7 +3,7 @@
 
 use euler::algorithm::bit::BitSet;
 use euler::algorithm::long::DEFAULT_RADIX;
-use euler::algorithm::prime::generator_trial_division;
+use euler::algorithm::prime::generator_wheel;
 use euler::Solver;
 
 // The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
@@ -22,8 +22,8 @@ impl Default for Solver037 {
 
 impl Solver for Solver037 {
     fn solve(&self) -> isize {
-        let (generator, mut set) = (generator_trial_division().skip(4), [2, 3, 5, 7].iter().collect::<BitSet>());
-        generator.filter(|&p| set.insert(p) && is_truncatable_right(p, &set) && is_truncatable_left(p, &set)).take(self.n as _).sum()
+        let (generator, mut set) = (generator_wheel(), [2, 3, 5, 7].iter().collect::<BitSet>());
+        generator.skip(4).filter(|&p| set.insert(p) && is_truncatable_right(p, &set) && is_truncatable_left(p, &set)).take(self.n as _).sum()
     }
 }
 

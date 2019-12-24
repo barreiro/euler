@@ -83,10 +83,22 @@ pub fn int_log_10(n: isize) -> isize {
 }
 
 /// calculates an approximate of the square root
+pub fn floor_sqrt(value: isize) -> isize {
+    let (root, _) = exact_sqrt(value);
+    root
+}
+
+/// calculates an approximate of the square root
 pub fn int_sqrt(value: isize) -> isize {
+    let (root, remainder) = exact_sqrt(value);
+    // Rounding to nearest integer
+    if remainder > root { root + 1 } else { root }
+}
+
+fn exact_sqrt(value: isize) -> (isize, isize) {
     // fast path for digit conversions on the default radix
     if value == DEFAULT_RADIX {
-        return 3;
+        return (3, 1);
     }
 
     // "place" starts at the highest power of four <= than the argument
@@ -102,14 +114,12 @@ pub fn int_sqrt(value: isize) -> isize {
         }
         place >>= 2;
     }
-
-    // Rounding to nearest integer
-    if remainder > root { root + 1 } else { root }
+    (root, remainder)
 }
 
 /// the sum of all the numbers up to value
 pub const fn arithmetic_sum(value: isize) -> isize {
-    value * (value + 1) / 2
+    (value * (value + 1)) >> 1
 }
 
 /// Simple method to calculate the factorial of small values. No checks are performed. Use with caution.
@@ -158,28 +168,43 @@ pub const fn square(base: isize) -> isize {
     base * base
 }
 
-pub fn is_perfect_square(value: isize) -> bool {
-    square(int_sqrt(value)) == value
+pub fn is_square(value: isize) -> bool {
+    let hex = value & 0xF; // last hexadecimal "digit" (has to be either 0, 1, 4 or 9)
+    hex <= 9 && (hex == 0 || hex == 1 || hex == 4 || hex == 9) && square(int_sqrt(value)) == value
 }
 
 // --- //
 
-// triangle == arithmetic_sum
+pub const fn triangle(value: isize) -> isize {
+    arithmetic_sum(value)
+}
 
 pub fn is_triangle(value: isize) -> bool {
-    value == arithmetic_sum(int_sqrt(2 * value))
+    value == triangle(int_sqrt(value << 1))
 }
 
 pub const fn pentagonal(value: isize) -> isize {
-    value * (3 * value - 1) / 2
+    (value * (3 * value - 1)) >> 1
 }
 
 pub fn is_pentagonal(value: isize) -> bool {
-    value == pentagonal(int_sqrt(2 * (value + 1) / 3))
+    value == pentagonal(int_sqrt(((value + 1) << 1) / 3))
 }
 
 pub const fn hexagonal(value: isize) -> isize {
-    value * (2 * value - 1)
+    value * ((value << 1) - 1)
+}
+
+pub fn is_hexagonal(value: isize) -> bool {
+    value == hexagonal(int_sqrt((value + 1) >> 1))
+}
+
+pub const fn heptagonal(value: isize) -> isize {
+    (value * (5 * value - 3)) >> 1
+}
+
+pub const fn octagonal(value: isize) -> isize {
+    value * (3 * value - 2)
 }
 
 // --- //
@@ -199,7 +224,7 @@ pub fn is_palindrome_digits(digits: &[isize]) -> bool {
 
 /// Tests if a given number is pandigital, i.e. it has all the digits one and only once (excluding zero)
 pub fn is_pandigital(digits: &[isize]) -> bool {
-    for i in 0..digits.len() as isize {
+    for i in 0..digits.len() as _ {
         if !digits.contains(&(i + 1)) {
             return false;
         }
@@ -213,6 +238,13 @@ pub fn concatenation(one: isize, two: isize) -> isize {
 
 // --- //
 
+pub fn is_permutation(a: isize, b: isize) -> bool {
+    let (mut digits_a, mut digits_b) = (to_digits(a), to_digits(b));
+    digits_a.sort_unstable();
+    digits_b.sort_unstable();
+    digits_a.len() == digits_b.len() && (0..digits_a.len()).all(|i| digits_a[i] == digits_b[i])
+}
+
 pub fn digits_sum(mut value: isize) -> isize {
     let mut sum = 0;
     while value >= DEFAULT_RADIX {
@@ -222,7 +254,7 @@ pub fn digits_sum(mut value: isize) -> isize {
     sum + value
 }
 
-pub fn last_digits(value: isize, n: isize) -> isize {
+pub const fn last_digits(value: isize, n: isize) -> isize {
     value % POW_10[n as usize]
 }
 
@@ -262,7 +294,7 @@ pub fn from_digits_index(digits: &[isize], from: usize, to: usize) -> isize {
 fn from_digits_index_radix(digits: &[isize], from: usize, to: usize, radix: isize) -> isize {
     let (mut result, mut i, base_10) = (0, from, radix == DEFAULT_RADIX);
     while i < to {
-        result += digits[i] * if base_10 { POW_10[i - from] } else { pow(radix, (i - from) as isize) };
+        result += digits[i] * if base_10 { POW_10[i - from] } else { pow(radix, (i - from) as _) };
         i += 1;
     }
     result

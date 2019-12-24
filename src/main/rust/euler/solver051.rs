@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::long::{from_digits, pow_10, to_digits};
-use euler::algorithm::prime::{generator_trial_division, miller_rabin};
+use euler::algorithm::prime::{generator_wheel, miller_rabin};
 use euler::Solver;
 
 // By replacing the 1st digit of the 2-digit number *3, it turns out that six of the nine possible values: 13, 23, 43, 53, 73, and 83, are all prime.
@@ -39,6 +39,6 @@ impl Solver for Solver051 {
             })
         };
 
-        generator_trial_division().skip_while(small).find(predicate).unwrap()
+        generator_wheel().skip_while(small).find(predicate).unwrap()
     }
 }

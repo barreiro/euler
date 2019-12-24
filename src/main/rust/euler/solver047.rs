@@ -35,7 +35,7 @@ impl Solver for Solver047 {
 
 // Similar to primes.prime_factors() but optimized for this problem
 fn is_num_prime_factors(n: isize, primes: &mut Vec<isize>, expected: isize) -> bool {
-    let (mut count, mut value, small, stop) = (0, n, n <= i32::max_value() as isize, int_sqrt(n));
+    let (mut count, mut value, small, stop) = (0, n, n <= i32::max_value() as _, int_sqrt(n));
     for &factor in primes.iter() {
         let mut divides = false;
         while if small { value as i32 % factor as i32 == 0 } else { value % factor == 0 } {

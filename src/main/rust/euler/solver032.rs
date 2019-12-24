@@ -25,11 +25,12 @@ impl Solver for Solver032 {
     fn solve(&self) -> isize {
         let mut set = bit_set();
         permutations_with(1, self.n, |p| {
-            // Assume that the product is at least 2 digits long as is smaller than the sum of the size of it's factors
-            (2..=p.len() / 2).find_map(|i| (i + 1..p.len() - 1).find_map(|j| {
-                let (a, b, c) = (from_digits_index(p, 0, i), from_digits_index(p, i, j), from_digits_index(p, j, p.len()));
+            // Assume that the product is the first half of the digits and the factors the other half
+            let (half, quarter) = (p.len() >> 1, p.len() >> 2);
+            (half + 1..=half + quarter).find_map(|j| {
+                let (a, b, c) = (from_digits_index(p, 0, half), from_digits_index(p, half, j), from_digits_index(p, j, p.len()));
                 if a == b * c { Some(a) } else { None }
-            }))
+            })
         }).filter(|&a| set.insert(a)).sum()
     }
 }

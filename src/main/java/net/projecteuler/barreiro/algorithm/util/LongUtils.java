@@ -195,7 +195,7 @@ public final class LongUtils {
      * @return true if number is a palindrome
      */
     public static boolean isPalindrome(long... digits) {
-        for ( int i = 0; i * 2 < digits.length; i++ ) {
+        for ( int i = 0; i << 1 < digits.length; i++ ) {
             if ( digits[i] != digits[digits.length - i - 1] ) {
                 return false;
             }

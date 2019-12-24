@@ -6,3 +6,6 @@ authors = ["barreiro <lbbbarreiro@gmail.com>"]
 [[bin]]
 name = "euler"
 path = "src/main/rust/euler.rs"
+
+#[profile.release]
+#debug = true

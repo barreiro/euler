@@ -10,14 +10,13 @@ pub struct BitSet {
 }
 
 pub fn bit_set() -> BitSet {
-    BitSet { bits: vec![], step: 8 * size_of::<usize>() }
+    BitSet { bits: vec![0], step: 8 * size_of::<usize>() }
 }
 
 impl BitSet {
-
-    fn locate(& self, n:isize) -> (usize, usize) {
-        if n < i32::max_value() as isize {
-            ((n as i32 / self.step as i32) as usize, (n as i32 % self.step as i32) as usize)
+    fn locate(&self, n: isize) -> (usize, usize) {
+        if n < i32::max_value() as _ {
+            ((n as i32 / self.step as i32) as _, (n as i32 % self.step as i32) as _)
         } else {
             (n as usize / self.step, n as usize % self.step)
         }
@@ -27,7 +26,8 @@ impl BitSet {
     pub fn insert(&mut self, n: isize) -> bool {
         let (index, position) = self.locate(n);
         if index >= self.bits.len() {
-            self.bits.resize(index + 1, 0);
+            // resize aggressively to twice the current size
+            self.bits.resize(index << 1, 0);
         }
         let previous = self.bits[index] & (1 << position) == 0;
         self.bits[index] |= 1 << position;

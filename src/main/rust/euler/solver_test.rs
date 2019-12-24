@@ -2,6 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::*;
+use euler::algorithm::long::{heptagonal, hexagonal, pentagonal, square, triangle};
 
 #[test]
 fn solver_001_test() {
@@ -106,6 +107,7 @@ fn solver_010_test() {
     assert_eq!(Solver010 { n: 5 }.solve(), 5);
     assert_eq!(Solver010 { n: 10 }.solve(), 17);
     assert_eq!(Solver010 { n: 1000000 }.solve(), 37550402023);
+    assert_eq!(Solver010 { n: 2000000 }.solve(), 142913828922);
 }
 
 #[test]
@@ -413,6 +415,7 @@ fn solver_037_test() {
     assert_eq!(Solver037 { n: 4 }.solve(), 186);
     assert_eq!(Solver037 { n: 9 }.solve(), 5123);
     assert_eq!(Solver037 { n: 10 }.solve(), 8920);
+    assert_eq!(Solver037 { n: 11 }.solve(), 748317);
 }
 
 #[test]
@@ -647,4 +650,64 @@ fn solver_060_test() {
     assert_eq!(Solver060 { n: 2 }.solve(), 10);
     assert_eq!(Solver060 { n: 3 }.solve(), 107);
     assert_eq!(Solver060 { n: 4 }.solve(), 792);
+}
+
+#[test]
+fn solver_061_test() {
+    assert_eq!(Solver061::default().solve(), 28684);
+
+    assert_eq!(Solver061 { n: 4, input: &[triangle, square, pentagonal] }.solve(), 19291);
+    assert_eq!(Solver061 { n: 4, input: &[triangle, square, pentagonal, hexagonal] }.solve(), 12524);
+    assert_eq!(Solver061 { n: 4, input: &[triangle, square, pentagonal, hexagonal, heptagonal] }.solve(), 18685);
+    assert_eq!(Solver061 { n: 6, ..Default::default() }.solve(), 2240238);
+    assert_eq!(Solver061 { n: 8, ..Default::default() }.solve(), 227322730);
+}
+
+#[test]
+fn solver_062_test() {
+    assert_eq!(Solver062::default().solve(), 127035954683);
+
+    assert_eq!(Solver062 { n: 2 }.solve(), 125);
+    assert_eq!(Solver062 { n: 3 }.solve(), 41063625);
+    assert_eq!(Solver062 { n: 4 }.solve(), 1006012008);
+    assert_eq!(Solver062 { n: 6 }.solve(), 1426487591593);
+    assert_eq!(Solver062 { n: 7 }.solve(), 12804692354875);
+    assert_eq!(Solver062 { n: 8 }.solve(), 10340284735656);
+    assert_eq!(Solver062 { n: 9 }.solve(), 13465983902671);
+}
+
+#[test]
+fn solver_063_test() {
+    assert_eq!(Solver063::default().solve(), 49);
+
+    assert_eq!(Solver063 { n: 1 }.solve(), 9);
+    assert_eq!(Solver063 { n: 2 }.solve(), 15);
+    assert_eq!(Solver063 { n: 3 }.solve(), 20);
+    assert_eq!(Solver063 { n: 4 }.solve(), 24);
+    assert_eq!(Solver063 { n: 5 }.solve(), 27);
+    assert_eq!(Solver063 { n: 9 }.solve(), 36);
+    assert_eq!(Solver063 { n: 15 }.solve(), 43);
+    assert_eq!(Solver063 { n: 150 }.solve(), 49);
+}
+
+#[test]
+fn solver_064_test() {
+    assert_eq!(Solver064::default().solve(), 1322);
+
+    assert_eq!(Solver064 { n: 2 }.solve(), 1);
+    assert_eq!(Solver064 { n: 13 }.solve(), 4);
+    assert_eq!(Solver064 { n: 23 }.solve(), 5);
+    assert_eq!(Solver064 { n: 100000 }.solve(), 11486);
+}
+
+#[test]
+fn solver_065_test() {
+    assert_eq!(Solver065::default().solve(), 272);
+
+    assert_eq!(Solver065 { n: 1 }.solve(), 2);
+    assert_eq!(Solver065 { n: 2 }.solve(), 3);
+    assert_eq!(Solver065 { n: 9 }.solve(), 13);
+    assert_eq!(Solver065 { n: 10 }.solve(), 17);
+    assert_eq!(Solver065 { n: 1000 }.solve(), 4034);
+    assert_eq!(Solver065 { n: 10000 }.solve(), 55322);
 }

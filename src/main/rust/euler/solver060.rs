@@ -4,7 +4,7 @@
 use std::collections::HashMap;
 
 use euler::algorithm::long::{concatenation, pow_10, square};
-use euler::algorithm::prime::{generator_trial_division, miller_rabin, prime_sieve};
+use euler::algorithm::prime::{generator_wheel, miller_rabin, prime_sieve};
 use euler::Solver;
 
 // The primes 3, 7, 109, and 673, are quite remarkable. By taking any two primes and concatenating them in any order the result will always be prime.
@@ -24,7 +24,7 @@ impl Default for Solver060 {
 
 impl Solver for Solver060 {
     fn solve(&self) -> isize {
-        let (mut set, primes) = (vec![], generator_trial_division().take_while(|&p| p < pow_10(self.n - 1)).collect::<Vec<_>>());
+        let (mut set, primes) = (vec![], generator_wheel().take_while(|&p| p < pow_10(self.n - 1)).collect::<Vec<_>>());
         add_prime_to_set(&mut set, self.n as _, &primes, &mut HashMap::new());
         set.iter().sum()
     }

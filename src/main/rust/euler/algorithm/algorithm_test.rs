@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::combinatorics::partition;
-use euler::algorithm::long::int_sqrt;
+use euler::algorithm::long::{int_sqrt, floor_sqrt};
 use euler::algorithm::long::is_palindrome;
 use euler::algorithm::long::power_modulo;
 use euler::algorithm::prime::miller_rabin;
@@ -10,10 +10,28 @@ use euler::algorithm::prime::prime_factors;
 
 #[test]
 fn int_sqrt_test() {
+    assert_eq!(int_sqrt(1), 1);
+    assert_eq!(int_sqrt(2), 1);
+    assert_eq!(int_sqrt(3), 2);
     assert_eq!(int_sqrt(4), 2);
+    assert_eq!(int_sqrt(5), 2);
     assert_eq!(int_sqrt(10), 3);
     assert_eq!(int_sqrt(10000), 100);
+    assert_eq!(int_sqrt(10001), 100);
     assert_eq!(int_sqrt(1787568), 1337);
+}
+
+#[test]
+fn floor_sqrt_test() {
+    assert_eq!(floor_sqrt(1), 1);
+    assert_eq!(floor_sqrt(2), 1);
+    assert_eq!(floor_sqrt(3), 1);
+    assert_eq!(floor_sqrt(4), 2);
+    assert_eq!(floor_sqrt(5), 2);
+    assert_eq!(floor_sqrt(24), 4);
+    assert_eq!(floor_sqrt(25), 5);
+    assert_eq!(floor_sqrt(26), 5);
+    assert_eq!(floor_sqrt(1787568), 1336);
 }
 
 #[test]

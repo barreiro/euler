@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::long::{from_digits_index, int_log_10, to_digits};
-use euler::algorithm::prime::{generator_trial_division, miller_rabin};
+use euler::algorithm::prime::{generator_wheel, miller_rabin};
 use euler::Solver;
 
 // The number, 197, is called a circular prime because all rotations of the digits: 197, 971, and 719, are themselves prime.
@@ -21,7 +21,7 @@ impl Default for Solver035 {
 
 impl Solver for Solver035 {
     fn solve(&self) -> isize {
-        generator_trial_division().take_while(|&p| p < self.n).filter(|&p| is_circular_prime(p)).count() as _
+        generator_wheel().take_while(|&p| p < self.n).filter(|&p| is_circular_prime(p)).count() as _
     }
 }
 
