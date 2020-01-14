@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 
-use euler::algorithm::long::{int_sqrt, is_even};
+use euler::algorithm::long::{floor_sqrt, is_even};
 use euler::algorithm::long::power_modulo;
 
 // Bases for the Miller-Rabin test
@@ -13,7 +13,7 @@ const MR_BASE: &[isize] = &[2, 325, 9_375, 28_178, 450_775, 9_780_504, 1_795_265
 
 /// calculates the prime factors of a given number. The result is a map where the keys are primes and the values are the occurrences
 pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
-    let (mut factor_map, mut value, small, stop) = (HashMap::new(), n, n <= i32::max_value() as _, int_sqrt(n));
+    let (mut factor_map, mut value, small, stop) = (HashMap::new(), n, n <= i32::max_value() as _, floor_sqrt(n));
     for factor in generator_trial_division() {
         while if small { value as i32 % factor as i32 == 0 } else { value % factor == 0 } {
             value = if small { (value as i32 / factor as i32) as _ } else { value / factor };
@@ -61,7 +61,7 @@ impl Iterator for GeneratorTrialDivision {
 }
 
 pub fn prime_sieve(n: isize, sieve: &[isize]) -> bool {
-    let ceil = int_sqrt(n);
+    let ceil = floor_sqrt(n);
     if n <= i32::max_value() as _ {
         !sieve.iter().take_while(|&&factor| factor <= ceil).any(|&f| n as i32 % f as i32 == 0)
     } else {
@@ -146,6 +146,29 @@ impl Iterator for PrimesLessThan {
         }
     }
 }
+
+// --- //
+
+/// closure that generates primorals, the product of the smallest primes
+pub struct Primoral {
+    generator: GeneratorTrialDivision,
+    product: isize
+}
+
+pub fn primoral() -> Primoral {
+    Primoral { generator: generator_trial_division(), product: 1 }
+}
+
+impl Iterator for Primoral {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.product *= self.generator.next().unwrap();
+        Some(self.product)
+    }
+}
+
+// --- //
 
 pub fn miller_rabin(value: isize) -> bool {
     value != 1 && if value < MR_THRESHOLD { MR_BASE_FAST } else { MR_BASE }.iter().all(|&b| value <= b || miller_rabin_pass(b, value))

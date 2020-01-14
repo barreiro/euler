@@ -1,7 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::{floor_sqrt, is_odd, square};
+use euler::algorithm::continued_fraction::cycle_len;
+use euler::algorithm::long::is_odd;
 use euler::Solver;
 
 // All square roots are periodic when written as continued fractions and can be written in the form:
@@ -50,29 +51,6 @@ impl Default for Solver064 {
 
 impl Solver for Solver064 {
     fn solve(&self) -> isize {
-        // num / (√n - fractional) => a + (√n - b) / c
-        let transform = |n, floor, num, fractional| {
-            let c = (n - square(fractional)) / num;
-            let a = (fractional + floor) / c;
-            let b = -fractional + c * a;
-            (a, b, c)
-        };
-
-        // length of cycle, by applying transformations until c == 1
-        let cycle = |n| {
-            let floor = floor_sqrt(n);
-            if square(floor) == n {
-                return 0;
-            }
-            let (mut num, mut fractional) = (1, floor);
-            (0..n).take_while(|_| {
-                let (_, b, c) = transform(n, floor, num, fractional);
-                num = c;
-                fractional = b;
-                num != 1
-            }).count() as isize + 1
-        };
-
-        (1..=self.n).filter(|&n| is_odd(cycle(n))).count() as _
+        (1..=self.n).filter(|&n| is_odd(cycle_len(n))).count() as _
     }
 }

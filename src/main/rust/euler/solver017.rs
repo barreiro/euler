@@ -11,7 +11,7 @@ use euler::Solver;
 // number of letters for zero (0), one, two [...] nineteen
 const LOOKUP_ONES: &[isize] = &[0, 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, 6, 6, 8, 8, 7, 7, 9, 8, 8];
 
-// number of letters for  zero (0), ten, twenty [...] ninety
+// number of letters for zero (0), ten, twenty [...] ninety
 const LOOKUP_TENS: &[isize] = &[0, 3, 6, 6, 5, 5, 5, 7, 6, 6];
 
 // number of letters for 'and' 'thousand and' and 'hundred and'
@@ -38,7 +38,6 @@ impl Solver for Solver017 {
         sum
     }
 }
-
 
 fn letter_count(i: usize) -> isize {
     // the number of letters of the thousands, then the hundreds, and finally lookupOnes tens and ones

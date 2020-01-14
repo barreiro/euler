@@ -46,21 +46,21 @@ fn partition_memoize(remaining: isize, total: isize, sum: isize, constrains: &[i
 
 // --- //
 
-pub struct Permutations<F> where F: Fn(&[isize]) -> Option<isize> {
+pub struct Permutations<F,R> where F: Fn(&[isize]) -> Option<R> {
     digits: Vec<isize>,
     predicate: F,
 }
 
-pub fn permutations_of<F>(digits: Vec<isize>, predicate: F) -> Permutations<F> where F: Fn(&[isize]) -> Option<isize> {
+pub fn permutations_of<F,R>(digits: Vec<isize>, predicate: F) -> Permutations<F,R> where F: Fn(&[isize]) -> Option<R> {
     Permutations { digits, predicate }
 }
 
-pub fn permutations_with<F>(start: isize, size: isize, predicate: F) -> Permutations<F> where F: Fn(&[isize]) -> Option<isize> {
+pub fn permutations_with<F,R>(start: isize, size: isize, predicate: F) -> Permutations<F,R> where F: Fn(&[isize]) -> Option<R> {
     Permutations { digits: (start..=size).collect::<Vec<_>>(), predicate }
 }
 
-impl<F> Iterator for Permutations<F> where F: Fn(&[isize]) -> Option<isize> {
-    type Item = isize;
+impl<F,R> Iterator for Permutations<F,R> where F: Fn(&[isize]) -> Option<R> {
+    type Item = R;
 
     fn next(&mut self) -> Option<Self::Item> {
         while self.permutate() {
@@ -73,7 +73,7 @@ impl<F> Iterator for Permutations<F> where F: Fn(&[isize]) -> Option<isize> {
     }
 }
 
-impl<F> Permutations<F> where F: Fn(&[isize]) -> Option<isize> {
+impl<F,R> Permutations<F,R> where F: Fn(&[isize]) -> Option<R> {
     pub fn permutate(&mut self) -> bool {
         if self.digits.is_empty() {
             return false;

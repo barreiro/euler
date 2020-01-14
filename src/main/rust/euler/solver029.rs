@@ -28,9 +28,9 @@ impl Default for Solver029 {
 impl Solver for Solver029 {
     fn solve(&self) -> isize {
         // a given number 2≤a≤N can only produce duplicates if 'a^n' can be expressed as '(b^i)^j' with n=i∗j and 2≤n,i,j≤N
-        let (mut duplicates, bound, mut unique) = (0, int_sqrt(self.n) + 1, bit_set());
-        for b in 2..bound {
-            for i in 2..bound {
+        let (mut duplicates, bound, mut unique) = (0, int_sqrt(self.n), bit_set());
+        for b in 2..=bound {
+            for i in 2..=bound {
                 let a = pow(b, i);
                 if a <= self.n && unique.insert(a) {
                     duplicates += (self.n / i) - 1;

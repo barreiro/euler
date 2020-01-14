@@ -11,42 +11,6 @@ pub const fn is_odd(l: isize) -> bool {
 
 // --- //
 
-// Table for fast lookup of powers of 4
-const POW_4: [isize; 32] = [
-    0x0001,
-    0x0004,
-    0x0010,
-    0x0040,
-    0x0100,
-    0x0400,
-    0x1000,
-    0x4000,
-    0x0001_0000,
-    0x0004_0000,
-    0x0010_0000,
-    0x0040_0000,
-    0x0100_0000,
-    0x0400_0000,
-    0x1000_0000,
-    0x4000_0000,
-    0x0001_0000_0000,
-    0x0004_0000_0000,
-    0x0010_0000_0000,
-    0x0040_0000_0000,
-    0x0100_0000_0000,
-    0x0400_0000_0000,
-    0x1000_0000_0000,
-    0x4000_0000_0000,
-    0x0001_0000_0000_0000,
-    0x0004_0000_0000_0000,
-    0x0010_0000_0000_0000,
-    0x0040_0000_0000_0000,
-    0x0100_0000_0000_0000,
-    0x0400_0000_0000_0000,
-    0x1000_0000_0000_0000,
-    0x4000_0000_0000_0000,
-];
-
 // Table for fast lookup of powers of 10
 const POW_10: [isize; 19] = [
     1,
@@ -101,8 +65,9 @@ fn exact_sqrt(value: isize) -> (isize, isize) {
         return (3, 1);
     }
 
-    // "place" starts at the highest power of four <= than the argument
-    let (mut remainder, mut place, mut root) = (value, *POW_4.iter().take_while(|&&d| d <= value).last().unwrap(), 0);
+    // "place" starts at the highest power of four <= than the argument (64 = 0.leading_zeros())
+    let leading = 64 - value.leading_zeros();
+    let (mut remainder, mut place, mut root) = (value, 1 << if leading & 1 == 0 { leading - 2 } else { leading - 1 }, 0);
 
     while place != 0 {
         let term = root + place;
@@ -239,10 +204,15 @@ pub fn concatenation(one: isize, two: isize) -> isize {
 // --- //
 
 pub fn is_permutation(a: isize, b: isize) -> bool {
-    let (mut digits_a, mut digits_b) = (to_digits(a), to_digits(b));
-    digits_a.sort_unstable();
-    digits_b.sort_unstable();
-    digits_a.len() == digits_b.len() && (0..digits_a.len()).all(|i| digits_a[i] == digits_b[i])
+    if a % 9 == b % 9 {
+        let (mut digits_a, mut digits_b) = (to_digits(a), to_digits(b));
+        if digits_a.len() == digits_b.len() {
+            digits_a.sort_unstable();
+            digits_b.sort_unstable();
+            return (0..digits_a.len()).all(|i| digits_a[i] == digits_b[i]);
+        }
+    }
+    false
 }
 
 pub fn digits_sum(mut value: isize) -> isize {

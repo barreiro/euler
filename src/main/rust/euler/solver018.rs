@@ -47,13 +47,16 @@ impl<'a> Default for Solver018<'a> {
 
 impl<'a> Solver for Solver018<'a> {
     fn solve(&self) -> isize {
-        best_sum(0, 0, &str_to_heap(self.n, self.input))
+        best_sum(0, 0, &str_to_heap(self.n, self.input)[..arithmetic_sum(self.n) as _], &mut vec![0; arithmetic_sum(self.n) as _])
     }
 }
 
-fn best_sum(level: isize, index: isize, heap: &[isize]) -> isize {
+fn best_sum(level: isize, index: isize, heap: &[isize], cache: &mut [isize]) -> isize {
     let heap_index = (arithmetic_sum(level) + index) as usize;
-    if heap_index >= heap.len() { 0 } else { heap[heap_index] + best_sum(level + 1, index, heap).max(best_sum(level + 1, index + 1, heap)) }
+    if heap_index < heap.len() && cache[heap_index] == 0 {
+        cache[heap_index] = heap[heap_index] + best_sum(level + 1, index, heap, cache).max(best_sum(level + 1, index + 1, heap, cache))
+    }
+    *cache.get(heap_index).unwrap_or(&0)
 }
 
 // --- //

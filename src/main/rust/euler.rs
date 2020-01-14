@@ -5,7 +5,7 @@ pub use euler::*;
 
 fn solve(n: usize, solver: impl euler::Solver) {
     let now = std::time::Instant::now();
-    println!("Solution for problem {:03} is {:12} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_nanos() as f64 / 1_000_000.0);
+    println!("Solution for problem {:03} is {:16} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_nanos() as f64 / 1_000_000.0);
 }
 
 fn main() {
@@ -74,6 +74,11 @@ fn main() {
     solve(63, Solver063::default());
     solve(64, Solver064::default());
     solve(65, Solver065::default());
+    solve(66, Solver066::default());
+    solve(67, Solver067::default());
+    solve(68, Solver068::default());
+    solve(69, Solver069::default());
+    solve(70, Solver070::default());
 }
 
 mod euler {
@@ -142,6 +147,11 @@ mod euler {
     pub use self::solver063::Solver063;
     pub use self::solver064::Solver064;
     pub use self::solver065::Solver065;
+    pub use self::solver066::Solver066;
+    pub use self::solver067::Solver067;
+    pub use self::solver068::Solver068;
+    pub use self::solver069::Solver069;
+    pub use self::solver070::Solver070;
 
     pub trait Solver {
         fn solve(&self) -> isize;
@@ -155,6 +165,7 @@ mod euler {
         mod algorithm_test;
 
         pub mod bit;
+        pub mod continued_fraction;
         pub mod combinatorics;
         pub mod factor;
         pub mod long;
@@ -226,4 +237,9 @@ mod euler {
     pub mod solver063;
     pub mod solver064;
     pub mod solver065;
+    pub mod solver066;
+    pub mod solver067;
+    pub mod solver068;
+    pub mod solver069;
+    pub mod solver070;
 }
