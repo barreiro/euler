@@ -1,7 +1,6 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::collections::BinaryHeap;
 use std::fs::read_to_string;
 use std::path::Path;
 
@@ -24,7 +23,6 @@ use euler::Solver;
 // There is an efficient algorithm to solve it. ;o)
 
 const BASE_PATH: &str = "src/main/resources/net/projecteuler/barreiro/problem/";
-const _ELEMENT_CEIL: isize = 100;
 
 pub struct Solver067 {
     pub n: isize,
@@ -41,45 +39,9 @@ impl Default for Solver067 {
 
 impl Solver for Solver067 {
     fn solve(&self) -> isize {
-        let ceil = arithmetic_sum(self.n) as _;
-        best_sum(0, 0, &str_to_heap(self.n, &self.input)[..ceil], &mut vec![0; ceil])
+        let heap = str_to_heap(self.n, &self.input);
+        best_sum(0, 0, &heap, &mut vec![0; heap.len()])
     }
-}
-
-fn _a_star_search(heap: Vec<isize>, target_level: isize) -> isize {
-    let heap_index = |level, index| (arithmetic_sum(level) + index) as usize;
-
-    // from[n] is the node immediately preceding it on the cheapest path from start to n currently known.
-    let (mut priority_queue, mut g, mut from) = (BinaryHeap::with_capacity(heap.len()), vec![0; heap.len()], vec![usize::max_value(); heap.len()]);
-    priority_queue.push((0, 0, 0));
-    g[0] = heap[0];
-
-    let leaf = loop {
-        let (_, level, index) = priority_queue.pop().unwrap();
-        let current = heap_index(level, index);
-        if level == target_level {
-            break current;
-        }
-
-        for &(child_level, child_index) in [(level + 1, index), (level + 1, index + 1)].iter() {
-            // each iteration A* extends its paths based on the cost of the path and an (over-)estimate of the cost to the goal.
-            let child = heap_index(child_level, child_index);
-            let tentative = g[current] + heap[child];
-            if tentative > g[child] {
-                g[child] = tentative;
-                from[child] = current;
-                priority_queue.push((tentative + _ELEMENT_CEIL * (target_level - child_level), child_level, child_index));
-            }
-        }
-    };
-
-    // reconstruct path to the leaf based on the best known predecessor
-    let (mut sum, mut position) = (heap[0], leaf);
-    while from[position] != usize::max_value() {
-        sum += heap[position];
-        position = from[position];
-    }
-    sum
 }
 
 fn best_sum(level: isize, index: isize, heap: &[isize], cache: &mut [isize]) -> isize {

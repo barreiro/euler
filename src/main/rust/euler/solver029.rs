@@ -1,7 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::bit::bit_set;
+use std::collections::HashSet;
+
 use euler::algorithm::long::{int_sqrt, pow, square};
 use euler::algorithm::prime::prime_factors;
 use euler::Solver;
@@ -28,7 +29,7 @@ impl Default for Solver029 {
 impl Solver for Solver029 {
     fn solve(&self) -> isize {
         // a given number 2≤a≤N can only produce duplicates if 'a^n' can be expressed as '(b^i)^j' with n=i∗j and 2≤n,i,j≤N
-        let (mut duplicates, bound, mut unique) = (0, int_sqrt(self.n), bit_set());
+        let (mut duplicates, bound, mut unique) = (0, int_sqrt(self.n), HashSet::new());
         for b in 2..=bound {
             for i in 2..=bound {
                 let a = pow(b, i);

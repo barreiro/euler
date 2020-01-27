@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::bit::bit_set;
+use euler::algorithm::bit::BitSet;
 use euler::algorithm::combinatorics::permutations_with;
 use euler::algorithm::long::from_digits_index;
 use euler::Solver;
@@ -23,7 +23,7 @@ impl Default for Solver032 {
 
 impl Solver for Solver032 {
     fn solve(&self) -> isize {
-        let mut set = bit_set();
+        let mut set = BitSet::new();
         permutations_with(1, self.n, |p| {
             // Assume that the product is the first half of the digits and the factors the other half
             let (half, quarter) = (p.len() >> 1, p.len() >> 2);

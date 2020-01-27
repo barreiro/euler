@@ -47,7 +47,8 @@ impl<'a> Default for Solver018<'a> {
 
 impl<'a> Solver for Solver018<'a> {
     fn solve(&self) -> isize {
-        best_sum(0, 0, &str_to_heap(self.n, self.input)[..arithmetic_sum(self.n) as _], &mut vec![0; arithmetic_sum(self.n) as _])
+        let heap = str_to_heap(self.n, self.input);
+        best_sum(0, 0, &heap, &mut vec![0; heap.len()])
     }
 }
 

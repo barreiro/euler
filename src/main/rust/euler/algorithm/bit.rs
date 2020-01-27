@@ -9,17 +9,9 @@ pub struct BitSet {
     step: usize,
 }
 
-pub fn bit_set() -> BitSet {
-    BitSet { bits: vec![0], step: 8 * size_of::<usize>() }
-}
-
 impl BitSet {
-    fn locate(&self, n: isize) -> (usize, usize) {
-        if n < i32::max_value() as _ {
-            ((n as i32 / self.step as i32) as _, (n as i32 % self.step as i32) as _)
-        } else {
-            (n as usize / self.step, n as usize % self.step)
-        }
+    pub fn new() -> BitSet {
+        BitSet { bits: vec![0, 0, 0, 0], step: 8 * size_of::<usize>() }
     }
 
     /// Adds a value to the set. If the set did not have this value present, `true` is returned.
@@ -38,11 +30,23 @@ impl BitSet {
         let (index, position) = self.locate(n);
         index < self.bits.len() && self.bits[index] & (1 << position) != 0
     }
+
+    pub fn len(&self) -> usize {
+        self.bits.iter().map(|b| b.count_ones() as usize).sum()
+    }
+
+    fn locate(&self, n: isize) -> (usize, usize) {
+        if n < i32::max_value() as _ {
+            ((n as i32 / self.step as i32) as _, (n as i32 % self.step as i32) as _)
+        } else {
+            (n as usize / self.step, n as usize % self.step)
+        }
+    }
 }
 
 impl FromIterator<isize> for BitSet {
     fn from_iter<I: IntoIterator<Item=isize>>(iter: I) -> BitSet {
-        let mut bit_set = bit_set();
+        let mut bit_set = BitSet::new();
         iter.into_iter().for_each(|i| { bit_set.insert(i); });
         bit_set
     }
@@ -50,7 +54,7 @@ impl FromIterator<isize> for BitSet {
 
 impl<'a> FromIterator<&'a isize> for BitSet {
     fn from_iter<I: IntoIterator<Item=&'a isize>>(iter: I) -> BitSet {
-        let mut bit_set = bit_set();
+        let mut bit_set = BitSet::new();
         iter.into_iter().for_each(|&i| { bit_set.insert(i); });
         bit_set
     }

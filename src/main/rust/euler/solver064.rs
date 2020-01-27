@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::continued_fraction::cycle_len;
+use euler::algorithm::continued_fraction::continued_expansion_sqrt_cycle_len;
 use euler::algorithm::long::is_odd;
 use euler::Solver;
 
@@ -51,6 +51,6 @@ impl Default for Solver064 {
 
 impl Solver for Solver064 {
     fn solve(&self) -> isize {
-        (1..=self.n).filter(|&n| is_odd(cycle_len(n))).count() as _
+        (1..=self.n).filter(|&n| is_odd(continued_expansion_sqrt_cycle_len(n))).count() as _
     }
 }

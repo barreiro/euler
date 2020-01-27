@@ -1,6 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+use std::mem::swap;
+
 pub const fn is_even(l: isize) -> bool {
     l & 1 == 0
 }
@@ -44,6 +46,27 @@ pub const fn pow_10(exp: isize) -> isize {
 /// Convenience method to calculate the integer logarithm in base 10.
 pub fn int_log_10(n: isize) -> isize {
     POW_10.iter().take_while(|&&d| d <= n).count() as isize
+}
+
+/** Calculates the Greatest Common Divisor using Stein's algorithm */
+pub fn gcd(mut a: isize, mut b: isize) -> isize {
+    if a == 0 { return b }
+    if b == 0 { return a }
+    let shift = (a | b).trailing_zeros();
+    a >>= a.trailing_zeros();
+    while b != 0 {
+        b >>= b.trailing_zeros();
+        if a > b {
+            swap(&mut a , &mut b);
+        }
+        b -= a;
+    }
+    a << shift
+}
+
+/** Calculates the Least Common Multiple */
+pub fn lcm(a: isize, b: isize) -> isize {
+   a / gcd(a,b) * b
 }
 
 /// calculates an approximate of the square root

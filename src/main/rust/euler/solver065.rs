@@ -1,8 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::continued_fraction::convergent_with;
-use euler::algorithm::long::digits_sum;
+use std::mem::swap;
+
+use euler::algorithm::continued_fraction::add_mul;
+use euler::algorithm::long::{digits_sum, pow_10};
 use euler::Solver;
 
 // The square root of 2 can be written as an infinite continued fraction.
@@ -40,7 +42,17 @@ impl Default for Solver065 {
 
 impl Solver for Solver065 {
     fn solve(&self) -> isize {
-        let (n, _) = convergent_with(|n| if n == 0 { 2 } else if n % 3 == 2 { (n + 2) * 2 / 3 } else { 1 }, self.n);
-        n.iter().map(|&d| digits_sum(d)).sum()
+        // optimization of convergent_with that only calculates numerators
+        let convergent_numerator = |f: fn(isize) -> isize, nth| {
+            let (mut n, mut d, threshold) = (vec![f(nth - 1)], vec![1], pow_10(15));
+            (0..nth - 1).rev().for_each(|i| {
+                swap(&mut d, &mut n);
+                add_mul(&mut n, &d, f(i), threshold);
+            });
+            n
+        };
+
+        let e_expansion = |n| if n == 0 { 2 } else if n % 3 == 2 { (n + 2) * 2 / 3 } else { 1 };
+        convergent_numerator(e_expansion, self.n).iter().map(|&d| digits_sum(d)).sum()
     }
 }

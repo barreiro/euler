@@ -59,6 +59,11 @@ fn solver_005_test() {
 
     assert_eq!(Solver005::default().solve(), 232792560);
 
+    assert_eq!(Solver005 { n: 1 }.solve(), 1);
+    assert_eq!(Solver005 { n: 2 }.solve(), 2);
+    assert_eq!(Solver005 { n: 3 }.solve(), 6);
+    assert_eq!(Solver005 { n: 4 }.solve(), 12);
+    assert_eq!(Solver005 { n: 5 }.solve(), 60);
     assert_eq!(Solver005 { n: 6 }.solve(), 60);
     assert_eq!(Solver005 { n: 10 }.solve(), 2520);
     assert_eq!(Solver005 { n: 40 }.solve(), 5342931457063200);
@@ -772,4 +777,69 @@ fn solver_070_test() {
     assert_eq!(Solver070 { n: 6 }.solve(), 783169);
     assert_eq!(Solver070 { n: 8 }.solve(), 99836521);
     assert_eq!(Solver070 { n: 9 }.solve(), 990326167);
+}
+
+#[test]
+fn solver_071_test() {
+    assert_eq!(Solver071::default().solve(), 428570);
+
+    assert_eq!(Solver071 { n: 3 }.solve(), 1);
+    assert_eq!(Solver071 { n: 4 }.solve(), 1);
+    assert_eq!(Solver071 { n: 8 }.solve(), 2);
+    assert_eq!(Solver071 { n: 24 }.solve(), 8);
+    assert_eq!(Solver071 { n: 30 }.solve(), 11);
+    assert_eq!(Solver071 { n: 1000 }.solve(), 428);
+    assert_eq!(Solver071 { n: 100000000000000 }.solve(), 42857142857141);
+}
+
+
+#[test]
+fn solver_072_test() {
+    assert_eq!(Solver072::default().solve(), 303963552391);
+
+    assert_eq!(Solver072 { n: 1 }.solve(), 0);
+    assert_eq!(Solver072 { n: 2 }.solve(), 1);
+    assert_eq!(Solver072 { n: 3 }.solve(), 3);
+    assert_eq!(Solver072 { n: 8 }.solve(), 21);
+    assert_eq!(Solver072 { n: 56 }.solve(), 963);
+    assert_eq!(Solver072 { n: 100 }.solve(), 3043);
+    assert_eq!(Solver072 { n: 1000 }.solve(), 304191);
+    assert_eq!(Solver072 { n: 10000 }.solve(), 30397485);
+    assert_eq!(Solver072 { n: 100000 }.solve(), 3039650753);
+}
+
+#[test]
+fn solver_073_test() {
+    assert_eq!(Solver073::default().solve(), 7295372);
+
+    assert_eq!(Solver073 { n: 4 }.solve(), 0);
+    assert_eq!(Solver073 { n: 5 }.solve(), 1);
+    assert_eq!(Solver073 { n: 8 }.solve(), 3);
+    assert_eq!(Solver073 { n: 9 }.solve(), 4);
+    assert_eq!(Solver073 { n: 10 }.solve(), 4);
+    assert_eq!(Solver073 { n: 1000 }.solve(), 50695);
+    assert_eq!(Solver073 { n: 10000 }.solve(), 5066251);
+    assert_eq!(Solver073 { n: 100000 }.solve(), 506608484);
+}
+
+#[test]
+fn solver_074_test() {
+    assert_eq!(Solver074::default().solve(), 402);
+
+    assert_eq!(Solver074 { n: 1000 }.solve(), 0);
+    assert_eq!(Solver074 { n: 10000 }.solve(), 42);
+    assert_eq!(Solver074 { n: 100000 }.solve(), 42);
+}
+
+#[test]
+fn solver_075_test() {
+    assert_eq!(Solver075::default().solve(), 161667);
+
+    assert_eq!(Solver075 { n: 100 }.solve(), 11);
+    assert_eq!(Solver075 { n: 1000 }.solve(), 112);
+    assert_eq!(Solver075 { n: 10000 }.solve(), 1120);
+    assert_eq!(Solver075 { n: 100000 }.solve(), 11013);
+    assert_eq!(Solver075 { n: 1000000 }.solve(), 107876);
+    assert_eq!(Solver075 { n: 10000000 }.solve(), 1067080);
+//    assert_eq!(Solver075 { n: 100000000 }.solve(), 10619384);
 }

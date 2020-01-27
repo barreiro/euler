@@ -2,11 +2,22 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::combinatorics::partition;
-use euler::algorithm::long::{int_sqrt, floor_sqrt};
+use euler::algorithm::long::{floor_sqrt, gcd, int_sqrt};
 use euler::algorithm::long::is_palindrome;
 use euler::algorithm::long::power_modulo;
 use euler::algorithm::prime::miller_rabin;
 use euler::algorithm::prime::prime_factors;
+
+#[test]
+fn gcd_test() {
+    assert_eq!(gcd(48, 18), 6);
+    assert_eq!(gcd(42, 56), 14);
+    assert_eq!(gcd(98, 56), 14);
+    assert_eq!(gcd(285, 741), 57);
+    assert_eq!(gcd(461952, 116298), 18);
+    assert_eq!(gcd(7966496, 314080416), 32);
+    assert_eq!(gcd(24826148, 45296490), 526);
+}
 
 #[test]
 fn int_sqrt_test() {

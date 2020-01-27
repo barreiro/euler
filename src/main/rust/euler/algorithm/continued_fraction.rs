@@ -13,8 +13,9 @@ fn transform(n: isize, floor: isize, multiplier: isize, fractional: isize) -> (i
     (a, b, c)
 }
 
-/// length of cycle, by applying transformations until c == 1 (or a == 2 * floor)
-pub fn cycle_len(n: isize) -> isize {
+/// length of cycle of sqrt(n), by applying transformations until c == 1 (or a == 2 * floor)
+pub fn continued_expansion_sqrt_cycle_len(n: isize) -> isize {
+    // this is an optimization of continued_expansion_sqrt(n) that does not store values
     let floor = floor_sqrt(n);
     if square(floor) == n {
         return 0;
@@ -28,8 +29,8 @@ pub fn cycle_len(n: isize) -> isize {
     }).count() as isize + 1
 }
 
-/// continued fraction expansion, by applying transformations until c == 1 (or a == 2 * floor)
-pub fn continued_expansion(n: isize) -> Vec<isize> {
+/// continued fraction expansion of sqrt(n), by applying transformations until c == 1 (or a == 2 * floor)
+pub fn continued_expansion_sqrt(n: isize) -> Vec<isize> {
     let floor = floor_sqrt(n);
     if square(floor) == n {
         return vec![0];
@@ -43,6 +44,17 @@ pub fn continued_expansion(n: isize) -> Vec<isize> {
         multiplier = c;
         multiplier != 1
     }).for_each(|_| ());
+    expansion
+}
+
+/// continued fraction expansion of rational n/d, by applying Eucledean algorithm
+pub fn continued_expansion_rational(mut n: isize, mut d: isize) -> Vec<isize> {
+    let mut expansion = vec![];
+    while d != 0 {
+        expansion.push(n / d);
+        swap(&mut n, &mut d);
+        d %= n;
+    }
     expansion
 }
 
@@ -60,28 +72,43 @@ pub fn add_mul(a: &mut Vec<isize>, b: &[isize], c: isize, threshold: isize) {
     }
 }
 
-/// Get the nth convergent (starting at 1)
-pub fn convergent(value: isize, nth: isize) -> (Vec<isize>, Vec<isize>) {
-    convergent_with_expansion(continued_expansion(value), nth)
+// --- //
+
+/// closure that approximates a real value by iterating the convergent
+pub struct Convergent<'a> {
+    f: Box<dyn Fn(usize) -> Option<isize> + 'a>,
+    previous: (Vec<isize>, Vec<isize>),
+    last: (Vec<isize>, Vec<isize>),
+    i: usize,
+    threshold: isize,
 }
 
-/// Get the nth convergent (starting at 1)
-pub fn convergent_with_expansion(expansion: Vec<isize>, nth: isize) -> (Vec<isize>, Vec<isize>) {
-    let (f, threshold) = (|n| if n < expansion.len() { expansion[n] } else { expansion[1 + n % (expansion.len() - 1)] }, pow_10(15));
-    let (mut n, mut d) = (vec![f(nth as usize - 1)], vec![1]);
-    (0..nth - 1).rev().for_each(|i| {
-        swap(&mut d, &mut n);
-        add_mul(&mut n, &d, f(i as _), threshold);
-    });
-    (n, d)
+pub fn convergent_with<'a>(f: Box<dyn Fn(usize) -> Option<isize>>) -> Convergent<'a> {
+    Convergent { f, previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
 }
 
-/// Get the nth convergent (starting at 1)
-pub fn convergent_with(f: fn(isize) -> isize, nth: isize) -> (Vec<isize>, Vec<isize>) {
-    let (mut n, mut d, threshold) = (vec![f(nth - 1)], vec![1], pow_10(15));
-    (0..nth - 1).rev().for_each(|i| {
-        swap(&mut d, &mut n);
-        add_mul(&mut n, &d, f(i), threshold);
-    });
-    (n, d)
+pub fn convergent_with_expansion(expansion: &Vec<isize>) -> Convergent {
+    let f = move |n| if n < expansion.len() { Some(expansion[n]) } else { None };
+    Convergent { f: Box::new(f), previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
+}
+
+pub fn convergent_cyclic(expansion: &Vec<isize>) -> Convergent {
+    let f = move |n| Some(expansion[if n < expansion.len() { n } else { 1 + n % (expansion.len() - 1) }]);
+    Convergent { f: Box::new(f), previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
+}
+
+impl<'a> Iterator for Convergent<'a> {
+    type Item = (Vec<isize>, Vec<isize>);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.i += 1;
+        if let Some(value) = (*self.f)(self.i - 1) {
+            add_mul(&mut self.previous.0, &self.last.0, value, self.threshold);
+            add_mul(&mut self.previous.1, &self.last.1, value, self.threshold);
+            swap(&mut self.last, &mut self.previous);
+            Some((self.last.0.to_vec(), self.last.1.to_vec()))
+        } else {
+            None
+        }
+    }
 }
