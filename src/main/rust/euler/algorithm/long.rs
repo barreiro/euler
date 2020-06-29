@@ -57,7 +57,7 @@ pub fn gcd(mut a: isize, mut b: isize) -> isize {
     while b != 0 {
         b >>= b.trailing_zeros();
         if a > b {
-            swap(&mut a , &mut b);
+            swap(&mut a, &mut b);
         }
         b -= a;
     }
@@ -66,13 +66,12 @@ pub fn gcd(mut a: isize, mut b: isize) -> isize {
 
 /** Calculates the Least Common Multiple */
 pub fn lcm(a: isize, b: isize) -> isize {
-   a / gcd(a,b) * b
+    a / gcd(a, b) * b
 }
 
 /// calculates an approximate of the square root
 pub fn floor_sqrt(value: isize) -> isize {
-    let (root, _) = exact_sqrt(value);
-    root
+    exact_sqrt(value).0
 }
 
 /// calculates an approximate of the square root
@@ -82,10 +81,12 @@ pub fn int_sqrt(value: isize) -> isize {
     if remainder > root { root + 1 } else { root }
 }
 
-fn exact_sqrt(value: isize) -> (isize, isize) {
+pub fn exact_sqrt(value: isize) -> (isize, isize) {
     // fast path for digit conversions on the default radix
     if value == DEFAULT_RADIX {
         return (3, 1);
+    } else if value == 0 {
+        return (0, 0);
     }
 
     // "place" starts at the highest power of four <= than the argument (64 = 0.leading_zeros())
@@ -128,6 +129,9 @@ pub fn pow(base: isize, exp: isize) -> isize {
     }
     if base == 1 || exp == 1 {
         return base;
+    }
+    if base == -1 {
+        return if is_even(exp) { 1 } else { -1 };
     }
     if base == 2 {
         return 1 << exp;

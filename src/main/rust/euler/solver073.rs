@@ -26,21 +26,6 @@ impl Default for Solver073 {
 
 impl Solver for Solver073 {
     fn solve(&self) -> isize {
-        // iterative method for calculating the next term of the Farey sequence
-//        let initial_expansion = &continued_expansion_rational(LOWER.0 * self.n + 1, LOWER.1 * self.n);
-//        let (mut previous, mut last) = (LOWER, convergent_with_expansion(initial_expansion).take_while(|(_, d)| d[0] <= self.n).last().map(|(n, d)| (n[0], d[0])).unwrap());
-//        let mut count = 0;
-//        while last != UPPER {
-//            count += 1;
-//            let k = (self.n + previous.1) / last.1;
-//            previous = (k * last.0 - previous.0, k * last.1 - previous.1);
-//            swap(&mut previous, &mut last);
-//        }
-//        count
-
-        // recursive method based on the Stern–Brocot tree
-//        count_between(LOWER, UPPER, self.n)
-
         // return numbers of irreducible fractions a/b < n/d where b is less than size
         // algorithm from "Computer Order Statistics in the Farey Sequence" by C. & M. Patrascu
         // http://people.csail.mit.edu/mip/papers/farey/talk.pdf
@@ -55,8 +40,3 @@ impl Solver for Solver073 {
         farey_rank(UPPER, self.n as _) - farey_rank(LOWER, self.n as _) - 1
     }
 }
-
-//fn count_between(lower: (isize, isize), upper: (isize, isize), max_d: isize) -> isize {
-//    let mid = (lower.0 + upper.0, lower.1 + upper.1);
-//    if mid.1 > max_d { 0 } else { 1 + count_between(lower, mid, max_d) + count_between(mid, upper, max_d) }
-//}

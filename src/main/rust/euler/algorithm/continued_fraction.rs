@@ -3,7 +3,7 @@
 
 use std::mem::swap;
 
-use euler::algorithm::long::{floor_sqrt, pow_10, square};
+use euler::algorithm::long::{floor_sqrt, pow_10, square, exact_sqrt};
 
 // multiplier / (√n - fractional) => a + (√n - b) / c
 fn transform(n: isize, floor: isize, multiplier: isize, fractional: isize) -> (isize, isize, isize) {
@@ -31,8 +31,8 @@ pub fn continued_expansion_sqrt_cycle_len(n: isize) -> isize {
 
 /// continued fraction expansion of sqrt(n), by applying transformations until c == 1 (or a == 2 * floor)
 pub fn continued_expansion_sqrt(n: isize) -> Vec<isize> {
-    let floor = floor_sqrt(n);
-    if square(floor) == n {
+    let (floor, remainder) = exact_sqrt(n);
+    if remainder == 0 {
         return vec![0];
     }
     let (mut multiplier, mut fractional, mut expansion) = (1, floor, Vec::new());
@@ -87,12 +87,12 @@ pub fn convergent_with<'a>(f: Box<dyn Fn(usize) -> Option<isize>>) -> Convergent
     Convergent { f, previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
 }
 
-pub fn convergent_with_expansion(expansion: &Vec<isize>) -> Convergent {
+pub fn convergent_with_expansion(expansion: &[isize]) -> Convergent {
     let f = move |n| if n < expansion.len() { Some(expansion[n]) } else { None };
     Convergent { f: Box::new(f), previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
 }
 
-pub fn convergent_cyclic(expansion: &Vec<isize>) -> Convergent {
+pub fn convergent_cyclic(expansion: &[isize]) -> Convergent {
     let f = move |n| Some(expansion[if n < expansion.len() { n } else { 1 + n % (expansion.len() - 1) }]);
     Convergent { f: Box::new(f), previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
 }

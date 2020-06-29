@@ -54,7 +54,7 @@ fn best_sum(level: isize, index: isize, heap: &[isize], cache: &mut [isize]) -> 
 
 // --- //
 
-fn str_to_heap(level: isize, data: &String) -> Vec<isize> {
+fn str_to_heap(level: isize, data: &str) -> Vec<isize> {
     let mut parsed = vec![];
     for (l, line) in data.split('\n').enumerate() {
         if l < level as usize {

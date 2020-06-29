@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::combinatorics::partition;
+use euler::algorithm::combinatorics::{partition, partition_with_constrains};
 use euler::algorithm::long::{floor_sqrt, gcd, int_sqrt};
 use euler::algorithm::long::is_palindrome;
 use euler::algorithm::long::power_modulo;
@@ -99,13 +99,8 @@ fn miller_rabin_long_test() {
 
 #[test]
 fn partition_test() {
-    let natural = vec![1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002];
-
-    for i in 1..natural.len() {
-        let mut constrains = vec![0; i];
-        for c in 0..i {
-            constrains[c] = 1 + c as isize;
-        }
-        assert_eq!(natural[i], partition(i as isize, &constrains));
-    }
+    let natural = vec![1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002, 1255, 1575, 1958, 2436, 3010, 3718, 4565, 5604, 6842, 8349, 10143, 12310, 14883, 17977, 21637, 26015, 31185, 37338, 44583, 53174, 63261, 75175, 89134, 105558, 124754, 147273, 173525];
+    natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition(n as _), p));
+//    natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition_e(n as _), p));
+    natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition_with_constrains(n as _, &(1..=n as _).collect::<Vec<_>>()), p));
 }

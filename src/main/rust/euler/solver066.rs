@@ -39,16 +39,16 @@ impl Default for Solver066 {
 impl Solver for Solver066 {
     fn solve(&self) -> isize {
         let custom_comparator = |n: Vec<_>| (n.len(), n[n.len() - 1]);
+        let (cache_sqrt, threshold) = ((0..self.n).map(floor_sqrt).collect::<Vec<_>>(), pow_10(15));
 
         // algorithm is described in the paper "An Algorithm to Solve a Pell Equation" by Alexander Junod
-        // http://www.geman.in/yahoo_site_admin/assets/docs/1_GMN-8492-V28N2.190180001.pdf
+        // https://www.emis.de/journals/GMN/yahoo_site_admin/assets/docs/1_GMN-8492-V28N2.190180001.pdf
         let junod = |d| {
-            let (mut previous, mut current, root, threshold) = ((vec![0], 1, d), (vec![1], 0, 1), floor_sqrt(d), pow_10(15));
-            let sqrt = |n| if n == 0 { 0 } else { floor_sqrt(n) };
+            let (mut previous, mut current, root) = ((vec![0], 1, d), (vec![1], 0, 1), cache_sqrt[d as usize]);
             while current.2 > 2 || current.1 == 0 {
                 let (mut a_p, _, c_p) = previous;
                 let (a, b, c) = current;
-                let p_factor = sqrt(d - c * c_p);
+                let p_factor = cache_sqrt[(d - c * c_p) as usize];
                 let q = (p_factor + root) / c;
 
                 add_mul(&mut a_p, &a, q, threshold);
@@ -56,7 +56,7 @@ impl Solver for Solver066 {
                 current = (a_p, 1, c_p + 2 * q * p_factor - q * q * c); // ( q * a + a_p,  q * b + b_p, c_next)
             }
             if current.2 == 1 { // c is either 1 or 2, normalize by multiplying by 2
-                add_mul(&mut current.0, &vec![0], 2, threshold);
+                add_mul(&mut current.0, &[0], 2, threshold);
             }
             current.0 // outputs 2 * a / c instead of x ( actual value of x = ±1 + (2 * a^2) / c )
         };

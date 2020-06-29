@@ -4,6 +4,7 @@
 use std::iter::FromIterator;
 use std::mem::size_of;
 
+#[derive(Default)]
 pub struct BitSet {
     bits: Vec<usize>,
     step: usize,
@@ -33,6 +34,10 @@ impl BitSet {
 
     pub fn len(&self) -> usize {
         self.bits.iter().map(|b| b.count_ones() as usize).sum()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.bits.iter().all(|&b| b == 0)
     }
 
     fn locate(&self, n: isize) -> (usize, usize) {

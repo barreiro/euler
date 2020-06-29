@@ -19,6 +19,6 @@ impl Default for Solver005 {
 
 impl Solver for Solver005 {
     fn solve(&self) -> isize {
-        (2..=self.n).fold(1, |acc, l| lcm(acc, l))
+        (2..=self.n).fold(1, lcm)
     }
 }

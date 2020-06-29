@@ -30,16 +30,6 @@ impl Default for Solver075 {
 
 impl Solver for Solver075 {
     fn solve(&self) -> isize {
-        // solved with Euclides Formula --- a=m^2-n^2 --- b=2nm --- c=m^2+n^2 --- with m>n
-//        let primitive_triplet = |m, n| if is_odd(n + m) && gcd(m, n) == 1 { Some((m * (m + n) << 1) as usize) } else { None };
-//        let (ceil, mut lengths) = (floor_sqrt(self.n << 1) >> 1, vec![0; self.n as usize + 1]);
-//        (2..=ceil).for_each(|m| (1..m).filter_map(|n| primitive_triplet(m, n)).for_each(|sum| (sum..).step_by(sum).take_while(|&s| s <= self.n as _).for_each(|s| lengths[s] += 1)));
-//        lengths.iter().filter(|&&l| l == LENGTH).count() as _
-
-//        let mut lengths = vec![0; self.n as usize + 1];
-//        _primitive_triplets(3, 4, 5, &mut lengths);
-//        lengths.iter().filter(|&&l| l == LENGTH).count() as _
-
         // take advantage of the fact that the perimeter is always even
         let mut lengths = vec![0; self.n as usize / 2 + 1];
         // the (2, 1) initial coprime pair ensures one value is even and the other is odd (as opposed to both odd)
@@ -47,19 +37,6 @@ impl Solver for Solver075 {
         lengths.iter().filter(|&&l| l == 1).count() as _
     }
 }
-
-// generates all primitive triplets using a Price matrix transformations
-//fn _primitive_triplets(a: isize, b: isize, c: isize, lengths: &mut [usize]) {
-//    let sum = (a + b + c) as usize;
-//    if sum <= lengths.len() {
-//        for i in 1..lengths.len() / sum {
-//            lengths[i * sum] += 1;
-//        }
-//        _primitive_triplets((a << 1) + b - c, (-a + b + c) << 1, (-a << 1) + b + 3 * c, lengths);
-//        _primitive_triplets((a << 1) + b + c, (a - b + c) << 1, (a << 1) - b + 3 * c, lengths);
-//        _primitive_triplets((a << 1) - b + c, (a + b + c) << 1, (a << 1) + b + 3 * c, lengths);
-//    }
-//}
 
 // generates all perimeters using two coprime numbers (each coprime pair generates a primitive triplet)
 fn coprimes(m: isize, n: isize, lengths: &mut [usize]) {
@@ -71,4 +48,3 @@ fn coprimes(m: isize, n: isize, lengths: &mut [usize]) {
         coprimes(m + (n << 1), n, lengths);
     }
 }
-
