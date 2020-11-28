@@ -43,6 +43,6 @@ impl<'a> Default for Solver008<'a> {
 impl<'a> Solver for Solver008<'a> {
     fn solve(&self) -> isize {
         let digits = self.input.chars().map(|c| c.to_digit(DEFAULT_RADIX as _).unwrap() as _).collect::<Vec<_>>();
-        digits.windows(self.n as _).max_by_key(|w| w.iter().product::<isize>()).map(|w| w.iter().product()).unwrap()
+        digits.windows(self.n as _).map(|w| w.iter().product()).max().unwrap()
     }
 }

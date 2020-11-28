@@ -29,6 +29,6 @@ impl Default for Solver078 {
 
 impl Solver for Solver078 {
     fn solve(&self) -> isize {
-        partition_modulo_find(self.n, 0).unwrap()
+        partition_modulo_find(self.n, 0)
     }
 }

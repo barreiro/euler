@@ -31,8 +31,14 @@ impl Solver for Solver060 {
 }
 
 fn add_prime_to_set<'a>(set: &mut Vec<isize>, size: usize, primes: &'a [isize], cache: &mut HashMap<isize, Vec<&'a isize>>) -> bool {
-    let (last_prime, threshold) = (*primes.last().unwrap(), square(*primes.last().unwrap()));
-    let is_prime = |c| if c < last_prime { primes.binary_search(&c).is_ok() } else if c < threshold { prime_sieve(c, primes) } else { miller_rabin(c) };
+    let last_prime = *primes.last().unwrap();
+    let is_prime = |c| if c < last_prime {
+        primes.binary_search(&c).is_ok()
+    } else if c < square(last_prime) {
+        prime_sieve(c, primes)
+    } else {
+        miller_rabin(c)
+    };
     let concatenation_list = |p| primes.iter().filter(|&&prime| prime > p && is_prime(concatenation(p, prime)) && is_prime(concatenation(prime, p))).collect::<Vec<_>>();
 
     // Memoization of the prime concatenations for a 25% speedup, despite increasing code complexity significantly

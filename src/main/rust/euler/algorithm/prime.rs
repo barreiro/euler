@@ -35,11 +35,13 @@ pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
 
 /// closure that generates primes based on the method of trial division
 pub struct GeneratorTrialDivision {
-    sieve: Vec<isize>
+    sieve: Vec<isize>,
+    bound: isize,
+    bound_target: isize,
 }
 
 pub fn generator_trial_division() -> GeneratorTrialDivision {
-    GeneratorTrialDivision { sieve: vec![] }
+    GeneratorTrialDivision { sieve: vec![], bound: 1, bound_target: 1 }
 }
 
 impl Iterator for GeneratorTrialDivision {
@@ -52,7 +54,7 @@ impl Iterator for GeneratorTrialDivision {
                 self.sieve.clear();
                 3
             }
-            last => { (last.unwrap() + 2..).step_by(2).find(|&candidate| prime_sieve(candidate, &self.sieve)).unwrap() }
+            last => { (last.unwrap() + 2..).step_by(2).find(|&candidate| prime_sieve_bound(candidate, &self.sieve, &mut self.bound, &mut self.bound_target)).unwrap() }
         };
 
         self.sieve.push(next);
@@ -61,12 +63,16 @@ impl Iterator for GeneratorTrialDivision {
 }
 
 pub fn prime_sieve(n: isize, sieve: &[isize]) -> bool {
-    let ceil = floor_sqrt(n);
-    if n <= i32::max_value() as _ {
-        !sieve.iter().take_while(|&&factor| factor <= ceil).any(|&f| n as i32 % f as i32 == 0)
-    } else {
-        !sieve.iter().take_while(|&&factor| factor <= ceil).any(|&f| n % f == 0)
+    prime_sieve_bound(n, sieve, &mut floor_sqrt(n), &mut isize::MAX)
+}
+
+// this function keeps track of search bound to avoid calculating the square root each time
+fn prime_sieve_bound(n: isize, sieve: &[isize], ceil: &mut isize, ceil_target: &mut isize) -> bool {
+    if *ceil_target < n {
+        *ceil += 1;
+        *ceil_target = *ceil * *ceil;
     }
+    !sieve.iter().take_while(|&factor| factor <= ceil).any(|&f| if n <= i32::max_value() as _ { n as i32 % f as i32 == 0 } else { n % f == 0 })
 }
 
 // --- //
@@ -76,6 +82,8 @@ pub struct GeneratorWheel {
     size: isize,
     increments: Vec<isize>,
     sieve: Vec<isize>,
+    bound: isize,
+    bound_target: isize,
 }
 
 pub fn generator_wheel() -> GeneratorWheel {
@@ -87,7 +95,7 @@ pub fn generator_custom_wheel(primes: &[isize]) -> GeneratorWheel {
     let buckets = (size..=1 + size * 2).filter(|n| primes.iter().all(|p| n % p != 0)).map(|n| n - size).collect::<Vec<_>>();
     let mut increments = vec![0; *buckets.last().unwrap() as usize];
     (0..buckets.len() - 1).for_each(|i| increments[buckets[i] as usize] = buckets[i + 1] - buckets[i]);
-    GeneratorWheel { size, increments, sieve: vec![] }
+    GeneratorWheel { size, increments, sieve: vec![], bound: 1, bound_target: 1 }
 }
 
 impl Iterator for GeneratorWheel {
@@ -102,13 +110,13 @@ impl Iterator for GeneratorWheel {
             }
             last => {
                 if *last.unwrap() < self.size {
-                    (last.unwrap() + 2..).step_by(2).find(|&candidate| prime_sieve(candidate, &self.sieve)).unwrap()
+                    (last.unwrap() + 2..).step_by(2).find(|&candidate| prime_sieve_bound(candidate, &self.sieve, &mut self.bound, &mut self.bound_target)).unwrap()
                 } else {
                     let (mut candidate, mut index) = (*last.unwrap(), (last.unwrap() % self.size));
                     loop {
                         let increment = self.increments[index as usize];
                         candidate += increment;
-                        if prime_sieve(candidate, &self.sieve) {
+                        if prime_sieve_bound(candidate, &self.sieve, &mut self.bound, &mut self.bound_target) {
                             break candidate;
                         }
                         index += increment;

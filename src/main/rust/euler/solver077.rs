@@ -26,8 +26,7 @@ impl Default for Solver077 {
 
 impl Solver for Solver077 {
     fn solve(&self) -> isize {
-        let primes_ceil = (20).max(floor_sqrt(self.n << 1));
-        let primes = generator_trial_division().take_while(|&p| p <= primes_ceil).collect::<Vec<_>>();
+        let primes = generator_trial_division().take_while(|&p| p <= (20).max(floor_sqrt(self.n << 1))).collect::<Vec<_>>();
         (3..).find(|&value| partition_with_constrains(value, &primes) - if primes.binary_search(&value).is_ok() { 1 } else { 0 } > self.n).unwrap()
     }
 }

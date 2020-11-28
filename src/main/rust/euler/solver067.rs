@@ -58,11 +58,7 @@ fn str_to_heap(level: isize, data: &str) -> Vec<isize> {
     let mut parsed = vec![];
     for (l, line) in data.split('\n').enumerate() {
         if l < level as usize {
-            for s in line.split_whitespace() {
-                if let Ok(value) = s.parse() {
-                    parsed.push(value);
-                }
-            }
+            line.split_whitespace().filter_map(|s| s.parse().ok()).for_each(|value| parsed.push(value));
         }
     }
     parsed

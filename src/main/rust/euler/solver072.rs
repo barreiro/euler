@@ -23,14 +23,14 @@ impl Default for Solver072 {
 
 impl Solver for Solver072 {
     fn solve(&self) -> isize {
-        // calculate the number of fractions in the Farey sequence using a (recursive) Mobius inversion formula, and remove 0/1 ans 1/1
-        farey_size(self.n as _, &mut vec![0; self.n as usize + 1]) - 2
+        // calculate the number of fractions in the Farey sequence using a (recursive) Mobius inversion formula, and remove 0/1 and 1/1
+        farey_size(self.n as _, &mut vec![0; self.n as usize + 1]) as isize - 2
     }
 }
 
-pub fn farey_size(n: usize, cache: &mut [usize]) -> isize {
-    let recursion = |m| if cache[m] != 0 { cache[m] } else { farey_size(m, cache) as _ };
+fn farey_size(n: usize, cache: &mut [usize]) -> usize {
+    let recursion = |m| if cache[m] != 0 { cache[m] } else { farey_size(m, cache) };
     let value = (((n + 3) * n) >> 1) - (2..=n).map(|d| n / d).map(recursion).sum::<usize>();
     cache[n] = value;
-    value as _
+    value
 }

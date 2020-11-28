@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::factor::sum_of_factors;
-use euler::algorithm::long::pentagonal;
+use euler::algorithm::long::{pentagonal, int_sqrt};
 
 /// Method for calculation the combinations of a certain number of elements in a total number of places.
 /// Uses iteration instead of the formula with factorials.
@@ -49,22 +49,22 @@ pub fn partition(value: isize) -> isize {
 }
 
 /// Finds the least number with a certain integer partition value, with a certain modulo
-pub fn partition_modulo_find(modulo: isize, predicate: isize) -> Option<isize> {
-    let mut cache = (0..2).map(|_| 1).collect();
-    (2..).find(|&value| partition_modulo_memoize(value, modulo, &mut cache) == predicate)
+pub fn partition_modulo_find(modulo: isize, predicate: isize) -> isize {
+    let mut cache = Vec::with_capacity(int_sqrt(modulo) as _);
+    (0..2).for_each(|_| cache.push(1));
+    (2..).find(|&value| partition_modulo_memoize(value, modulo, &mut cache) == predicate).unwrap()
 }
 
 // The cache is assume to be initialized with [1,1] and is to be populated by calls with incrementing value
 fn partition_modulo_memoize(value: isize, modulo: isize, cache: &mut Vec<isize>) -> isize {
     let index = value as usize;
-    if index >= cache.len() || cache[index] == 0 {
-        if index >= cache.len() { cache.push(0) };
-        // uses Euler's recursive formula p(n) = p(n-1) + p(n-2) - p(n-5) - p(n-7) + p(n-12) + ...
-        (0..).map(|n| if n & 1 == 0 { (n >> 1) + 1 } else { -(n >> 1) - 1 }).map(pentagonal).take_while(|&k| k <= value).enumerate().for_each(|(i, k)| {
-            // i & 2 == 0 generates the signal sequence + + - - + + - - ...
-            cache[index] += if i & 2 == 0 { 1 } else { -1 } * partition_modulo_memoize(value - k, modulo, cache);
-        });
-        cache[index] = cache[index].rem_euclid(modulo);
+    if index >= cache.len() { cache.push(0) }
+    if cache[index] == 0 {
+        // uses Euler's recursive formula p(n) = p(n-1) + p(n-2) - p(n-5) - p(n-7) + p(n-12) + ... where i & 2 == 0 generates the signal sequence + + - - + + - - ...
+        (0..).map(|n| if n & 1 == 0 { (n >> 1) + 1 } else { -(n >> 1) - 1 }).map(pentagonal).take_while(|&k| k <= value).enumerate().for_each(|(i, k)|
+            cache[index] += if i & 2 == 0 { partition_modulo_memoize(value - k, modulo, cache) } else { -partition_modulo_memoize(value - k, modulo, cache) }
+        );
+        cache[index] %= modulo;
     }
     cache[index]
 }
