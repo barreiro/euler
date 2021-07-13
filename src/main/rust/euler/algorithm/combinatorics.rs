@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::factor::sum_of_factors;
-use euler::algorithm::long::{pentagonal, int_sqrt};
+use euler::algorithm::long::{int_sqrt, pentagonal};
 
 /// Method for calculation the combinations of a certain number of elements in a total number of places.
 /// Uses iteration instead of the formula with factorials.
@@ -76,34 +76,36 @@ pub struct Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
     predicate: F,
 }
 
-pub fn permutations_of<F, R>(digits: Vec<isize>, predicate: F) -> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
+/// requires the digits set to be ordered
+pub fn permutations_of_set_with<F, R>(digits: Vec<isize>, predicate: F) -> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
     Permutations { digits, predicate }
 }
 
 pub fn permutations_with<F, R>(start: isize, size: isize, predicate: F) -> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
-    Permutations { digits: (start..=size).collect::<Vec<_>>(), predicate }
+    permutations_of_set_with((start..=size).collect::<Vec<_>>(), predicate)
 }
 
 impl<F, R> Iterator for Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
     type Item = R;
 
     fn next(&mut self) -> Option<Self::Item> {
-        while self.permutate() {
+        loop {
+            if self.digits.is_empty() {
+                return None;
+            }
             let result = (self.predicate)(&self.digits);
+            if !self.permutate() {
+                self.digits.clear();
+            }
             if result.is_some() {
                 return result;
             }
         }
-        None
     }
 }
 
 impl<F, R> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
     pub fn permutate(&mut self) -> bool {
-        if self.digits.is_empty() {
-            return false;
-        }
-
         // find non-increasing suffix
         let mut i = self.digits.len() - 1;
         while i > 0 && self.digits[i - 1] >= self.digits[i] {
@@ -129,8 +131,52 @@ impl<F, R> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
 
 // --- //
 
+// this implementation uses a vec of positions. it can be improved for digits.len() < isize::BITS using a trick known as Gospher's Hack
+pub struct Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
+    digits: Vec<isize>,
+    pattern: Vec<usize>,
+    predicate: F,
+}
+
+pub fn combinations_with<F, R>(digits: Vec<isize>, size: usize, predicate: F) -> Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
+    let mut pattern = (0..size).rev().collect::<Vec<_>>();
+    pattern[0] -= 1;
+    Combinations { digits, pattern, predicate }
+}
+
+impl<F, R> Iterator for Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
+    type Item = R;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        while self.pattern_increase() {
+            let result = (self.predicate)(&self.pattern.iter().map(|&i| self.digits[i]).collect::<Vec<_>>());
+            if result.is_some() {
+                return result;
+            }
+        }
+        None
+    }
+}
+
+impl<F, R> Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
+    fn pattern_increase(&mut self) -> bool {
+        for i in 0..self.pattern.len() {
+            if self.pattern[i] + i < self.digits.len() - 1 {
+                self.pattern[i] += 1;
+                for j in 0..i {
+                    self.pattern[j] = self.pattern[i] + i - j;
+                }
+                return true;
+            }
+        }
+        false
+    }
+}
+
+// --- //
+
 pub struct Palindromes {
-    pub digits: Vec<isize>
+    pub digits: Vec<isize>,
 }
 
 pub fn palindromes() -> Palindromes {

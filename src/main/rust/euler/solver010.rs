@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::prime::generator_wheel;
+use euler::algorithm::prime::primes_wheel_up_to;
 use euler::Solver;
 
 // The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
@@ -19,6 +19,6 @@ impl Default for Solver010 {
 
 impl Solver for Solver010 {
     fn solve(&self) -> isize {
-        generator_wheel().take_while(|&p| p < self.n).sum()
+        primes_wheel_up_to(self.n).sum()
     }
 }

@@ -13,7 +13,7 @@ const MR_BASE: &[isize] = &[2, 325, 9_375, 28_178, 450_775, 9_780_504, 1_795_265
 
 /// calculates the prime factors of a given number. The result is a map where the keys are primes and the values are the occurrences
 pub fn prime_factors(n: isize) -> HashMap<isize, isize> {
-    let (mut factor_map, mut value, small, stop) = (HashMap::new(), n, n <= i32::max_value() as _, floor_sqrt(n));
+    let (mut factor_map, mut value, small, stop) = (HashMap::new(), n, n <= i32::MAX as _, floor_sqrt(n));
     for factor in generator_trial_division() {
         while if small { value as i32 % factor as i32 == 0 } else { value % factor == 0 } {
             value = if small { (value as i32 / factor as i32) as _ } else { value / factor };
@@ -44,6 +44,11 @@ pub fn generator_trial_division() -> GeneratorTrialDivision {
     GeneratorTrialDivision { sieve: vec![], bound: 1, bound_target: 1 }
 }
 
+/// iterator of the primes up to n (excluding n) using trial division algorithm
+pub fn primes_up_to(n: isize) -> impl Iterator<Item = isize> {
+    GeneratorTrialDivision { sieve: vec![], bound: 1, bound_target: 1 }.take_while(move |&p| p <= n)
+}
+
 impl Iterator for GeneratorTrialDivision {
     type Item = isize;
 
@@ -63,7 +68,7 @@ impl Iterator for GeneratorTrialDivision {
 }
 
 pub fn prime_sieve(n: isize, sieve: &[isize]) -> bool {
-    prime_sieve_bound(n, sieve, &mut floor_sqrt(n), &mut isize::MAX)
+    prime_sieve_bound(n, sieve, &mut floor_sqrt(n), &mut isize::MAX.clone())
 }
 
 // this function keeps track of search bound to avoid calculating the square root each time
@@ -72,7 +77,7 @@ fn prime_sieve_bound(n: isize, sieve: &[isize], ceil: &mut isize, ceil_target: &
         *ceil += 1;
         *ceil_target = *ceil * *ceil;
     }
-    !sieve.iter().take_while(|&factor| factor <= ceil).any(|&f| if n <= i32::max_value() as _ { n as i32 % f as i32 == 0 } else { n % f == 0 })
+    sieve.iter().take_while(|&factor| factor <= ceil).all(|&f| if n <= i32::MAX as _ { n as i32 % f as i32 != 0 } else { n % f != 0 })
 }
 
 // --- //
@@ -96,6 +101,11 @@ pub fn generator_custom_wheel(primes: &[isize]) -> GeneratorWheel {
     let mut increments = vec![0; *buckets.last().unwrap() as usize];
     (0..buckets.len() - 1).for_each(|i| increments[buckets[i] as usize] = buckets[i + 1] - buckets[i]);
     GeneratorWheel { size, increments, sieve: vec![], bound: 1, bound_target: 1 }
+}
+
+/// iterator of the primes up to n (excluding n) using wheel factorization algorithm
+pub fn primes_wheel_up_to(n: isize) -> impl Iterator<Item = isize> {
+    generator_wheel().take_while(move |&p| p < n)
 }
 
 impl Iterator for GeneratorWheel {
@@ -133,16 +143,16 @@ impl Iterator for GeneratorWheel {
 
 // --- //
 
-/// closure that generates primes prime numbers, starting with the one below N.
-pub struct PrimesLessThan {
+/// closure that generates prime numbers, starting with the one below N.
+pub struct DescendingPrimes {
     pub n: isize
 }
 
-pub fn primes_less_than(n: isize) -> PrimesLessThan {
-    PrimesLessThan { n: if is_even(n) { n - 1 } else { n } }
+pub fn descending_primes(n: isize) -> DescendingPrimes {
+    DescendingPrimes { n: if is_even(n) { n - 1 } else { n } }
 }
 
-impl Iterator for PrimesLessThan {
+impl Iterator for DescendingPrimes {
     type Item = isize;
 
     fn next(&mut self) -> Option<Self::Item> {

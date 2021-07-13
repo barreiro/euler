@@ -3,7 +3,7 @@
 
 use std::collections::HashSet;
 
-use euler::algorithm::combinatorics::permutations_of;
+use euler::algorithm::combinatorics::permutations_of_set_with;
 use euler::algorithm::long::{from_digits_index, to_digits};
 use euler::Solver;
 
@@ -61,7 +61,7 @@ impl Solver for Solver074 {
         (1..self.n as _).rev().filter(|&i| {
             if cache[i] == 0 {
                 cache[i] = factorial_cycle_len(i, &cache);
-                permutations_of(to_digits(i as _), predicate).for_each(|permutation| cache[permutation as usize] = cache[i]);
+                permutations_of_set_with(to_digits(i as _), predicate).for_each(|permutation| cache[permutation as usize] = cache[i]);
             }
             cache[i] == TARGET
         }).count() as _

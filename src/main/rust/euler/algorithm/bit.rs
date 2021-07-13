@@ -27,6 +27,18 @@ impl BitSet {
         previous
     }
 
+    /// Removes a value from the set. If the set did have this value present, `true` is returned.
+    pub fn remove(&mut self, n: isize) -> bool {
+        let (index, position) = self.locate(n);
+        if index < self.bits.len() {
+            let previous = self.bits[index] & (1 << position) == 0;
+            self.bits[index] &= !(1 << position);
+            previous
+        } else { 
+            false
+        }
+    }
+
     pub fn contains(&self, n: isize) -> bool {
         let (index, position) = self.locate(n);
         index < self.bits.len() && self.bits[index] & (1 << position) != 0
@@ -41,7 +53,7 @@ impl BitSet {
     }
 
     fn locate(&self, n: isize) -> (usize, usize) {
-        if n < i32::max_value() as _ {
+        if n < i32::MAX as _ {
             ((n as i32 / self.step as i32) as _, (n as i32 % self.step as i32) as _)
         } else {
             (n as usize / self.step, n as usize % self.step)

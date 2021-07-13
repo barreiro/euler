@@ -51,7 +51,7 @@ use euler::Solver;
 //
 // How many hands does Player 1 win?
 
-const BASE_PATH: &str = "src/main/resources/net/projecteuler/barreiro/problem/";
+const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem054-data.txt";
 
 pub struct Solver054 {
     pub n: isize,
@@ -60,16 +60,14 @@ pub struct Solver054 {
 
 impl Default for Solver054 {
     fn default() -> Self {
-        let location = BASE_PATH.to_string() + "problem054-data.txt";
-        let path = Path::new(location.trim());
-        Solver054 { n: 1000, input: read_to_string(path).expect("Unable to read file") }
+        Solver054 { n: 1000, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
     }
 }
 
 impl Solver for Solver054 {
     fn solve(&self) -> isize {
-        self.input.split('\n').take(self.n as _).map(|s| {
-            let cards: Vec<_> = s.split_whitespace().map(|c| c.parse().unwrap()).collect::<Vec<_>>();
+        self.input.lines().take(self.n as _).map(|s| {
+            let cards = s.split_whitespace().map(|c| c.parse().unwrap()).collect::<Vec<_>>();
             (Hand::from(&cards[0..5]), Hand::from(&cards[5..10]))
         }).filter(|(h1, h2)| h1 > h2).count() as _
     }
@@ -79,19 +77,19 @@ impl Solver for Solver054 {
 
 #[derive(Copy, Clone, PartialOrd, PartialEq, Ord, Eq)]
 enum Rank {
-    TWO = 2,
-    THREE = 3,
-    FOUR = 4,
-    FIVE = 5,
-    SIX = 6,
-    SEVEN = 7,
-    EIGHT = 8,
-    NINE = 9,
-    TEN = 10,
-    JACK = 11,
-    QUEEN = 12,
-    KING = 13,
-    ACE = 14,
+    Two = 2,
+    Three = 3,
+    Four = 4,
+    Five = 5,
+    Six = 6,
+    Seven = 7,
+    Eight = 8,
+    Nine = 9,
+    Ten = 10,
+    Jack = 11,
+    Queen = 12,
+    King = 13,
+    Ace = 14,
 }
 
 impl FromStr for Rank {
@@ -99,19 +97,19 @@ impl FromStr for Rank {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "2" => Ok(Rank::TWO),
-            "3" => Ok(Rank::THREE),
-            "4" => Ok(Rank::FOUR),
-            "5" => Ok(Rank::FIVE),
-            "6" => Ok(Rank::SIX),
-            "7" => Ok(Rank::SEVEN),
-            "8" => Ok(Rank::EIGHT),
-            "9" => Ok(Rank::NINE),
-            "T" => Ok(Rank::TEN),
-            "J" => Ok(Rank::JACK),
-            "Q" => Ok(Rank::QUEEN),
-            "K" => Ok(Rank::KING),
-            "A" => Ok(Rank::ACE),
+            "2" => Ok(Rank::Two),
+            "3" => Ok(Rank::Three),
+            "4" => Ok(Rank::Four),
+            "5" => Ok(Rank::Five),
+            "6" => Ok(Rank::Six),
+            "7" => Ok(Rank::Seven),
+            "8" => Ok(Rank::Eight),
+            "9" => Ok(Rank::Nine),
+            "T" => Ok(Rank::Ten),
+            "J" => Ok(Rank::Jack),
+            "Q" => Ok(Rank::Queen),
+            "K" => Ok(Rank::King),
+            "A" => Ok(Rank::Ace),
             _ => Err("Unknown Rank"),
         }
     }
@@ -119,10 +117,10 @@ impl FromStr for Rank {
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 enum Suite {
-    CLUBS,
-    DIAMONDS,
-    HEARTS,
-    SPADES,
+    Clubs,
+    Diamonds,
+    Hearts,
+    Spades,
 }
 
 impl FromStr for Suite {
@@ -130,10 +128,10 @@ impl FromStr for Suite {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "C" => Ok(Suite::CLUBS),
-            "D" => Ok(Suite::DIAMONDS),
-            "H" => Ok(Suite::HEARTS),
-            "S" => Ok(Suite::SPADES),
+            "C" => Ok(Suite::Clubs),
+            "D" => Ok(Suite::Diamonds),
+            "H" => Ok(Suite::Hearts),
+            "S" => Ok(Suite::Spades),
             _ => Err("Unknown Suite"),
         }
     }

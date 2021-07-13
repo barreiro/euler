@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 
-use euler::algorithm::long::{from_digits, pow, pow_10, to_digits};
+use euler::algorithm::long::{cube, from_digits, pow_10, to_digits};
 use euler::Solver;
 
 // The cube, 41063625 (345^3), can be permuted to produce two other cubes: 56623104 (384^3) and 66430125 (405^3).
@@ -30,7 +30,7 @@ impl Solver for Solver062 {
             from_digits(digits)
         };
 
-        (1..).map(|n| pow(n, 3)).skip_while(|&cube| cube < floor).find_map(|cube| {
+        (1..).map(cube).skip_while(|&cube| cube < floor).find_map(|cube| {
             let cubes = map.entry(hash(cube)).or_insert_with(Vec::new);
             cubes.push(cube);
             if cubes.len() != self.n as _ { None } else { Some(cubes[0]) }

@@ -3,7 +3,7 @@
 
 use euler::algorithm::combinatorics::partition_with_constrains;
 use euler::algorithm::long::floor_sqrt;
-use euler::algorithm::prime::generator_trial_division;
+use euler::algorithm::prime::primes_up_to;
 use euler::Solver;
 
 // It is possible to write ten as the sum of primes in exactly five different ways:
@@ -26,7 +26,7 @@ impl Default for Solver077 {
 
 impl Solver for Solver077 {
     fn solve(&self) -> isize {
-        let primes = generator_trial_division().take_while(|&p| p <= (20).max(floor_sqrt(self.n << 1))).collect::<Vec<_>>();
+        let primes = primes_up_to(floor_sqrt(self.n << 1).max(20)).collect::<Vec<_>>();
         (3..).find(|&value| partition_with_constrains(value, &primes) - if primes.binary_search(&value).is_ok() { 1 } else { 0 } > self.n).unwrap()
     }
 }

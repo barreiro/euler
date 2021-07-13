@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::pow;
+use euler::algorithm::long::{square, cube, fourth};
 use euler::Solver;
 
 // The sum of the squares of the first ten natural numbers is, 1^2 + 2^2 + ... + 10^2 = 385
@@ -23,7 +23,7 @@ impl Default for Solver006 {
 impl Solver for Solver006 {
     fn solve(&self) -> isize {
         // using Faulhaber's Formula for the square of the sum and Gauss's Formula for the sum of the squares
-        let (faulhaber, gauss) = (|n| (pow(n, 4) + 2 * pow(n, 3) + pow(n, 2)) / 4, |n| n * (n + 1) * (2 * n + 1) / 6);
+        let (faulhaber, gauss) = (|n| (fourth(n) + 2 * cube(n) + square(n)) / 4, |n| n * (n + 1) * (2 * n + 1) / 6);
         faulhaber(self.n) - gauss(self.n)
     }
 }

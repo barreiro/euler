@@ -1,8 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::cmp::{Reverse, min};
-use std::collections::BinaryHeap;
+use std::cmp::min;
 use std::fs::read_to_string;
 use std::path::Path;
 
@@ -36,47 +35,15 @@ impl Default for Solver081 {
 impl Solver for Solver081 {
     fn solve(&self) -> isize {
         let (mut matrix, last) = (str_to_matrix(&self), (self.n - 1) as usize);
-        (0..last).rev().for_each(|i| { // preliminary step to fold the right and bottom borders
+
+        // Dijkstra algorithm ends up being slower than just folding the matrix right to left
+        // preliminary step to fold the right and bottom borders
+        (0..last).rev().for_each(|i| {
             matrix[i][last] += matrix[i + 1][last];
             matrix[last][i] += matrix[last][i + 1];
         });
         (0..last).rev().for_each(|a| (0..last).rev().for_each(|b| matrix[a][b] += min(matrix[a + 1][b], matrix[a][b + 1])));
         matrix[0][0]
-
-        // Dijkstra algorithm ends up being slower than just folding the matrix right to left
-        // _dijkstra(&str_to_matrix(self), self.n as _)
-    }
-}
-
-fn _dijkstra(matrix: &[Vec<isize>], dimension: usize) -> isize {
-    let capacity = dimension * dimension;
-    let expansion = |index| {
-        let mut expansion = Vec::with_capacity(2);
-        if index + dimension < capacity {
-            expansion.push(index + dimension);
-        }
-        if index % dimension != dimension - 1 {
-            expansion.push(index + 1);
-        }
-        expansion
-    };
-
-    let (mut priority_queue, mut g) = (BinaryHeap::with_capacity(capacity), vec![isize::max_value(); capacity]);
-    priority_queue.push(Reverse((matrix[0][0], 0)));
-    g[0] = matrix[0][0];
-
-    loop {
-        let (_, current) = priority_queue.pop().unwrap().0;
-        if current == capacity - 1 {
-            break g[current];
-        }
-        for &child in expansion(current).iter() {
-            let tentative = g[current] + matrix[child / dimension][child % dimension];
-            if tentative < g[child] {
-                g[child] = tentative;
-                priority_queue.push(Reverse((tentative, child)));
-            }
-        }
     }
 }
 

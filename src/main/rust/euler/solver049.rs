@@ -4,7 +4,7 @@
 use std::collections::HashMap;
 
 use euler::algorithm::long::{from_digits, pow_10, to_digits};
-use euler::algorithm::prime::generator_trial_division;
+use euler::algorithm::prime::primes_up_to;
 use euler::Solver;
 
 // The arithmetic sequence, 1487, 4817, 8147, in which each of the terms increases by 3330, is unusual in two ways:
@@ -29,7 +29,7 @@ impl Solver for Solver049 {
     fn solve(&self) -> isize {
         // group together primes based on their permutation --- using their sorted digits as the key on a map
         let mut grouped_primes = HashMap::with_capacity(pow_10(self.n) as _);
-        generator_trial_division().skip_while(|&p| p < pow_10(self.n - 1)).take_while(|&p| p < pow_10(self.n)).for_each(|prime| {
+        primes_up_to(pow_10(self.n)).skip_while(|&p| p < pow_10(self.n - 1)).for_each(|prime| {
             let mut digits = to_digits(prime);
             if !digits.contains(&0) {
                 digits.sort_unstable();

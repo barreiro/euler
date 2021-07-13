@@ -2,11 +2,13 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::combinatorics::{partition, partition_with_constrains};
-use euler::algorithm::long::{floor_sqrt, gcd, int_sqrt};
+use euler::algorithm::long::{floor_sqrt, gcd, int_sqrt, exact_root};
 use euler::algorithm::long::is_palindrome;
 use euler::algorithm::long::power_modulo;
 use euler::algorithm::prime::miller_rabin;
 use euler::algorithm::prime::prime_factors;
+use algorithm::combinatorics::permutations_with;
+use algorithm::long::factorial;
 
 #[test]
 fn gcd_test() {
@@ -43,6 +45,18 @@ fn floor_sqrt_test() {
     assert_eq!(floor_sqrt(25), 5);
     assert_eq!(floor_sqrt(26), 5);
     assert_eq!(floor_sqrt(1787568), 1336);
+}
+
+#[test]
+fn cube_root_test() {
+    assert_eq!(exact_root(10, 3), (2, 2));
+    assert_eq!(exact_root(27, 3), (3, 0));
+    assert_eq!(exact_root(28, 3), (3, 1));
+    assert_eq!(exact_root(29, 3), (3, 2));
+    assert_eq!(exact_root(30, 3), (3, 3));
+    assert_eq!(exact_root(262144, 3), (64, 0));
+    assert_eq!(exact_root(1000000, 3), (100, 0));
+    assert_eq!(exact_root(100000000, 3), (464, 102656));
 }
 
 #[test]
@@ -101,6 +115,16 @@ fn miller_rabin_long_test() {
 fn partition_test() {
     let natural = vec![1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002, 1255, 1575, 1958, 2436, 3010, 3718, 4565, 5604, 6842, 8349, 10143, 12310, 14883, 17977, 21637, 26015, 31185, 37338, 44583, 53174, 63261, 75175, 89134, 105558, 124754, 147273, 173525];
     natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition(n as _), p));
-//    natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition_e(n as _), p));
     natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition_with_constrains(n as _, &(1..=n as _).collect::<Vec<_>>()), p));
+}
+
+#[test]
+fn permutation_test() {
+    assert_eq!(factorial(5 + 1) as usize, permutations_with(0, 5, |p| Some(p.to_vec())).count());
+    
+    let mut perm = permutations_with(0, 1, |p| Some(p.to_vec()));
+    assert_eq!(Some(vec![0, 1]), perm.next());
+    assert_eq!(Some(vec![1, 0]), perm.next());
+    assert_eq!(None, perm.next());
+
 }

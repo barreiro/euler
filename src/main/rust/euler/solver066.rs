@@ -3,7 +3,7 @@
 
 use euler::algorithm::continued_fraction::add_mul;
 use euler::algorithm::long::{floor_sqrt, pow_10};
-use euler::algorithm::prime::generator_trial_division;
+use euler::algorithm::prime::primes_up_to;
 use euler::Solver;
 
 // Consider quadratic Diophantine equations of the form:
@@ -62,6 +62,6 @@ impl Solver for Solver066 {
         };
 
         // optimization: only check prime numbers because these generate the biggest numerators
-        generator_trial_division().take_while(|&p| p < self.n as _).max_by_key(|&d| custom_comparator(junod(d))).unwrap()
+        primes_up_to(self.n).max_by_key(|&d| custom_comparator(junod(d))).unwrap()
     }
 }
