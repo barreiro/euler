@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::Solver;
-use euler::algorithm::prime::primoral;
+use euler::algorithm::prime::primorals;
 
 // Euler's Totient function, φ(n) [sometimes called the phi function], is used to determine the number of numbers less than n which are relatively prime to n.
 // For example, as 1, 2, 4, 5, 7, and 8, are all less than nine and relatively prime to nine, φ(9)=6.
@@ -33,6 +33,6 @@ impl Default for Solver069 {
 
 impl Solver for Solver069 {
     fn solve(&self) -> isize {
-       primoral().take_while(|&p| p <= self.n).last().unwrap()
+       primorals().take_while(|&p| p <= self.n).last().unwrap()
     }
 }

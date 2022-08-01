@@ -9,22 +9,16 @@ use euler::Solver;
 // It can be seen that P(4) + P(7) = 22 + 70 = 92 = P(8). However, their difference, 70 − 22 = 48, is not pentagonal.
 // Find the pair of pentagonal numbers, P(j) and P(k), for which their sum and difference are pentagonal and D = |P(k) − P(j)| is minimised; what is the value of D?
 
+#[derive(Default)]
 pub struct Solver044 {
     pub n: isize
-}
-
-impl Default for Solver044 {
-    fn default() -> Self {
-        Solver044 { n: 0 }
-    }
 }
 
 impl Solver for Solver044 {
     fn solve(&self) -> isize {
         let predicate = |j, k| {
             let (p_j, p_k) = (pentagonal(j), pentagonal(k));
-            let p_diff = p_j - p_k;
-            if is_pentagonal(p_diff) && is_pentagonal(p_j + p_k) { Some(p_diff) } else {None}
+            Some(p_j - p_k).filter(|&p_diff| is_pentagonal(p_diff) && is_pentagonal(p_j + p_k))
         };
 
         (2..).filter_map(|j| (1..j).find_map(|k| predicate(j, k))).nth(self.n as _).unwrap()

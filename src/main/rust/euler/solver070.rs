@@ -15,7 +15,7 @@ use euler::Solver;
 // Find the value of n, 1 < n < 10^7, for which φ(n) is a permutation of n and the ratio n/φ(n) produces a minimum.
 
 pub struct Solver070 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver070 {
@@ -35,7 +35,7 @@ impl Solver for Solver070 {
             (small..primes_index(domain / primes[small])).rev().find_map(|big| {
                 let product = primes[big] * primes[small];
                 let phi = product - primes[big] - primes[small] + 1;
-                if is_permutation(product, phi) { Some((domain * product / phi, product)) } else { None }
+                Some((domain * product / phi, product)).filter(|_| is_permutation(product, phi))
             })).take(self.n as _).min().map(|(_, n)| n).unwrap()
     }
 }

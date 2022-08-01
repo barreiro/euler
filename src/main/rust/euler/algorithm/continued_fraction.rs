@@ -3,10 +3,10 @@
 
 use std::mem::swap;
 
-use euler::algorithm::long::{floor_sqrt, pow_10, square, exact_sqrt};
+use euler::algorithm::long::{exact_sqrt, floor_sqrt, pow_10, square};
 
 // multiplier / (√n - fractional) => a + (√n - b) / c
-fn transform(n: isize, floor: isize, multiplier: isize, fractional: isize) -> (isize, isize, isize) {
+const fn transform(n: isize, floor: isize, multiplier: isize, fractional: isize) -> (isize, isize, isize) {
     let c = (n - square(fractional)) / multiplier;
     let a = (fractional + floor) / c;
     let b = -fractional + c * a;
@@ -74,27 +74,27 @@ pub fn add_mul(a: &mut Vec<isize>, b: &[isize], c: isize, threshold: isize) {
 
 // --- //
 
-/// closure that approximates a real value by iterating the convergent
+pub fn convergent_with(f: Box<dyn Fn(usize) -> Option<isize>>) -> impl Iterator<Item=(Vec<isize>, Vec<isize>)> {
+    Convergent { f, previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
+}
+
+pub fn convergent_with_expansion(expansion: &[isize]) -> impl Iterator<Item=(Vec<isize>, Vec<isize>)> + '_ {
+    let f = move |n| if n < expansion.len() { Some(expansion[n]) } else { None };
+    Convergent { f: Box::new(f), previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
+}
+
+pub fn convergent_cyclic(expansion: &[isize]) -> impl Iterator<Item=(Vec<isize>, Vec<isize>)> + '_ {
+    let f = move |n| Some(expansion[if n < expansion.len() { n } else { 1 + n % (expansion.len() - 1) }]);
+    Convergent { f: Box::new(f), previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
+}
+
+// closure that approximates a real value by iterating the convergent
 pub struct Convergent<'a> {
     f: Box<dyn Fn(usize) -> Option<isize> + 'a>,
     previous: (Vec<isize>, Vec<isize>),
     last: (Vec<isize>, Vec<isize>),
     i: usize,
     threshold: isize,
-}
-
-pub fn convergent_with<'a>(f: Box<dyn Fn(usize) -> Option<isize>>) -> Convergent<'a> {
-    Convergent { f, previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
-}
-
-pub fn convergent_with_expansion(expansion: &[isize]) -> Convergent {
-    let f = move |n| if n < expansion.len() { Some(expansion[n]) } else { None };
-    Convergent { f: Box::new(f), previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
-}
-
-pub fn convergent_cyclic(expansion: &[isize]) -> Convergent {
-    let f = move |n| Some(expansion[if n < expansion.len() { n } else { 1 + n % (expansion.len() - 1) }]);
-    Convergent { f: Box::new(f), previous: (vec![0], vec![1]), last: (vec![1], vec![0]), i: 0, threshold: pow_10(15) }
 }
 
 impl<'a> Iterator for Convergent<'a> {

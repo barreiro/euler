@@ -36,7 +36,7 @@ impl Default for Solver082 {
 
 impl Solver for Solver082 {
     fn solve(&self) -> isize {
-        let (mut matrix, last) = (str_to_matrix(&self), (self.n - 1) as usize);
+        let (mut matrix, last) = (str_to_matrix(self), (self.n - 1) as usize);
 
         // Dijkstra algorithm ends up being slower than just folding the matrix right to left
         // fold the matrix right to left, and adjust when there is a 'shorter' path up or down

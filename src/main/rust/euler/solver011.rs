@@ -30,20 +30,20 @@ const INPUT_011: &str = "\
 20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54
 01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48";
 
-pub struct Solver011<'a> {
+pub struct Solver011 {
     pub n: isize,
-    pub input: &'a str,
+    pub input: String,
 }
 
-impl<'a> Default for Solver011<'a> {
+impl Default for Solver011 {
     fn default() -> Self {
-        Solver011 { n: 4, input: INPUT_011 }
+        Solver011 { n: 4, input: INPUT_011.to_string() }
     }
 }
 
-impl<'a> Solver for Solver011<'a> {
+impl Solver for Solver011 {
     fn solve(&self) -> isize {
-        let (mut greatest, grid) = (0, grid_str(self.input));
+        let (mut greatest, grid) = (0, grid_str(&self.input));
         for n in self.n as usize - 1..grid.len() {
             for m in self.n as usize - 1..grid[n].len() {
                 let (mut row, mut column, mut diag_a, mut diag_b) = (1, 1, 1, 1);

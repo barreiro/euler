@@ -10,7 +10,7 @@ use euler::Solver;
 // Considering natural numbers of the form, a^b , where a, b < 100, what is the maximum digital sum?
 
 pub struct Solver056 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver056 {
@@ -21,41 +21,40 @@ impl Default for Solver056 {
 
 impl Solver for Solver056 {
     fn solve(&self) -> isize {
-        // Only test a fraction of the space, just the 10% biggest numbers!
+        // only test a fraction of the space, just the 10% biggest numbers!
         let (floor, ceil) = (9 * self.n / 10, self.n);
-        let vec_digit_sum = |power: Vec<_>| power.iter().map(|&d| digits_sum(d)).sum::<_>();
-
-        (floor..ceil).map(|a| vectorized_power(a).skip((floor - 1) as _).take((ceil - floor) as _).map(vec_digit_sum).max().unwrap()).max().unwrap()
+        (floor..ceil).map(|a| vectorized_power(a).skip((floor - 1) as _).take((ceil - floor) as _).map(|power| power.iter().map(digits_sum).sum()).max().unwrap()).max().unwrap()
     }
 }
 
 // --- //
 
+///
+fn vectorized_power(base: isize) -> impl Iterator<Item=Vec<isize>> {
+    VectorizedPower { power: vec![1], base, threshold: pow_10(10) }
+}
+
 struct VectorizedPower {
     power: Vec<isize>,
     base: isize,
-}
-
-fn vectorized_power(base: isize) -> VectorizedPower {
-    VectorizedPower { power: vec![1], base }
+    threshold: isize,
 }
 
 impl Iterator for VectorizedPower {
     type Item = Vec<isize>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let (mut carry, ceil) = (0, pow_10(10));
-        for bucket in &mut self.power {
-            let value = *bucket * self.base + carry;
+        let (base, threshold, mut carry) = (self.base, self.threshold, None);
+        self.power.iter_mut().for_each(|cell| {
+            let value = *cell * base + carry.unwrap_or_default();
 
-            // Adjust the buckets that grow beyond the ceiling value, carrying to next bucket
-            carry = if value > ceil { value / ceil } else { 0 };
-            *bucket = if value > ceil { value % ceil } else { value };
-        }
-        if carry != 0 {
-            // with a small ceiling values would probably need to split the carry into buckets
-            self.power.push(carry)
-        }
+            // adjust the buckets that grow beyond the ceiling value, carrying to next bucket
+            carry = if value > threshold { Some(value / threshold) } else { None };
+            *cell = if value > threshold { value % threshold } else { value };
+        });
+
+        // with a small cell_threshold values would probably need to split the carry into cells as well
+        carry.iter().for_each(|&c| self.power.push(c));
         Some(self.power.to_vec())
     }
 }

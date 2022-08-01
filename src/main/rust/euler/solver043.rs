@@ -1,6 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+use algorithm::long::from_digits_array;
 use euler::algorithm::combinatorics::permutations_with;
 use euler::algorithm::long::from_digits_index;
 use euler::algorithm::prime::generator_trial_division;
@@ -20,7 +21,7 @@ use euler::Solver;
 const DIM: usize = 3;
 
 pub struct Solver043 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver043 {
@@ -32,12 +33,7 @@ impl Default for Solver043 {
 impl Solver for Solver043 {
     fn solve(&self) -> isize {
         let primes = generator_trial_division().take(self.n as usize - DIM + 1).collect::<Vec<_>>();
-        let predicate = |d: &[_]| {
-            match (1..=primes.len()).rev().find(|&n| from_digits_index(&d, n, n + DIM) % primes[n - 1] != 0) {
-                None => Some(from_digits_index(d, 0, d.len())),
-                _ => None
-            }
-        };
+        let predicate = |d: &[_]| (1..=primes.len()).rev().find(|&n| from_digits_index(d, n, n + DIM) % primes[n - 1] != 0).map(|n| n as isize).xor(Some(from_digits_array(d)));
         permutations_with(0, self.n, predicate).sum()
     }
 }

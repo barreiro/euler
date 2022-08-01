@@ -15,7 +15,7 @@ use euler::Solver;
 // What is the first value which can be written as the sum of primes in over five thousand different ways?
 
 pub struct Solver077 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver077 {
@@ -27,6 +27,6 @@ impl Default for Solver077 {
 impl Solver for Solver077 {
     fn solve(&self) -> isize {
         let primes = primes_up_to(floor_sqrt(self.n << 1).max(20)).collect::<Vec<_>>();
-        (3..).find(|&value| partition_with_constrains(value, &primes) - if primes.binary_search(&value).is_ok() { 1 } else { 0 } > self.n).unwrap()
+        (3..).find(|&value| partition_with_constrains(value, &primes) - primes.binary_search(&value).map_or(0, |_| 1) > self.n).unwrap()
     }
 }

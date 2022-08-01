@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::factor::has_factor_below;
+use euler::algorithm::factor::has_factor_pair_below;
 use euler::algorithm::long::{is_palindrome, pow_10};
 use euler::Solver;
 
@@ -20,6 +20,6 @@ impl Default for Solver004 {
 
 impl Solver for Solver004 {
     fn solve(&self) -> isize {
-        (1..=pow_10(2 * self.n)).rev().find(|&p| is_palindrome(p) && has_factor_below(p, pow_10(self.n))).unwrap()
+        (1..=pow_10(2 * self.n)).rev().find(|&p| is_palindrome(p) && has_factor_pair_below(p, pow_10(self.n))).unwrap()
     }
 }

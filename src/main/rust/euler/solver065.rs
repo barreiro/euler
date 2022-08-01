@@ -43,7 +43,7 @@ impl Default for Solver065 {
 impl Solver for Solver065 {
     fn solve(&self) -> isize {
         // optimization of convergent_with that only calculates numerators
-        let convergent_numerator = |f: fn(isize) -> isize, nth| {
+        let convergent_numerator = |f: fn(_) -> _, nth| {
             let (mut n, mut d, threshold) = (vec![f(nth - 1)], vec![1], pow_10(15));
             (0..nth - 1).rev().for_each(|i| {
                 swap(&mut d, &mut n);
@@ -53,6 +53,6 @@ impl Solver for Solver065 {
         };
 
         let e_expansion = |n| if n == 0 { 2 } else if n % 3 == 2 { (n + 2) * 2 / 3 } else { 1 };
-        convergent_numerator(e_expansion, self.n).iter().map(|&d| digits_sum(d)).sum()
+        convergent_numerator(e_expansion, self.n).iter().map(digits_sum).sum()
     }
 }

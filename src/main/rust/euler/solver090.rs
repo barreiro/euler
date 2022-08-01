@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::combinatorics::permutations_of_set_with;
-use algorithm::long::{pow_10, square, to_digits};
-use euler::algorithm::combinatorics::combinations_with;
-use euler::Solver;
 use std::collections::HashSet;
+
+use euler::algorithm::combinatorics::{combinations_with, permutations_of_set_with};
+use euler::algorithm::long::{pow_10, square, to_digits};
+use euler::Solver;
 
 // Each of the six faces on a cube has a different digit (0 to 9) written on it; the same is done to a second cube.
 // By placing the two cubes side-by-side in different positions we can form a variety of 2-digit numbers.
@@ -59,14 +59,14 @@ impl Solver for Solver090 {
 
 // --- //
 
+/// creates an iterator for combinations of n dimensions up to a certain value
+fn cartesian_with<F>(value: usize, dimensions: usize, predicate: F) -> impl Iterator<Item=bool> where F: Fn(&[usize]) -> bool {
+    Cartesian { indexes: vec![value - 1; dimensions], predicate }
+}
+
 struct Cartesian<F> where F: Fn(&[usize]) -> bool {
     indexes: Vec<usize>,
     predicate: F,
-}
-
-/// creates an iterator for combinations of n dimensions up to a certain value
-fn cartesian_with<F>(value: usize, dimensions: usize, predicate: F) -> Cartesian<F> where F: Fn(&[usize]) -> bool {
-    Cartesian { indexes: vec![value - 1; dimensions], predicate }
 }
 
 impl<F> Iterator for Cartesian<F> where F: Fn(&[usize]) -> bool {

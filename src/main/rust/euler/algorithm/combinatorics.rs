@@ -2,10 +2,10 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::factor::sum_of_factors;
-use euler::algorithm::long::{int_sqrt, pentagonal};
+use euler::algorithm::long::{ceil_sqrt, gcd, is_even, pentagonal, square};
 
-/// Method for calculation the combinations of a certain number of elements in a total number of places.
-/// Uses iteration instead of the formula with factorials.
+/// method for calculation the combinations of a certain number of elements in a total number of places.
+/// uses iteration instead of the formula with factorials.
 pub fn choose(total: isize, elements: isize) -> isize {
     if elements <= 0 || elements >= total {
         return 0;
@@ -21,7 +21,7 @@ pub fn choose(total: isize, elements: isize) -> isize {
 
 // --- //
 
-/// Calculates the number of integer partition of a value, given a set of (ordered) constrains.
+/// calculates the number of integer partitions of a value, given a set of (ordered) constrains.
 pub fn partition_with_constrains(value: isize, constrains: &[isize]) -> isize {
     partition_with_constrains_memoize(value as _, value as _, 0, constrains, &mut vec![vec![0; 1 + value as usize]; 1 + value as usize])
 }
@@ -40,7 +40,7 @@ fn partition_with_constrains_memoize(total: usize, remaining: usize, level: usiz
     }
 }
 
-/// Calculates the number of integer partition of a value
+/// calculates the number of integer partitions of a value
 pub fn partition(value: isize) -> isize {
     let (mut p, sum_of_factors) = (vec![0; 1 + value as usize], (0..=value).map(|v| v + sum_of_factors(v)).collect::<Vec<_>>());
     (0..=1.min(value as _)).for_each(|v| p[v] = 1);
@@ -48,9 +48,9 @@ pub fn partition(value: isize) -> isize {
     p[value as usize]
 }
 
-/// Finds the least number with a certain integer partition value, with a certain modulo
+/// finds the least number with a certain integer partition value, with a certain modulo
 pub fn partition_modulo_find(modulo: isize, predicate: isize) -> isize {
-    let mut cache = Vec::with_capacity(int_sqrt(modulo) as _);
+    let mut cache = Vec::with_capacity(ceil_sqrt(modulo) as _);
     (0..2).for_each(|_| cache.push(1));
     (2..).find(|&value| partition_modulo_memoize(value, modulo, &mut cache) == predicate).unwrap()
 }
@@ -71,31 +71,32 @@ fn partition_modulo_memoize(value: isize, modulo: isize, cache: &mut Vec<isize>)
 
 // --- //
 
-pub struct Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
-    digits: Vec<isize>,
-    predicate: F,
+/// provides an iterator of the permutations of the given elements that satisfy a given mapping predicate. requires the elements to be sorted in order to provide all possible permutations
+pub fn permutations_of_set_with<T, F, R>(elements: Vec<T>, predicate: F) -> impl Iterator<Item=R> where T: PartialOrd, F: Fn(&[T]) -> Option<R> {
+    Permutations { elements, predicate }
 }
 
-/// requires the digits set to be ordered
-pub fn permutations_of_set_with<F, R>(digits: Vec<isize>, predicate: F) -> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
-    Permutations { digits, predicate }
-}
-
-pub fn permutations_with<F, R>(start: isize, size: isize, predicate: F) -> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
+/// provides an iterator of permutations of the numbers between start and size (inclusive) that satisfy a given mapping predicate.
+pub fn permutations_with<F, R>(start: isize, size: isize, predicate: F) -> impl Iterator<Item=R> where F: Fn(&[isize]) -> Option<R> {
     permutations_of_set_with((start..=size).collect::<Vec<_>>(), predicate)
 }
 
-impl<F, R> Iterator for Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
+struct Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]) -> Option<R> {
+    elements: Vec<T>,
+    predicate: F,
+}
+
+impl<T, F, R> Iterator for Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]) -> Option<R> {
     type Item = R;
 
     fn next(&mut self) -> Option<Self::Item> {
         loop {
-            if self.digits.is_empty() {
+            if self.elements.is_empty() {
                 return None;
             }
-            let result = (self.predicate)(&self.digits);
+            let result = (self.predicate)(&self.elements);
             if !self.permutate() {
-                self.digits.clear();
+                self.elements.clear();
             }
             if result.is_some() {
                 return result;
@@ -104,11 +105,11 @@ impl<F, R> Iterator for Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
     }
 }
 
-impl<F, R> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
+impl<T, F, R> Permutations<T, F, R> where T:PartialOrd, F: Fn(&[T]) -> Option<R> {
     pub fn permutate(&mut self) -> bool {
         // find non-increasing suffix
-        let mut i = self.digits.len() - 1;
-        while i > 0 && self.digits[i - 1] >= self.digits[i] {
+        let mut i = self.elements.len() - 1;
+        while i > 0 && self.elements[i - 1] >= self.elements[i] {
             i -= 1;
         }
 
@@ -117,39 +118,75 @@ impl<F, R> Permutations<F, R> where F: Fn(&[isize]) -> Option<R> {
         }
 
         // find successor to pivot
-        let mut j = self.digits.len() - 1;
-        while self.digits[j] <= self.digits[i - 1] {
+        let mut j = self.elements.len() - 1;
+        while self.elements[j] <= self.elements[i - 1] {
             j -= 1;
         }
 
         // swap and reverse suffix
-        self.digits.swap(i - 1, j);
-        self.digits[i..].reverse();
+        self.elements.swap(i - 1, j);
+        self.elements[i..].reverse();
         true
     }
 }
 
 // --- //
 
-// this implementation uses a vec of positions. it can be improved for digits.len() < isize::BITS using a trick known as Gospher's Hack
-pub struct Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
-    digits: Vec<isize>,
-    pattern: Vec<usize>,
+/// provides an iterator of combinations of the elements (with repetition of elements)
+pub fn permutations_with_repetition_of_set<T>(elements: Vec<T>, size: usize) -> impl Iterator<Item=Vec<T>> where T: Copy {
+    PermutationsWithRepetition { elements, indexes: vec![0; size] }
+}
+
+struct PermutationsWithRepetition<T> where T: Copy {
+    elements: Vec<T>,
+    indexes: Vec<usize>,
+}
+
+impl<T> Iterator for PermutationsWithRepetition<T> where T: Copy {
+    type Item = Vec<T>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.indexes[0] >= self.elements.len() {
+            None
+        } else {
+            let mut result = Vec::with_capacity(self.indexes.len());
+            self.indexes.iter().for_each(|&i| result.push(self.elements[i]));
+            for i in (0..self.indexes.len()).rev() {
+                self.indexes[i] += 1;
+                if i != 0 && self.indexes[i] >= self.elements.len() {
+                    self.indexes[i] = 0;
+                } else {
+                    break;
+                }
+            }
+            Some(result)
+        }
+    }
+}
+
+// --- //
+
+/// provides an iterator of combinations of elements that satisfy a given mapping predicate
+pub fn combinations_with<T, F, R>(elements: Vec<T>, size: usize, predicate: F) -> impl Iterator<Item=R> where T: Copy, F: Fn(&[T]) -> Option<R> {
+    let mut pattern = (0..size as isize).rev().collect::<Vec<_>>();
+    pattern[0] -= 1;
+    Combinations { elements, pattern, predicate }
+}
+
+// this implementation uses a vec of positions. it can be improved for elements.len() < isize::BITS using a trick known as Gospher's Hack
+struct Combinations<T, F, R> where F: Fn(&[T]) -> Option<R> {
+    // use an isize pattern to allow combinations of size 1
+    elements: Vec<T>,
+    pattern: Vec<isize>,
     predicate: F,
 }
 
-pub fn combinations_with<F, R>(digits: Vec<isize>, size: usize, predicate: F) -> Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
-    let mut pattern = (0..size).rev().collect::<Vec<_>>();
-    pattern[0] -= 1;
-    Combinations { digits, pattern, predicate }
-}
-
-impl<F, R> Iterator for Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
+impl<T, F, R> Iterator for Combinations<T, F, R> where F: Fn(&[T]) -> Option<R>, T: Copy {
     type Item = R;
 
     fn next(&mut self) -> Option<Self::Item> {
         while self.pattern_increase() {
-            let result = (self.predicate)(&self.pattern.iter().map(|&i| self.digits[i]).collect::<Vec<_>>());
+            let result = (self.predicate)(self.pattern.iter().map(|&i| self.elements[i as usize]).collect::<Vec<_>>().as_slice());
             if result.is_some() {
                 return result;
             }
@@ -158,13 +195,13 @@ impl<F, R> Iterator for Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
     }
 }
 
-impl<F, R> Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
+impl<I, F, R> Combinations<I, F, R> where F: Fn(&[I]) -> Option<R> {
     fn pattern_increase(&mut self) -> bool {
         for i in 0..self.pattern.len() {
-            if self.pattern[i] + i < self.digits.len() - 1 {
+            if (self.pattern[i] + i as isize) < (self.elements.len() - 1) as isize {
                 self.pattern[i] += 1;
                 for j in 0..i {
-                    self.pattern[j] = self.pattern[i] + i - j;
+                    self.pattern[j] = self.pattern[i] + (i - j) as isize;
                 }
                 return true;
             }
@@ -175,12 +212,54 @@ impl<F, R> Combinations<F, R> where F: Fn(&[isize]) -> Option<R> {
 
 // --- //
 
-pub struct Palindromes {
-    pub digits: Vec<isize>,
+/// iteration over all Pythagorean triples
+/// (a < b < c) but each can have smaller values later on the iteration
+pub fn pythagorean_triplets() -> impl Iterator<Item=(isize, isize, isize)> {
+    PythagoreanTriplets { m: 1, n: 0 }
 }
 
-pub fn palindromes() -> Palindromes {
+/// iteration over all Pythagorean triples
+/// (a < b < c) but each can have smaller values later on the iteration
+pub fn pythagorean_triplets_lower_bound(bound: isize) -> impl Iterator<Item=(isize, isize, isize)> {
+    PythagoreanTriplets { m: 1, n: 0 }.take_while(move |&(a, b, c)| c - b != 2 && a < square(bound))
+}
+
+struct PythagoreanTriplets {
+    m: isize,
+    n: isize,
+}
+
+impl Iterator for PythagoreanTriplets {
+    type Item = (isize, isize, isize);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        // A primitive Pythagorean triple additionally requires:
+        // m and n have opposite parity – i.e. if one is odd, the other must be even.
+        // m and n are coprime – i.e. they have no common integer factors greater than 1.
+        while {
+            self.n += 2;
+            if self.n >= self.m {
+                self.m += 1;
+                self.n = if is_even(self.m) { 1 } else { 2 };
+            }
+            gcd(self.m, self.n) != 1
+        } {}
+
+        // uses Euclides Formula --- a=m^2-n^2 --- b=2nm --- c=m^2+n^2 --- with m>n
+        let (m_square, n_square) = (square(self.m), square(self.n));
+        let (a, b, c) = (m_square - n_square, 2 * self.m * self.n, m_square + n_square);
+        Some((a.min(b), a.max(b), c))
+    }
+}
+
+// --- //
+
+pub fn palindromes() -> impl Iterator<Item=Vec<isize>> {
     Palindromes { digits: vec![0] }
+}
+
+struct Palindromes {
+    pub digits: Vec<isize>,
 }
 
 impl Iterator for Palindromes {

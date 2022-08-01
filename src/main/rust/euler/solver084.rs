@@ -77,7 +77,7 @@ const CH_NEXT_R: &[usize] = &[15, 25, 5];
 const CH_NEXT_U: &[usize] = &[12, 28, 12];
 
 pub struct Solver084 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver084 {
@@ -94,7 +94,7 @@ impl Solver for Solver084 {
             // fill probability of moving from square to square based on the dice roll
             let mut roll = vec![0.0; MARKOV_SIZE];
             (1..=self.n as _).for_each(|dice1| (1..=self.n as _).for_each(|dice2| {
-                let landing = (square + dice1 + dice2) % BOARD_DIM + if dice1 != dice2 { 0 } else { ( 1 + square / BOARD_DIM ) * BOARD_DIM };
+                let landing = (square + dice1 + dice2) % BOARD_DIM + if dice1 != dice2 { 0 } else { (1 + square / BOARD_DIM) * BOARD_DIM };
                 roll[if landing >= MARKOV_SIZE { JAIL } else { landing }] += roll_probability;
             }));
 
@@ -126,7 +126,7 @@ impl Solver for Solver084 {
         (0..MARKOV_SIZE).for_each(|d| steady[d][d] -= 1.0);
 
         // after transpose and append a 0.0 column, also add a line of 1.0 to ensure the sum of all probabilities equals 1.0
-        steady.push(vec![1.0; MARKOV_SIZE+1]);
+        steady.push(vec![1.0; MARKOV_SIZE + 1]);
 
         // FORWARD ELIMINATION: reduce every element under diagonal to 0.0
         (0..=MARKOV_SIZE).for_each(|c| {
@@ -134,7 +134,7 @@ impl Solver for Solver084 {
             let pivot = (c..=MARKOV_SIZE).max_by(|&r1, &r2| steady[r1][c].abs().partial_cmp(&steady[r2][c].abs()).unwrap()).unwrap();
             steady.swap(c, pivot);
 
-            (c+1..=MARKOV_SIZE).for_each(|r| {
+            (c + 1..=MARKOV_SIZE).for_each(|r| {
                 let factor = steady[r][c] / steady[c][c];
                 (c..=MARKOV_SIZE).for_each(|k| steady[r][k] -= factor * steady[c][k]);
             });
@@ -148,8 +148,8 @@ impl Solver for Solver084 {
         });
 
         // take the last column of the steady state, group consecutive rolls, sort and output
-        let mut ordered = (0..BOARD_DIM).map(|target| (0..CONSECUTIVE_DOUBLES).map(|d| steady[target + d * BOARD_DIM][MARKOV_SIZE]).sum::<f64>() ).enumerate().collect::<Vec<_>>();
-        ordered.sort_unstable_by(|&(_,i), &(_,j)| j.partial_cmp(&i).unwrap());
-        ordered.iter().take(OUTPUT_SQUARES).fold(0, |acc, &(x,_)| if x == 0 { acc * 100 } else if x < 10 { concatenation(acc * 10, x as _) } else { concatenation(acc, x as _) })
+        let mut ordered = (0..BOARD_DIM).map(|target| (0..CONSECUTIVE_DOUBLES).map(|d| steady[target + d * BOARD_DIM][MARKOV_SIZE]).sum::<f64>()).enumerate().collect::<Vec<_>>();
+        ordered.sort_unstable_by(|&(_, i), &(_, j)| j.partial_cmp(&i).unwrap());
+        ordered.iter().take(OUTPUT_SQUARES).fold(0, |acc, &(x, _)| if x == 0 { acc * 100 } else if x < 10 { concatenation(acc * 10, x as _) } else { concatenation(acc, x as _) })
     }
 }

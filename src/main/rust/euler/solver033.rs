@@ -23,26 +23,23 @@ impl Default for Solver033 {
 impl Solver for Solver033 {
     fn solve(&self) -> isize {
         let mut product = 1;
-        for denominator in 1..self.n {
-            for numerator in 1..denominator {
-                for radix in 1..BASE {
-                    if naive_cancellation(numerator, denominator, radix) {
-                        product = product * denominator / numerator;
-                    }
-                }
+        (1..self.n).for_each(|denominator| (1..denominator).for_each(|numerator| (1..BASE).for_each(|radix| {
+            if naive_cancellation(numerator, denominator, radix) {
+                // using the *= operator causes rounding errors
+                product = product * denominator / numerator;
             }
-        }
+        })));
         product
     }
 }
 
-// This is a bit over-optimized!
-// What happens here is that we first check if the end of the numerator is equal to the start of the denominator.
-// We then check to see if the fractions match, juggling a bit with the terms to avoid double calculation.
+// this is a bit over-optimized!
+// first check if the end of the numerator is equal to the start of the denominator then check if the fractions match
+// juggling a bit with the terms to avoid double calculation.
 //
 // => naiveNumerator = numerator / 10, naiveDenominator = denominator - radix * 10
 // => numerator / denominator == naiveNumerator / naiveDenominator
-fn naive_cancellation(n: isize, d: isize, r: isize) -> bool {
+const fn naive_cancellation(n: isize, d: isize, r: isize) -> bool {
     n % 10 == r && d > r * 10 && n * (d - r * BASE) == d * (n / BASE)
 }
 

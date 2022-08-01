@@ -3,11 +3,21 @@
 
 use euler::algorithm::long::{exact_sqrt, floor_sqrt, is_square};
 
-pub fn has_factor_below(value: isize, roof: isize) -> bool {
-    (floor_sqrt(value)..roof).any(|l| value % l == 0 && value / l < roof)
+/// test if a given value has a factor pair where both factors are below a given bound
+pub const fn has_factor_pair_below(value: isize, bound: isize) -> bool {
+    // changed for const: (floor_sqrt(value)..bound).any(|l| value % l == 0 && value / l < bound)
+    let mut i = floor_sqrt(value);
+    while i < bound {
+        if value % i == 0 && value / i < bound {
+            return true;
+        }
+        i += 1;
+    }
+    false
 }
 
-pub fn totient(value: isize) -> isize {
+/// Euler's totient function counts the positive integers up to a given integer n that are relatively prime to n
+pub const fn totient(value: isize) -> isize {
     let (mut f, mut n, mut totient) = (2, value, value);
     while f * f <= n {
         if if n <= i32::MAX as _ { n as i32 % f as i32 == 0 } else { n % f == 0 } {
@@ -24,11 +34,13 @@ pub fn totient(value: isize) -> isize {
     totient
 }
 
-pub fn number_of_factors(value: isize) -> isize {
+/// the number of different divisors of a given value
+pub fn number_of_factors(value: isize) -> usize {
     // need to adjust the number of divisors if the number is a perfect square
-    ((proper_factors_of(value).count() as isize) << 1) - if is_square(value) { 1 } else { 0 }
+    (proper_factors_of(value).count() << 1) - if is_square(value) { 1 } else { 0 }
 }
 
+/// calculate the sum of the factors of a given value
 // defined according to problem 21: numbers less than n which divide evenly into n
 pub fn sum_of_factors(value: isize) -> isize {
     let (sum, (sqrt, rem)) = (proper_factors_of(value).map(|f| f + value / f).sum::<isize>(), exact_sqrt(value));
@@ -37,21 +49,22 @@ pub fn sum_of_factors(value: isize) -> isize {
     if rem == 0 { sum - sqrt - value } else { sum - value }
 }
 
+/// if the sum of the factors of a given value equals the value itself
 pub fn is_abundant(value: isize) -> bool {
     value < sum_of_factors(value)
 }
 
 // --- //
 
-/// closure that generates the proper factors, the factors up until the square root (in reverse order)
-pub struct ProperFactor {
+/// provides an iterator of the proper factors of value, the factors up until the square root
+pub fn proper_factors_of(value: isize) -> impl Iterator<Item=isize> {
+    ProperFactor { value, f: floor_sqrt(value) + 1, small: value <= i32::MAX as isize }
+}
+
+struct ProperFactor {
     value: isize,
     f: isize,
     small: bool,
-}
-
-pub fn proper_factors_of(value: isize) -> ProperFactor {
-    ProperFactor { value, f: floor_sqrt(value) + 1, small: value <= i32::MAX as isize }
 }
 
 impl Iterator for ProperFactor {

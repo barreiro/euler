@@ -4,6 +4,7 @@
 use std::cmp::Ordering;
 use std::cmp::Ordering::{Equal, Greater, Less};
 use std::fs::read_to_string;
+use std::ops::Sub;
 use std::path::Path;
 use std::str::FromStr;
 
@@ -68,7 +69,7 @@ impl Solver for Solver054 {
     fn solve(&self) -> isize {
         self.input.lines().take(self.n as _).map(|s| {
             let cards = s.split_whitespace().map(|c| c.parse().unwrap()).collect::<Vec<_>>();
-            (Hand::from(&cards[0..5]), Hand::from(&cards[5..10]))
+            (Hand::from(&cards[0..cards.len() >> 1]), Hand::from(&cards[cards.len() >> 1..cards.len()]))
         }).filter(|(h1, h2)| h1 > h2).count() as _
     }
 }
@@ -112,6 +113,14 @@ impl FromStr for Rank {
             "A" => Ok(Rank::Ace),
             _ => Err("Unknown Rank"),
         }
+    }
+}
+
+impl Sub for Rank {
+    type Output = isize;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        self as isize - rhs as isize
     }
 }
 
@@ -173,7 +182,7 @@ impl Ord for Card {
 }
 
 struct Hand {
-    cards: [Card; 5]
+    cards: [Card; 5],
 }
 
 impl Hand {
@@ -199,11 +208,11 @@ impl Hand {
     }
 
     fn is_straight(&self) -> bool {
-        if self.cards[4].rank as isize - self.cards[0].rank as isize != 4 {
+        if self.cards[4].rank - self.cards[0].rank != 4 {
             return false;
         }
         for i in 1..5 {
-            if self.cards[i].rank as isize - self.cards[i - 1].rank as isize != 1 {
+            if self.cards[i].rank - self.cards[i - 1].rank != 1 {
                 return false;
             }
         }
@@ -252,31 +261,31 @@ impl Eq for Hand {}
 
 impl PartialOrd for Hand {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(&other))
+        Some(self.cmp(other))
     }
 }
 
 impl Ord for Hand {
     fn cmp(&self, other: &Self) -> Ordering {
-        let highest = self.cards[4].cmp(&other.cards[4]).then(self.cards[3].cmp(&other.cards[3])).then(self.cards[2].cmp(&other.cards[2])).then(self.cards[1].cmp(&other.cards[1])).then(self.cards[0].cmp(&other.cards[0]));
+        let highest = || self.cards[4].cmp(&other.cards[4]).then(self.cards[3].cmp(&other.cards[3])).then(self.cards[2].cmp(&other.cards[2])).then(self.cards[1].cmp(&other.cards[1])).then(self.cards[0].cmp(&other.cards[0]));
         let (trio, pair) = (self.is_three_of_a_kind(), self.is_pair());
 
         if self.is_straight_flush() {
-            if other.is_straight_flush() { highest } else { Greater }
+            if other.is_straight_flush() { highest() } else { Greater }
         } else if self.is_four_of_a_kind() {
-            if other.is_straight_flush() { Less } else if other.is_four_of_a_kind() { highest } else { Greater }
+            if other.is_straight_flush() { Less } else if other.is_four_of_a_kind() { highest() } else { Greater }
         } else if self.is_full_house() {
             if other.is_straight_flush() || other.is_four_of_a_kind() { Less } else if other.is_full_house() { trio.cmp(&other.is_three_of_a_kind()).then(pair.cmp(&other.is_pair())) } else { Greater }
         } else if self.is_flush() {
-            if other.is_straight_flush() || other.is_four_of_a_kind() || other.is_full_house() { Less } else if other.is_flush() { highest } else { Greater }
+            if other.is_straight_flush() || other.is_four_of_a_kind() || other.is_full_house() { Less } else if other.is_flush() { highest() } else { Greater }
         } else if self.is_straight() {
-            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() { Less } else if other.is_straight() { highest } else { Greater }
+            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() { Less } else if other.is_straight() { highest() } else { Greater }
         } else if trio.is_some() {
-            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() { Less } else { other.is_three_of_a_kind().map_or(Greater, |t| trio.unwrap().cmp(&t)).then(highest) }
+            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() { Less } else { other.is_three_of_a_kind().map_or(Greater, |t| trio.unwrap().cmp(&t)).then(highest()) }
         } else if self.is_two_pairs() {
-            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() { Less } else if other.is_two_pairs() { other.is_pair().map_or(Greater, |t| pair.unwrap().cmp(&t)).then(highest) } else { Greater }
+            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() { Less } else if other.is_two_pairs() { other.is_pair().map_or(Greater, |t| pair.unwrap().cmp(&t)).then(highest()) } else { Greater }
         } else if pair.is_some() {
-            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() || other.is_two_pairs() { Less } else { other.is_pair().map_or(Greater, |t| pair.unwrap().cmp(&t)).then(highest) }
-        } else if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() || other.is_two_pairs() || other.is_pair().is_some() { Less } else { highest }
+            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() || other.is_two_pairs() { Less } else { other.is_pair().map_or(Greater, |t| pair.unwrap().cmp(&t)).then(highest()) }
+        } else if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() || other.is_two_pairs() || other.is_pair().is_some() { Less } else { highest() }
     }
 }

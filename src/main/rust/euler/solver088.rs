@@ -3,7 +3,7 @@
 
 use euler::algorithm::bit::BitSet;
 use euler::Solver;
-use euler::algorithm::long::{floor_sqrt, div_ceil};
+use euler::algorithm::long::{ceil_sqrt, div_ceil};
 
 // A natural number, N, that can be written as the sum and product of a given set of at least two natural numbers, {a1, a2, ..., ak} is called a product-sum number: N = a1 + a2 + ... + ak = a1 × a2 × ... × ak.
 //
@@ -23,7 +23,7 @@ use euler::algorithm::long::{floor_sqrt, div_ceil};
 // What is the sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000?
 
 pub struct Solver088 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver088 {
@@ -33,35 +33,13 @@ impl Default for Solver088 {
 }
 
 impl Solver for Solver088 {
+    // see http://www.marmet.org/louis/sumprod/index.html for a list of the actual solutions
     fn solve(&self) -> isize {
-        // see http://www.marmet.org/louis/sumprod/index.html for a list of the actual solutions
-
         let (mut min_product_sum, mut dedup) = (vec![isize::MAX; self.n as usize + 1], BitSet::new());
-        (2..=floor_sqrt(self.n) + 1).for_each(|k| recursive_product_sum(k, k, 1, k, &mut *min_product_sum));
+        (2..=ceil_sqrt(self.n)).for_each(|k| recursive_product_sum(k, k, 1, k, &mut *min_product_sum));
         min_product_sum.iter().skip(2).filter(|&&n| dedup.insert(n)).sum()
-
-        // initial implementation, based on searching on increasing number of fixed digits
-        // not very fast as fixed not always increases and not always yields the min product
-
-        // let (mut dedup, mut fixed) = (BitSet::new(), 0);
-        // let min_product_sum = |n| {
-        //     loop {
-        //         if let Some(mut s) = (n..=2*n).find(|&p| exists_sum(p - fixed, p, n - fixed)) {
-        //             // search for sums with more fixed (== 1) digits that have smaller products
-        //             (1..5).filter_map(|k| (n..=2*n).find(|&p| exists_sum(p - fixed - k, p, n - fixed - k))).for_each(|o| s = s.min(o));
-        //             fixed = fixed - if fixed < 3 { 0 } else { 3 }; // sometimes a scale back on the number of fixed digits is required
-        //             return s
-        //         }
-        //         fixed += 1;
-        //     }
-        // };
-        // (2..=self.n).map(min_product_sum).filter(|&n| dedup.insert(n)).sum()
     }
 }
-
-// fn exists_sum(s: isize, p: isize, len: isize) -> bool {
-//     if len == 1 { s == p } else if p < s { false } else { proper_factors_of(p).filter(|&a| a != 1).any(|a| exists_sum(s - a, p / a, len - 1)) }
-// }
 
 // the idea is to have a product `p` and the corresponding sum `s` of size `len`
 // there is a product-sum for a set of size `len + (p - s)` with value `p = s + (p - s)`

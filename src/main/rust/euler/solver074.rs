@@ -4,7 +4,7 @@
 use std::collections::HashSet;
 
 use euler::algorithm::combinatorics::permutations_of_set_with;
-use euler::algorithm::long::{from_digits_index, to_digits};
+use euler::algorithm::long::{from_digits_array, to_digits};
 use euler::Solver;
 
 // The number 145 is well known for the property that the sum of the factorial of its digits is equal to 145:
@@ -31,7 +31,7 @@ const TARGET: usize = 60;
 const FACTORIAL_CACHE: &[usize] = &[1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880];
 
 pub struct Solver074 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver074 {
@@ -55,9 +55,9 @@ impl Solver for Solver074 {
         };
 
         // permutations starting with 0 are discarded as 0! is 1
-        let (predicate, mut cache) = (|d: &[_]| if d[d.len() - 1] != 0 { Some(from_digits_index(d, 0, d.len())) } else { None }, vec![0; self.n as _]);
+        let (predicate, mut cache) = (|d: &[_]| Some(from_digits_array(d)).filter(|_| d[d.len() - 1] != 0), vec![0; self.n as _]);
 
-        // iterate in reverse order due to the nature of the permutations_of() iterator
+        // iterate in reverse as permutations_of_set_with() requires the digits to be ordered
         (1..self.n as _).rev().filter(|&i| {
             if cache[i] == 0 {
                 cache[i] = factorial_cycle_len(i, &cache);

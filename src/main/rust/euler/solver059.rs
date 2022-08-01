@@ -40,7 +40,7 @@ impl Default for Solver059 {
 
 impl Solver for Solver059 {
     fn solve(&self) -> isize {
-        let encoded = self.input.split(',').map(|s| s.parse::<isize>().unwrap()).collect::<Vec<_>>();
+        let encoded = self.input.split(',').filter_map(|s| s.parse().ok()).collect::<Vec<isize>>();
 
         // the key maximizes the number of space characters
         let max_spaces = |pos| ('a' as _..='z' as _).max_by_key(|k| encoded.iter().skip(pos).step_by(KEY_SIZE).filter(|&c| c ^ k == ' ' as _).count()).unwrap();

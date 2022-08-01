@@ -8,7 +8,7 @@ use euler::Solver;
 // Although there exists no rectangular grid that contains exactly two million rectangles, find the area of the grid with the nearest solution.
 
 pub struct Solver085 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver085 {

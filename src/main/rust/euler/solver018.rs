@@ -36,18 +36,18 @@ const INPUT_018: &[&str; 15] = &[
 
 pub struct Solver018<'a> {
     pub n: isize,
-    pub input: &'a [&'a str],
+    pub input: Vec<&'a str>,
 }
 
 impl<'a> Default for Solver018<'a> {
     fn default() -> Self {
-        Solver018 { n: 15, input: INPUT_018 }
+        Solver018 { n: 15, input: INPUT_018.to_vec() }
     }
 }
 
 impl<'a> Solver for Solver018<'a> {
     fn solve(&self) -> isize {
-        let heap = str_to_heap(self.n, self.input);
+        let heap = str_to_heap(self.n as _, &self.input);
         best_sum(0, 0, &heap, &mut vec![0; heap.len()])
     }
 }
@@ -62,10 +62,10 @@ fn best_sum(level: isize, index: isize, heap: &[isize], cache: &mut [isize]) -> 
 
 // --- //
 
-fn str_to_heap(level: isize, data: &[&str]) -> Vec<isize> {
+fn str_to_heap(level: usize, data: &[&str]) -> Vec<isize> {
     let mut parsed = vec![];
     for (l, line) in data.iter().enumerate() {
-        if l < level as usize {
+        if l < level {
             for s in line.split_whitespace() {
                 if let Ok(value) = s.parse() {
                     parsed.push(value);

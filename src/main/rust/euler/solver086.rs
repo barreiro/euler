@@ -50,10 +50,9 @@ impl Solver for Solver086 {
         };
 
         // sum the contributions of the cuboids until it goes over the number of solutions required
-        let mut count = 0;
-        (1..).find(|&m| {
-            count += cuboids(m);
-            count > self.n
-        }).unwrap()
+        (1..).scan(0, |count, m| {
+            *count += cuboids(m);
+            Some(m + 1).filter(|_| *count <= self.n)
+        }).last().unwrap()
     }
 }

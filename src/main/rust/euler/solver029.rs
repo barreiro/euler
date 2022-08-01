@@ -28,40 +28,33 @@ impl Default for Solver029 {
 
 impl Solver for Solver029 {
     fn solve(&self) -> isize {
+        // the strategy is to find the combinations that generate duplicate powers and subtract it from the total number of combinations
         // a given number 2≤a≤N can only produce duplicates if 'a^n' can be expressed as '(b^i)^j' with n=i∗j and 2≤n,i,j≤N
-        let (mut duplicates, bound, mut unique) = (0, int_sqrt(self.n), HashSet::new());
-        for b in 2..=bound {
-            for i in 2..=bound {
-                let a = pow(b, i);
-                if a <= self.n && unique.insert(a) {
-                    duplicates += (self.n / i) - 1;
+        let (bound, mut unique) = (int_sqrt(self.n), HashSet::new());
 
-                    // the trivial duplicates that have i*j<=N are accounted. there may be an equivalent of the factorization that still satisfies the relation
-                    for j in 1 + self.n / i..self.n {
-                        let (factored_base, factored_exp) = factored_power(a, j);
-                        let (mut base, mut exp, mut k) = (factored_base, factored_exp, 2);
-                        while base < a {
-                            if exp <= self.n && factored_exp % exp == 0 {
-                                duplicates += 1;
-                                break;
-                            }
-                            base *= factored_base;
-                            exp = factored_exp / k;
-                            k += 1;
-                        }
+        let factored_power = |base, power| {
+            let factors = prime_factors(base);
+            (factors.keys().product::<isize>(), factors.values().product::<isize>() * power / factors.len() as isize)
+        };
+
+        square(self.n - 1) - (2..=bound).map(|b| (2..=bound).map(|i| (pow(b,i),i)).filter(|&(a,_)| a <= self.n && unique.insert(a)).map(|(a,i)| {
+            let mut duplicates = (self.n / i) - 1;
+
+            // the trivial duplicates that have i*j<=N are accounted. there may be an equivalent of the factorization that still satisfies the relation
+            for j in 1 + self.n / i..self.n {
+                let (factored_base, factored_exp) = factored_power(a, j);
+                let (mut base, mut exp, mut k) = (factored_base, factored_exp, 2);
+                while base < a {
+                    if exp <= self.n && factored_exp % exp == 0 {
+                        duplicates += 1;
+                        break;
                     }
+                    base *= factored_base;
+                    exp = factored_exp / k;
+                    k += 1;
                 }
             }
-        }
-        square(self.n - 1) - duplicates
+            duplicates
+        }).sum::<isize>()).sum::<isize>()
     }
-}
-
-fn factored_power(base: isize, power: isize) -> (isize, isize) {
-    let (mut factored_base, mut factored_exp, factors) = (1, 0, prime_factors(base));
-    for (&k, &v) in &factors {
-        factored_base *= k;
-        factored_exp += v;
-    }
-    (factored_base, factored_exp * power / factors.len() as isize)
 }

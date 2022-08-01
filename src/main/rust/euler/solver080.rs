@@ -15,7 +15,7 @@ const DIM: isize = 100;
 const THRESHOLD: isize = pow_10(15);
 
 pub struct Solver080 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver080 {
@@ -31,7 +31,7 @@ impl Solver for Solver080 {
             let (mut a, mut b, mut i) = (vec![5 * n], vec![5], DIM - int_log_10(floor_sqrt(n)));
             loop {
                 if less(&a, &b) { // first branch fixes a digit of the root in b
-                    if i == 0 { break; } else { i -= 1; }
+                    if i == 0 { break } else { i -= 1 }
                     insert_zero(&mut b);
                     mul_scalar(&mut a, 100);
                 } else {
@@ -39,7 +39,7 @@ impl Solver for Solver080 {
                     add_scalar(&mut b, 10);
                 }
             }
-            b.iter().map(|&d| digits_sum(d)).sum::<isize>() - 5 // b ends with an extra '5'
+            b.iter().map(digits_sum).sum::<isize>() - 5 // b ends with an extra '5'
         }).sum()
     }
 }

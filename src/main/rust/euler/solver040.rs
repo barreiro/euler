@@ -38,9 +38,9 @@ impl Solver for Solver040 {
         };
 
         let d_function = |position| {
-            // Compute the size of the integer and it's offset from the ledge. From there calculate the number and the index of the digit.
+            // compute the size of the integer and it's offset from the ledge. From there calculate the number and the index of the digit.
             let (length, offset) = ledge(position);
-            nth_digit(pow_10(length - 1) + offset / length, offset % length + 1)
+            nth_digit(pow_10(length - 1) + offset / length, offset % length)
         };
 
         (0..self.n).map(pow_10).map(d_function).product()

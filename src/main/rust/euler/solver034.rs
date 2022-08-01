@@ -22,7 +22,7 @@ impl Default for Solver034 {
 
 impl Solver for Solver034 {
     fn solve(&self) -> isize {
-        let fast_factorial_sum = |l: &Vec<_>| l.iter().map(|&d| FACTORIAL_CACHE[d as usize]).sum();
-        incrementing_digits(0).enumerate().skip(3).take(self.n as _).filter(|(n, digits)| *n == fast_factorial_sum(digits)).map(|(n, _)| n as isize).sum()
+        let equals_factorial_sum = |(n, l): &(_, Vec<_>)| *n == l.iter().map(|&d| FACTORIAL_CACHE[d as usize]).sum();
+        incrementing_digits(0).enumerate().skip(3).take(self.n as _).filter(equals_factorial_sum).map(|(n, _)| n as isize).sum()
     }
 }

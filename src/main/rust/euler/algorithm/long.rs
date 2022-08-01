@@ -11,6 +11,9 @@ pub const fn is_odd(l: isize) -> bool {
 
 // --- //
 
+/// constant that defines the default base for conversions to and from digits
+pub const DEFAULT_RADIX: isize = 10;
+
 // table for fast lookup of powers of 10
 const POW_10: [isize; 19] = [
     1,
@@ -33,8 +36,6 @@ const POW_10: [isize; 19] = [
     100_000_000_000_000_000,
     1_000_000_000_000_000_000,
 ];
-
-pub const DEFAULT_RADIX: isize = 10;
 
 /// convenience method to calculate the power when in base 10.
 pub const fn pow_10(exp: isize) -> isize {
@@ -92,10 +93,16 @@ pub const fn floor_sqrt(value: isize) -> isize {
     exact_sqrt(value).0
 }
 
+/// calculates an overestimation of the square root
+pub const fn ceil_sqrt(value: isize) -> isize {
+    let (root, remainder) = exact_sqrt(value);
+    if remainder == 0 { root } else { root + 1 }
+}
+
 /// calculates an approximation of the square root
 pub const fn int_sqrt(value: isize) -> isize {
     let (root, remainder) = exact_sqrt(value);
-    // Rounding to nearest integer
+    // rounding to nearest integer
     if remainder > root { root + 1 } else { root }
 }
 
@@ -131,11 +138,11 @@ pub const fn floor_cube_root(value: isize) -> isize {
 
 /// returns nth root of a number value (binary search algorithm)
 pub const fn exact_root(value: isize, n: isize) -> (isize, isize) {
-    // set start and end for binary search to powers of 2
+    // set start and end for binary search as some powers of 2
     let leading = (63 - value.leading_zeros() as isize) / n;
     let (mut start, mut end) = (1 << leading, 1 << (leading + 1));
     loop {
-        if end - start == 1 { break (start, value - pow(start, n)) }
+        if end - start == 1 { break (start, value - pow(start, n)); }
 
         let mid = (start + end) >> 1;
         let error = value - pow(mid, n);
@@ -194,23 +201,28 @@ const fn squaring(base: isize, exp: isize) -> isize {
     }
 }
 
+/// calculates the square af a given value
 pub const fn square(base: isize) -> isize {
     base * base
 }
 
+/// verifies that a given value is a perfect square
 pub const fn is_square(value: isize) -> bool {
     let hex = value & 0xF; // last hexadecimal "digit" (has to be either 0, 1, 4 or 9)
     hex <= 9 && (hex == 0 || hex == 1 || hex == 4 || hex == 9) && exact_sqrt(value).1 == 0
 }
 
+/// calculates the cube of a given value
 pub const fn cube(base: isize) -> isize {
     base * base * base
 }
 
+/// verifies that a given value is a perfect cube
 pub const fn is_cube(base: isize) -> bool {
     exact_root(base, 3).1 == 0
 }
 
+/// calculates the fourth power of a given value
 pub const fn fourth(base: isize) -> isize {
     square(base) * square(base)
 }
@@ -251,20 +263,41 @@ pub const fn octagonal(value: isize) -> isize {
 
 // --- //
 
-pub fn is_palindrome(value: isize) -> bool {
-    let (size, nth) = (int_log_10(value), |n| value / POW_10[n as usize] % DEFAULT_RADIX);
-    (0..size / 2).all(|i| nth(i) == nth(size - i - 1))
+/// verifies if a given value is a palindrome, i.e. reads the same both ways
+pub const fn is_palindrome(value: isize) -> bool {
+    // changed to const: (0..size / 2).all(|i| nth_digit(value, i) == nth_digit(value, size - i - 1))
+    let size = int_log_10(value);
+    let mut i = (size >> 1) - 1;
+    while i >= 0 {
+        if nth_digit(value, i) != nth_digit(value, size - i - 1) {
+            return false;
+        }
+        i -= 1;
+    }
+    true
 }
 
+/// verifies if a given value is a palindrome, i.e. reads the same both ways is a given base
 pub fn is_palindrome_radix(value: isize, radix: isize) -> bool {
     is_palindrome_digits(&to_digits_radix(value, radix))
 }
 
-pub fn is_palindrome_digits(digits: &[isize]) -> bool {
-    (0..=digits.len() / 2).all(|i| digits[i] == digits[digits.len() - i - 1])
+/// verifies that an array of digits is a palindrome, i.e. reads the same both ways
+pub const fn is_palindrome_digits(digits: &[isize]) -> bool {
+    // changed to const: (0..=digits.len() / 2).all(|i| digits[i] == digits[digits.len() - i - 1])
+    let mut i = digits.len() >> 1;
+    loop {
+        if digits[i] != digits[digits.len() - i - 1] {
+            return false;
+        }
+        if i == 0 {
+            return true;
+        }
+        i -= 1;
+    }
 }
 
-/// Tests if a given number is pandigital, i.e. it has all the digits one and only once (excluding zero)
+/// tests if a given number is pandigital, i.e. it has all the digits one and only once (excluding zero)
 pub fn is_pandigital(digits: &[isize]) -> bool {
     for i in 0..digits.len() as _ {
         if !digits.contains(&(i + 1)) {
@@ -274,12 +307,14 @@ pub fn is_pandigital(digits: &[isize]) -> bool {
     true
 }
 
+/// concatenate two values
 pub const fn concatenation(one: isize, two: isize) -> isize {
     one * pow_10(int_log_10(two)) + two
 }
 
 // --- //
 
+/// checks if two values are permutations of one another, i.e. have the same digits but it different order
 pub fn is_permutation(a: isize, b: isize) -> bool {
     if a % 9 == b % 9 {
         let (mut digits_a, mut digits_b) = (to_digits(a), to_digits(b));
@@ -292,25 +327,37 @@ pub fn is_permutation(a: isize, b: isize) -> bool {
     false
 }
 
-pub const fn digits_sum(mut value: isize) -> isize {
+/// calculates the sum of the digits of a given value
+pub const fn digits_sum(value: &isize) -> isize {
+    let (mut sum, mut v) = (0, *value);
+    while v >= DEFAULT_RADIX {
+        sum += v % DEFAULT_RADIX;
+        v /= DEFAULT_RADIX;
+    }
+    sum + v
+}
+
+pub const fn digits_square_sum(mut value: isize) -> isize {
     let mut sum = 0;
     while value >= DEFAULT_RADIX {
-        sum += value % DEFAULT_RADIX;
+        let remainder = value % DEFAULT_RADIX;
+        sum += remainder * remainder;
         value /= DEFAULT_RADIX;
     }
-    sum + value
+    sum + value * value
 }
 
 pub const fn last_digits(value: isize, n: isize) -> isize {
     value % POW_10[n as usize]
 }
 
-pub fn first_digits(value: isize, n: isize) -> isize {
-    value / POW_10[(int_log_10(value).max(n) - n) as usize]
+pub const fn first_digits(value: isize, n: isize) -> isize {
+    let int_log = int_log_10(value); // alternative to max() function for const
+    value / POW_10[((if int_log > n { int_log } else { n }) - n) as usize]
 }
 
 pub const fn nth_digit(value: isize, n: isize) -> isize {
-    value / POW_10[(int_log_10(value) - n) as usize] % DEFAULT_RADIX
+    value / POW_10[(int_log_10(value) - n - 1) as usize] % DEFAULT_RADIX
 }
 
 pub fn to_digits(value: isize) -> Vec<isize> {
@@ -334,6 +381,10 @@ pub fn from_digits(digits: Vec<isize>) -> isize {
     from_digits_index_radix(&digits, 0, digits.len(), DEFAULT_RADIX)
 }
 
+pub const fn from_digits_array(digits: &[isize]) -> isize {
+    from_digits_index_radix(digits, 0, digits.len(), DEFAULT_RADIX)
+}
+
 pub const fn from_digits_index(digits: &[isize], from: usize, to: usize) -> isize {
     from_digits_index_radix(digits, digits.len() - to, digits.len() - from, DEFAULT_RADIX)
 }
@@ -349,12 +400,13 @@ const fn from_digits_index_radix(digits: &[isize], from: usize, to: usize, radix
 
 // --- //
 
-pub struct IncrementingDigits {
-    array: Vec<isize>
+/// provides an iterator of numbers in digit format, starting at an initial value
+pub fn incrementing_digits(initial: isize) -> impl Iterator<Item=Vec<isize>> {
+    IncrementingDigits { array: to_digits(initial - 1) }
 }
 
-pub fn incrementing_digits(initial: isize) -> IncrementingDigits {
-    IncrementingDigits { array: to_digits(initial - 1) }
+struct IncrementingDigits {
+    array: Vec<isize>,
 }
 
 impl Iterator for IncrementingDigits {
@@ -398,6 +450,7 @@ impl IncrementingDigits {
 
 // --- //
 
+/// efficiently computes ( base ^ exp ) mod modulo
 pub const fn power_modulo(base: isize, exp: isize, modulo: isize) -> isize {
     let (mut result, mut b, mut e) = (1, base % modulo, exp);
     if (modulo - 1).checked_mul(modulo - 1).is_none() {

@@ -50,35 +50,37 @@ impl Solver for Solver089 {
 // --- //
 
 struct Roman {
-    digits: Vec<usize>
+    digits: Vec<usize>,
 }
 
 impl FromStr for Roman {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Roman { digits: s.chars().flat_map(|c| match c {
-            'I' => Some(1),
-            'V' => Some(5),
-            'X' => Some(10),
-            'L' => Some(50),
-            'C' => Some(100),
-            'D' => Some(500),
-            'M' => Some(1000),
-            _ => None
-        }).collect() })
+        Ok(Roman {
+            digits: s.chars().flat_map(|c| match c {
+                'I' => Some(1),
+                'V' => Some(5),
+                'X' => Some(10),
+                'L' => Some(50),
+                'C' => Some(100),
+                'D' => Some(500),
+                'M' => Some(1000),
+                _ => None
+            }).collect()
+        })
     }
 }
 
 impl Roman {
     fn minimal_len(&self) -> usize {
         // conversion from roman to decimal. sum all digits and then subtract twice the 'out of order'
-        let mut value = self.digits.iter().sum::<usize>();
-        for i in 0..self.digits.len() - 1 {
-            if self.digits[i] < self.digits[i + 1] {
-                value -= self.digits[i] << 1;
-            }
-        }
+        let value = self.digits.iter().scan(usize::MAX, |previous, &d| {
+            let v = (d > *previous).then(|| d - 2 * *previous).or(Some(d));
+            *previous = d;
+            v
+        }).sum::<usize>();
+        
         value / 1000 + to_digits(value as isize % 1000).iter().map(|&d| MINIMAL_FORM[d as usize]).sum::<usize>()
     }
 }

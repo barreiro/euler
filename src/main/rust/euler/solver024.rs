@@ -13,22 +13,22 @@ use euler::Solver;
 
 const BASE: &[isize] = &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-pub struct Solver024<'a> {
+pub struct Solver024 {
     pub n: isize,
-    pub base: &'a [isize],
+    pub base: Vec<isize>,
 }
 
-impl<'a> Default for Solver024<'a> {
+impl Default for Solver024 {
     fn default() -> Self {
-        Solver024 { n: 1_000_000, base: BASE }
+        Solver024 { n: 1_000_000, base: BASE.to_vec() }
     }
 }
 
-impl<'a> Solver for Solver024<'a> {
+impl Solver for Solver024 {
     fn solve(&self) -> isize {
-        let (mut value, mut unplaced, mut sum) = (self.n as usize - 1, Vec::from(self.base), 0);
+        let (mut value, mut unplaced, mut sum) = (self.n as usize - 1, self.base.to_vec(), 0);
 
-        // Use a kind of factorization of N over the factorials. In the end convert the digits to a number.
+        // use a kind of factorization of N over the factorials and in the end convert the digits to a number
         for l in (1..unplaced.len() as _).rev() {
             let f = factorial(l) as usize;
             sum += pow_10(l) * unplaced[value / f];

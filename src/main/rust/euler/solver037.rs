@@ -22,8 +22,8 @@ impl Default for Solver037 {
 
 impl Solver for Solver037 {
     fn solve(&self) -> isize {
-        let (generator, mut set) = (generator_wheel(), [2, 3, 5, 7].iter().collect::<BitSet>());
-        generator.skip(4).filter(|&p| set.insert(p) && is_truncatable_right(p, &set) && is_truncatable_left(p, &set)).take(self.n as _).sum()
+        let mut set = BitSet::new();
+        generator_wheel().filter(|&p| set.insert(p) && is_truncatable_right(p, &set) && is_truncatable_left(p, &set) && p > DEFAULT_RADIX).take(self.n as _).sum()
     }
 }
 

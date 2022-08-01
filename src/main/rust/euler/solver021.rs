@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::factor::sum_of_factors;
+use euler::algorithm::factor::sum_of_factors;
 use euler::Solver;
 
 // Let d(n) be defined as the sum of proper divisors of n (numbers less than n which divide evenly into n).
@@ -22,12 +22,10 @@ impl Default for Solver021 {
 impl Solver for Solver021 {
     fn solve(&self) -> isize {
         let mut factor_sum = Vec::with_capacity(self.n as _);
-        factor_sum.push(0);
-
-        (1..self.n).filter_map(|i| {
+        (0..self.n).filter_map(|i| {
             let sum = sum_of_factors(i);
             factor_sum.push(sum);
-            if sum < i && factor_sum[sum as usize] == i { Some(sum + i) } else { None }
+            Some(sum + i).filter(|_| sum < i && factor_sum[sum as usize] == i)
         }).sum()
     }
 }

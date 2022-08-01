@@ -25,17 +25,14 @@ impl Default for Solver023 {
 
 impl Solver for Solver023 {
     fn solve(&self) -> isize {
-        let (mut abundant, mut list, mut sum) = (vec![false; 1 + self.n as usize], Vec::with_capacity(self.n as _), arithmetic_sum(self.n));
-        for i in 1..=self.n {
-            // Abundant numbers are even or multiples of 5. The boolean array is faster than a bit_set() as long is the size is known upfront.
+        let (mut abundant, mut list) = (vec![false; 1 + self.n as usize], Vec::with_capacity(self.n as _));
+        arithmetic_sum(self.n) - (1..=self.n).filter(|&i| {
+            // abundant numbers are even or multiples of 5. the boolean array is faster than a bit_set() as long is the size is known upfront.
             if (is_even(i) || i % 5 == 0) && is_abundant(i) {
                 abundant[i as usize] |= true;
                 list.push(i);
             }
-            if list.iter().take_while(|&&j| j <= i/2).any(|&j| abundant[(i - j) as usize]) {
-                sum -= i;
-            }
-        }
-        sum
+            list.iter().take_while(|&&j| j <= i >> 1).any(|&j| abundant[(i - j) as usize])
+        }).sum::<isize>()
     }
 }

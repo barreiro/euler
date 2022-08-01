@@ -9,18 +9,18 @@ use euler::Solver;
 
 const INPUT_001: &[isize] = &[3, 5];
 
-pub struct Solver001<'a> {
+pub struct Solver001 {
     pub n: isize,
-    pub input: &'a [isize],
+    pub input: Vec<isize>,
 }
 
-impl<'a> Default for Solver001<'a> {
+impl Default for Solver001 {
     fn default() -> Self {
-        Solver001 { n: 1000, input: INPUT_001 }
+        Solver001 { n: 1000, input: INPUT_001.to_vec() }
     }
 }
 
-impl<'a> Solver for Solver001<'a> {
+impl Solver for Solver001 {
     fn solve(&self) -> isize {
         // the contribution is the factor multiplied by the sum of the number of occurrences
         let contribution = |factor| factor * arithmetic_sum((self.n - 1) / factor);

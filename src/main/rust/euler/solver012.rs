@@ -33,9 +33,9 @@ impl Default for Solver012 {
 
 impl Solver for Solver012 {
     fn solve(&self) -> isize {
-        // Use a more aggressive lower bound for bigger values. Not 100% accurate, but works well
+        // use a more aggressive lower bound for bigger values. Not 100% accurate, but works well
         let lower_bound = if self.n > 480 && self.n <= 503 || self.n > 650 { cube(self.n) * 3 / 5 } else { square(self.n - 1) / 2 };
 
-        (1..).map(arithmetic_sum).filter(|&t| t >= lower_bound).find(|&t| number_of_factors(t) >= self.n).unwrap()
+        (1..).map(arithmetic_sum).filter(|&t| t >= lower_bound).find(|&t| number_of_factors(t) >= self.n as _).unwrap()
     }
 }

@@ -3,12 +3,13 @@
 
 pub use euler::*;
 
-fn solve(n: usize, solver: impl euler::Solver) {
+fn solve(n: usize, solver: impl Solver) {
     let now = std::time::Instant::now();
-    println!("Solution for problem {:03} is {:16} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_nanos() as f64 / 1_000_000.0);
+    println!("Solution for problem {:03} is {:16} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_secs_f64() * 1000.0);
 }
 
-fn main() {
+/// solves all the problems! (the Euler ones)
+pub fn main() {
     solve(1, Solver001::default());
     solve(2, Solver002::default());
     solve(3, Solver003::default());
@@ -99,6 +100,11 @@ fn main() {
     solve(88, Solver088::default());
     solve(89, Solver089::default());
     solve(90, Solver090::default());
+    solve(91, Solver091::default());
+    solve(92, Solver092::default());
+    solve(93, Solver093::default());
+    solve(94, Solver094::default());
+    solve(95, Solver095::default());
 }
 
 mod euler {
@@ -192,6 +198,11 @@ mod euler {
     pub use self::solver088::Solver088;
     pub use self::solver089::Solver089;
     pub use self::solver090::Solver090;
+    pub use self::solver091::Solver091;
+    pub use self::solver092::Solver092;
+    pub use self::solver093::Solver093;
+    pub use self::solver094::Solver094;
+    pub use self::solver095::Solver095;
 
     pub trait Solver {
         fn solve(&self) -> isize;
@@ -302,4 +313,9 @@ mod euler {
     pub mod solver088;
     pub mod solver089;
     pub mod solver090;
+    pub mod solver091;
+    pub mod solver092;
+    pub mod solver093;
+    pub mod solver094;
+    pub mod solver095;
 }

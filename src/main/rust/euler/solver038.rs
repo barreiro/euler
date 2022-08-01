@@ -1,9 +1,6 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::iter::Rev;
-use std::ops::Range;
-
 use euler::algorithm::long::{concatenation, from_digits, int_log_10, int_sqrt, is_pandigital, pow_10, to_digits};
 use euler::Solver;
 
@@ -27,40 +24,35 @@ impl Default for Solver038 {
 
 impl Solver for Solver038 {
     fn solve(&self) -> isize {
+        let natural_product_concatenation = |value, size| {
+            let (mut n, mut result) = (value, value);
+            loop {
+                if int_log_10(result) >= size {
+                    return to_digits(result);
+                }
+                n += value;
+                result = concatenation(result, n);
+            }
+        };
+
         // generate the natural product concatenation and check if it's a pandigital. find the first according to the most significant digit ordering
         let (product_concatenation, pandigital) = (|v| natural_product_concatenation(v, self.n), |d: &Vec<_>| d.len() == self.n as _ && is_pandigital(d));
         decrementing_by_most_significant(self.n, int_sqrt(self.n)).map(product_concatenation).find(pandigital).map_or(0, from_digits)
     }
 }
 
-fn natural_product_concatenation(value: isize, size: isize) -> Vec<isize> {
-    let (mut n, mut result) = (value, value);
-    loop {
-        if int_log_10(result) >= size {
-            return to_digits(result);
-        }
-        n += value;
-        result = concatenation(result, n);
-    }
-}
-
 // --- //
 
+/// creates an iterator that returns elements ordered by most significant digit: 999 ... 900 -> 99 ... 90 -> 9 -> 899 ... 800 -> 89 .. 80 -> 8 -> 799
+fn decrementing_by_most_significant(value: isize, scale: isize) -> impl Iterator<Item=isize> {
+    DecrementingByMostSignificant { range: Box::new(0..0), size: 0, value: value + 1, scale}
+}
+
 struct DecrementingByMostSignificant {
-    range: Rev<Range<isize>>,
-    size: Rev<Range<isize>>,
+    range: Box<dyn Iterator<Item=isize>>,
+    size: isize,
     value: isize,
     scale: isize,
-}
-
-/// Stream that returns elements ordered by most significant digit: 999 ... 900 -> 99 ... 90 -> 9 -> 899 ... 800 -> 89 .. 80 -> 8 -> 799
-// actually, for the purpose of this problem, does not return single digit values
-fn decrementing_by_most_significant(value: isize, scale: isize) -> DecrementingByMostSignificant {
-    DecrementingByMostSignificant { range: decrementing_range(value, scale), size: (1..scale).rev(), value, scale }
-}
-
-fn decrementing_range(value: isize, scale: isize) -> Rev<Range<isize>> {
-    (value * pow_10(scale)..(value + 1) * pow_10(scale)).rev()
 }
 
 impl Iterator for DecrementingByMostSignificant {
@@ -68,14 +60,15 @@ impl Iterator for DecrementingByMostSignificant {
 
     fn next(&mut self) -> Option<isize> {
         self.range.next().or_else(|| {
-            let next_size = self.size.next().unwrap_or_else(|| {
+            if self.size > 0 {
+                self.size -= 1;
+            } else {
+                self.size = self.scale;
                 self.value -= 1;
-                self.size = (1..self.scale).rev();
-                self.size.next().unwrap()
-            });
-            if self.value != 0 {
-                self.range = decrementing_range(self.value, next_size);
-                self.range.next()
+            }
+            if self.value > 0 {
+                self.range = Box::new((self.value * pow_10(self.size)..(self.value + 1) * pow_10(self.size)).rev());
+                self.range.next().filter(|&v| v > 1)
             } else {
                 None
             }

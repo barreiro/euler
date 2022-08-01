@@ -33,7 +33,7 @@ impl Solver for Solver062 {
         (1..).map(cube).skip_while(|&cube| cube < floor).find_map(|cube| {
             let cubes = map.entry(hash(cube)).or_insert_with(Vec::new);
             cubes.push(cube);
-            if cubes.len() != self.n as _ { None } else { Some(cubes[0]) }
+            Some(cubes[0]).filter(|_| cubes.len() == self.n as usize)
         }).unwrap()
     }
 }

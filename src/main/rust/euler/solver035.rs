@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::{from_digits_index, int_log_10, to_digits};
+use euler::algorithm::long::{from_digits_array, to_digits};
 use euler::algorithm::prime::{miller_rabin, primes_wheel_up_to};
 use euler::Solver;
 
@@ -21,21 +21,22 @@ impl Default for Solver035 {
 
 impl Solver for Solver035 {
     fn solve(&self) -> isize {
-        primes_wheel_up_to(self.n).filter(|&p| is_circular_prime(p)).count() as _
+        let is_circular_prime = |prime: &isize| {
+            let mut digits = to_digits(*prime);
+            let len = digits.len();
+
+            // circular primes are only made of the digits 1, 3, 7 and 9
+            if digits.iter().any(|&d| d & 1 == 0 || d == 5) && *prime >= 10 {
+                return false;
+            }
+
+            let rotation = |_| {
+                digits.rotate_left(1);
+                from_digits_array(&digits)
+            };
+            (1..len).map(rotation).all(miller_rabin)
+        };
+
+        primes_wheel_up_to(self.n).filter(is_circular_prime).count() as _
     }
-}
-
-fn is_circular_prime(prime: isize) -> bool {
-    let mut digits = to_digits(prime);
-
-    // circular primes are only made of the digits 1, 3, 7 and 9
-    if digits.iter().any(|&d| d & 1 == 0 || d == 5) && prime >= 10 {
-        return false;
-    }
-
-    let rotation = |_| {
-        digits.rotate_left(1);
-        from_digits_index(&digits, 0, digits.len())
-    };
-    (1..int_log_10(prime)).map(rotation).all(miller_rabin)
 }

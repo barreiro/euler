@@ -7,5 +7,10 @@ authors = ["barreiro <lbbbarreiro@gmail.com>"]
 name = "euler"
 path = "src/main/rust/euler.rs"
 
-#[profile.release]
-#debug = true
+[profile.release]
+debug = false
+lto = true
+codegen-units = 1
+overflow-checks = false
+panic = "abort"
+strip = true

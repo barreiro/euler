@@ -34,7 +34,7 @@ impl Solver for Solver058 {
         (3..).step_by(2).scan(0, |state, level| {
             // test just 3 candidates, as the one in the bottom right diagonal is a perfect square
             *state += (1..4).map(|i| square(level) - i * (level - 1)).filter(|&c| miller_rabin(c)).count() as isize;
-            if (2 * level - 1) * self.n < *state * 100 { Some(level) } else { None }
+            Some(level).filter(|l| (2 * l - 1) * self.n < *state * 100)
         }).last().map_or(1, |l| l + 2)
     }
 }

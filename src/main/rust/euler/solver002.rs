@@ -25,23 +25,22 @@ impl Solver for Solver002 {
 
 // --- //
 
-struct EvenFibonacci {
-    previous: isize,
-    last: isize,
+/// iterator on the even terms of the Fibonacci sequence
+fn even_fibonacci() -> impl Iterator<Item=isize> {
+    EvenFibonacci { even: 0, odd: 1 }
 }
 
-fn even_fibonacci() -> EvenFibonacci {
-    EvenFibonacci { previous: 1, last: 2 }
+struct EvenFibonacci {
+    even: isize,
+    odd: isize,
 }
 
 impl Iterator for EvenFibonacci {
     type Item = isize;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let next = Some(self.last);
-        // previous moves to two terms ahead of last. last gets the term after the new previous. it's even by definition!
-        self.previous = self.previous + self.last + self.last;
-        self.last = self.previous + self.previous - self.last;
-        next
+        self.even += self.odd << 1;
+        self.odd = (self.even << 1) - self.odd;
+        Some(self.even)
     }
 }

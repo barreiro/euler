@@ -20,7 +20,7 @@ const THOUSAND_AND_LEN: isize = 8 + AND_LEN;
 const HUNDRED_AND_LEN: isize = 7 + AND_LEN;
 
 pub struct Solver017 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver017 {
@@ -31,31 +31,27 @@ impl Default for Solver017 {
 
 impl Solver for Solver017 {
     fn solve(&self) -> isize {
-        let mut sum = 0;
-        for i in 0..self.n as usize{
-            sum += letter_count(1 + i);
-        }
-        sum
-    }
-}
+        let letter_count = |i| {
+            // the number of letters of the thousands, then the hundreds, and finally lookupOnes tens and ones
+            let (thousand, hundred, ten, one) = (i / 1000, i % 1000 / 100, i % 100 / 10, i % 10);
+            let mut sum = 0;
 
-fn letter_count(i: usize) -> isize {
-    // the number of letters of the thousands, then the hundreds, and finally lookupOnes tens and ones
-    let (thousand, hundred, ten, one) = (i / 1000, i % 1000 / 100, i % 100 / 10, i % 10);
-    let mut sum = 0;
+            if thousand > 0 {
+                sum += LOOKUP_ONES[thousand] + THOUSAND_AND_LEN;
+            }
+            if hundred > 0 {
+                sum += LOOKUP_ONES[hundred] + HUNDRED_AND_LEN;
+            }
 
-    if thousand > 0 {
-        sum += LOOKUP_ONES[thousand] + THOUSAND_AND_LEN;
-    }
-    if hundred > 0 {
-        sum += LOOKUP_ONES[hundred] + HUNDRED_AND_LEN;
-    }
+            if ten == 0 && one == 0 {
+                sum - AND_LEN
+            } else if ten > 1 {
+                sum + LOOKUP_TENS[ten] + LOOKUP_ONES[one]
+            } else {
+                sum + LOOKUP_ONES[i % 100]
+            }
+        };
 
-    if ten == 0 && one == 0 {
-        sum - AND_LEN
-    } else if ten > 1 {
-        sum + LOOKUP_TENS[ten] + LOOKUP_ONES[one]
-    } else {
-        sum + LOOKUP_ONES[i % 100]
+        (1..=self.n as usize).map(letter_count).sum()
     }
 }

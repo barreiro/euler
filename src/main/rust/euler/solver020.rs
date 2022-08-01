@@ -8,6 +8,8 @@ use euler::Solver;
 // For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800, and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
 // Find the sum of the digits in the number 100!
 
+const CELL_THRESHOLD: isize = pow_10(12);
+
 pub struct Solver020 {
     pub n: isize,
 }
@@ -20,21 +22,18 @@ impl Default for Solver020 {
 
 impl Solver for Solver020 {
     fn solve(&self) -> isize {
-        let (mut factorial, ceiling) = (vec![1], pow_10(10));
-        for n in 2..=self.n {
-            let mut carry = 0;
-            for bucket in &mut factorial {
-                let value = *bucket * n + carry;
+        let mut factorial = vec![1];
+        (2..=self.n).for_each(|n| {
+            let mut carry = None;
+            factorial.iter_mut().for_each(|cell| {
+                let value = *cell * n + carry.unwrap_or_default();
 
-                // Adjust the buckets that grow beyond the ceiling value, carrying to next bucket
-                carry = if value > ceiling { value / ceiling } else { 0 };
-                *bucket = if value > ceiling { value % ceiling } else { value };
-            }
-            if carry != 0 {
-                // with a small ceiling values would probably need to split the carry into buckets
-                factorial.push(carry)
-            }
-        }
-        factorial.iter().map(|&d| digits_sum(d)).sum::<_>()
+                // adjust the buckets that grow beyond the ceiling value, carrying to next bucket
+                carry = if value > CELL_THRESHOLD { Some(value / CELL_THRESHOLD) } else { None };
+                *cell = if value > CELL_THRESHOLD { value % CELL_THRESHOLD } else { value };
+            });
+            carry.iter().for_each(|&c| factorial.push(c));
+        });
+        factorial.iter().map(digits_sum).sum()
     }
 }

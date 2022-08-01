@@ -26,21 +26,21 @@ use euler::Solver;
 
 const INPUT_061: &[fn(isize) -> isize] = &[triangle, square, pentagonal, hexagonal, heptagonal, octagonal];
 
-pub struct Solver061<'a> {
+pub struct Solver061 {
     pub n: isize,
-    pub input: &'a [fn(isize) -> isize],
+    pub input: Vec<fn(isize) -> isize>,
 }
 
-impl<'a> Default for Solver061<'a> {
+impl Default for Solver061 {
     fn default() -> Self {
-        Solver061 { n: 4, input: INPUT_061 }
+        Solver061 { n: 4, input: INPUT_061.to_vec() }
     }
 }
 
-impl<'a> Solver for Solver061<'a> {
+impl Solver for Solver061 {
     fn solve(&self) -> isize {
         let (mut set, floor, ceil, scale) = (Vec::with_capacity(self.input.len()), pow_10(self.n - 1), pow_10(self.n), pow_10(self.n / 2));
-        let map = self.input.iter().map(|f| (f, (1..).map(|i| f(i)).skip_while(|&y| y < floor).take_while(|&y| y < ceil).collect())).collect();
+        let map = self.input.iter().map(|f| (f, (1..).map(f).skip_while(|&y| y < floor).take_while(|&y| y < ceil).collect())).collect();
         find(map, floor..ceil, floor, scale, &mut set);
         set.iter().sum::<isize>()
     }

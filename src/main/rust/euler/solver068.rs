@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use euler::algorithm::combinatorics::permutations_with;
-use euler::algorithm::long::{arithmetic_sum, int_log_10, pow_10};
+use euler::algorithm::long::{arithmetic_sum, concatenation};
 use euler::Solver;
 
 // Consider the following "magic" 3-gon ring, filled with the numbers 1 to 6, and each line adding to nine.
@@ -44,7 +44,7 @@ use euler::Solver;
 // What is the maximum 16-digit string for a "magic" 5-gon ring?
 
 pub struct Solver068 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver068 {
@@ -55,14 +55,6 @@ impl Default for Solver068 {
 
 impl Solver for Solver068 {
     fn solve(&self) -> isize {
-        let concatenate = |digits| {
-            let mut result = 0;
-            for d in digits {
-                result = result * pow_10(int_log_10(d)) + d;
-            }
-            result
-        };
-
         // assumes there is an arrangement for the x-gon where all the smallest values are on the inside (true for odd x)
         let target_sum = (arithmetic_sum(2 * self.n) + arithmetic_sum(self.n)) / self.n;
 
@@ -71,12 +63,10 @@ impl Solver for Solver068 {
                 let mut outers = inners.windows(2).map(|i| target_sum - i[0] - i[1]).collect::<Vec<_>>();
                 outers.push(target_sum - inners[0] - inners[inners.len() - 1]);
                 if (2..=self.n).all(|n| outers.contains(&(self.n + n))) {
-                    let mut arrangement = vec![];
-                    outers.iter().enumerate().for_each(|(i, &o)| arrangement.append(&mut vec![o, inners[i], inners[(i + 1) % inners.len()]]));
-                    return Some(arrangement);
+                    return Some(outers.iter().enumerate().flat_map(|(i, &o)| [o, inners[i], inners[(i + 1) % inners.len()]]).collect::<Vec<_>>())
                 }
             }
             None
-        }).max().map(concatenate).unwrap()
+        }).max().unwrap().iter().fold(0, |c, &d| concatenation(c, d))
     }
 }

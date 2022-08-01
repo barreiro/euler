@@ -34,7 +34,7 @@ impl Default for Solver083 {
 
 impl Solver for Solver083 {
     fn solve(&self) -> isize {
-        let (matrix, last) = (str_to_matrix(&self), (self.n - 1) as usize);
+        let (matrix, last) = (str_to_matrix(self), (self.n - 1) as usize);
         let (mut sum, mut changes, mut modified) = (matrix.clone(), Vec::with_capacity(last * last), (0..=last).flat_map(|a| (0..=last).map(move |b| (a, b))).collect::<Vec<_>>());
 
         // Dijkstra algorithm ends up being slower than just folding the matrix from bottom right to top left
@@ -47,13 +47,14 @@ impl Solver for Solver083 {
 
         // iterate over the sum matrix, finding better paths that go up or left.
         while modified.last() == Some(&(last, last)) {
-            for (a, b) in modified {
-                let candidate = min_neighbour(a, b, last, &sum) + matrix[a][b];
+            modified.iter().for_each(|&(a, b)| {
+                let candidate = min_neighbour(a, b , last, &sum) + matrix[a][b];
                 if sum[a][b] > candidate {
-                    sum[a][b] = candidate;
-                    changes.push((a, b));
+                    sum [a][b] = candidate;
+                    changes.push((a,b));
                 }
-            };
+            });
+
             modified = changes.drain(0..).collect();
         }
         sum[last][last]

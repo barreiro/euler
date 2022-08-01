@@ -1,17 +1,26 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::combinatorics::{partition, partition_with_constrains};
-use euler::algorithm::long::{floor_sqrt, gcd, int_sqrt, exact_root};
+use euler::algorithm::combinatorics::partition;
+use euler::algorithm::combinatorics::partition_with_constrains;
+use euler::algorithm::combinatorics::permutations_with;
+use euler::algorithm::factor::sum_of_factors;
+use euler::algorithm::long::exact_root;
+use euler::algorithm::long::factorial;
+use euler::algorithm::long::floor_sqrt;
+use euler::algorithm::long::gcd;
+use euler::algorithm::long::int_sqrt;
 use euler::algorithm::long::is_palindrome;
 use euler::algorithm::long::power_modulo;
+use euler::algorithm::prime::descending_primes;
 use euler::algorithm::prime::miller_rabin;
 use euler::algorithm::prime::prime_factors;
-use algorithm::combinatorics::permutations_with;
-use algorithm::long::factorial;
+use euler::algorithm::prime::primes_up_to;
+use euler::algorithm::prime::primes_wheel_up_to;
 
 #[test]
 fn gcd_test() {
+    assert_eq!(gcd(30, 12), 6);
     assert_eq!(gcd(48, 18), 6);
     assert_eq!(gcd(42, 56), 14);
     assert_eq!(gcd(98, 56), 14);
@@ -23,12 +32,7 @@ fn gcd_test() {
 
 #[test]
 fn int_sqrt_test() {
-    assert_eq!(int_sqrt(1), 1);
-    assert_eq!(int_sqrt(2), 1);
-    assert_eq!(int_sqrt(3), 2);
-    assert_eq!(int_sqrt(4), 2);
-    assert_eq!(int_sqrt(5), 2);
-    assert_eq!(int_sqrt(10), 3);
+    assert_eq!((0..10).map(int_sqrt).collect::<Vec<_>>(), [0, 1, 1, 2, 2, 2, 2, 3, 3, 3]);
     assert_eq!(int_sqrt(10000), 100);
     assert_eq!(int_sqrt(10001), 100);
     assert_eq!(int_sqrt(1787568), 1337);
@@ -36,24 +40,15 @@ fn int_sqrt_test() {
 
 #[test]
 fn floor_sqrt_test() {
-    assert_eq!(floor_sqrt(1), 1);
-    assert_eq!(floor_sqrt(2), 1);
-    assert_eq!(floor_sqrt(3), 1);
-    assert_eq!(floor_sqrt(4), 2);
-    assert_eq!(floor_sqrt(5), 2);
-    assert_eq!(floor_sqrt(24), 4);
-    assert_eq!(floor_sqrt(25), 5);
-    assert_eq!(floor_sqrt(26), 5);
+    assert_eq!([1, 2, 3, 4, 5, 6, 24, 25, 26].iter().map(|&n| floor_sqrt(n)).collect::<Vec<_>>(), [1, 1, 1, 2, 2, 2, 4, 5, 5]);
+
     assert_eq!(floor_sqrt(1787568), 1336);
 }
 
 #[test]
 fn cube_root_test() {
-    assert_eq!(exact_root(10, 3), (2, 2));
-    assert_eq!(exact_root(27, 3), (3, 0));
-    assert_eq!(exact_root(28, 3), (3, 1));
-    assert_eq!(exact_root(29, 3), (3, 2));
-    assert_eq!(exact_root(30, 3), (3, 3));
+    assert_eq!([10, 27, 28, 29, 30].iter().map(|&n| exact_root(n, 3)).collect::<Vec<_>>(), [(2, 2), (3, 0), (3, 1), (3, 2), (3, 3)]);
+
     assert_eq!(exact_root(262144, 3), (64, 0));
     assert_eq!(exact_root(1000000, 3), (100, 0));
     assert_eq!(exact_root(100000000, 3), (464, 102656));
@@ -61,27 +56,35 @@ fn cube_root_test() {
 
 #[test]
 fn palindrome_test() {
-    assert_eq!(false, is_palindrome(15));
-    assert_eq!(true, is_palindrome(88));
-    assert_eq!(false, is_palindrome(15846));
-    assert_eq!(true, is_palindrome(84048));
+    assert!(is_palindrome(88) && is_palindrome(84048) && is_palindrome(38411483) && is_palindrome(384101483));
+    assert!(!is_palindrome(15) && !is_palindrome(15846) && !is_palindrome(9840486) && !is_palindrome(38413483));
+}
+
+#[test]
+fn sum_of_factors_test() {
+    assert_eq!((0..10).map(sum_of_factors).collect::<Vec<_>>(), [0, 0, 1, 1, 3, 1, 6, 1, 7, 4]);
+
+    assert_eq!(sum_of_factors(28), 28);
+    assert_eq!(sum_of_factors(220), 284);
+    assert_eq!(sum_of_factors(284), 220);
+    assert_eq!(sum_of_factors(12496), 14288);
 }
 
 #[test]
 fn modular_exponentiation_test() {
-    assert_eq!(445, power_modulo(4, 13, 497));
+    assert_eq!((0..10).map(|exp| power_modulo(3, exp, 7)).collect::<Vec<_>>(), [1, 3, 2, 6, 4, 5, 1, 3, 2, 6]);
 
-    // small values
-    assert_eq!(1, power_modulo(3, 0, 7));
-    assert_eq!(3, power_modulo(3, 1, 7));
-    assert_eq!(2, power_modulo(3, 2, 7));
-    assert_eq!(6, power_modulo(3, 3, 7));
-    assert_eq!(4, power_modulo(3, 4, 7));
-    assert_eq!(5, power_modulo(3, 5, 7));
-    assert_eq!(1, power_modulo(3, 6, 7));
+    assert_eq!(445, power_modulo(4, 13, 497));
 }
 
 // --- prime.rs
+
+#[test]
+fn prime_iterator_test() {
+    assert_eq!(primes_up_to(10).collect::<Vec<_>>(), [2, 3, 5, 7]);
+    assert_eq!(primes_wheel_up_to(10).collect::<Vec<_>>(), [2, 3, 5, 7]);
+    assert_eq!(descending_primes(10).collect::<Vec<_>>(), [7, 5, 3, 2]);
+}
 
 #[test]
 fn prime_factors_test() {
@@ -94,19 +97,19 @@ fn prime_factors_test() {
 
 #[test]
 fn miller_rabin_test() {
-    assert_eq!(true, miller_rabin(2) && miller_rabin(3) && miller_rabin(5) && miller_rabin(7) && miller_rabin(11) && miller_rabin(13));
-    assert_eq!(false, miller_rabin(4) || miller_rabin(6) || miller_rabin(8) || miller_rabin(9) || miller_rabin(10) || miller_rabin(12));
+    assert!(miller_rabin(2) && miller_rabin(3) && miller_rabin(5) && miller_rabin(7) && miller_rabin(11) && miller_rabin(13));
+    assert!(!(miller_rabin(1) || miller_rabin(4) || miller_rabin(6) || miller_rabin(8) || miller_rabin(9) || miller_rabin(10) || miller_rabin(12)));
 }
 
 #[test]
 fn miller_rabin_carmichael_test() {
-    assert_eq!(false, miller_rabin(561) || miller_rabin(1105) || miller_rabin(1729) || miller_rabin(2465) || miller_rabin(2821) || miller_rabin(6601));
-    assert_eq!(false, miller_rabin(101101) || miller_rabin(252602) || miller_rabin(314821) || miller_rabin(340561) || miller_rabin(410041) || miller_rabin(512461));
+    assert!(!(miller_rabin(561) || miller_rabin(1105) || miller_rabin(1729) || miller_rabin(2465) || miller_rabin(2821) || miller_rabin(6601)));
+    assert!(!(miller_rabin(101101) || miller_rabin(252602) || miller_rabin(314821) || miller_rabin(340561) || miller_rabin(410041) || miller_rabin(512461)));
 }
 
 #[test]
 fn miller_rabin_long_test() {
-    assert_eq!(false, miller_rabin(154639673381) || miller_rabin(585226005592931977) || miller_rabin(7999252175582851) || miller_rabin(55245642489451));
+    assert!(!(miller_rabin(154639673381) || miller_rabin(585226005592931977) || miller_rabin(7999252175582851) || miller_rabin(55245642489451)));
 }
 
 // combinatorics.rs
@@ -121,10 +124,9 @@ fn partition_test() {
 #[test]
 fn permutation_test() {
     assert_eq!(factorial(5 + 1) as usize, permutations_with(0, 5, |p| Some(p.to_vec())).count());
-    
+
     let mut perm = permutations_with(0, 1, |p| Some(p.to_vec()));
     assert_eq!(Some(vec![0, 1]), perm.next());
     assert_eq!(Some(vec![1, 0]), perm.next());
     assert_eq!(None, perm.next());
-
 }

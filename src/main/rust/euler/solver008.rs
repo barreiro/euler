@@ -29,20 +29,20 @@ const INPUT_008: &str = "\
 05886116467109405077541002256983155200055935729725\
 71636269561882670428252483600823257530420752963450";
 
-pub struct Solver008<'a> {
+pub struct Solver008 {
     pub n: isize,
-    pub input: &'a str,
+    pub input: String,
 }
 
-impl<'a> Default for Solver008<'a> {
+impl Default for Solver008 {
     fn default() -> Self {
-        Solver008 { n: 13, input: INPUT_008 }
+        Solver008 { n: 13, input: INPUT_008.to_string() }
     }
 }
 
-impl<'a> Solver for Solver008<'a> {
+impl Solver for Solver008 {
     fn solve(&self) -> isize {
-        let digits = self.input.chars().map(|c| c.to_digit(DEFAULT_RADIX as _).unwrap() as _).collect::<Vec<_>>();
-        digits.windows(self.n as _).map(|w| w.iter().product()).max().unwrap()
+        let digits = self.input.chars().filter_map(|c| c.to_digit(DEFAULT_RADIX as _).map(|d| d as _)).collect::<Vec<_>>();
+        digits.windows(self.n as _).map(|w| w.iter().product()).max().unwrap_or_default()
     }
 }

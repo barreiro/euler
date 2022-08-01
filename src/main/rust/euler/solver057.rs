@@ -19,6 +19,9 @@ use euler::Solver;
 //
 // In the first one-thousand expansions, how many fractions contain a numerator with more digits than the denominator?
 
+// truncate the continuous fraction to this value (16 digits prevents overflows)
+const THRESHOLD: isize = pow_10(16);
+
 pub struct Solver057 {
     pub n: isize
 }
@@ -31,27 +34,27 @@ impl Default for Solver057 {
 
 impl Solver for Solver057 {
     fn solve(&self) -> isize {
-        continued_root_two().take(self.n as _).filter(|&(n, d)| int_log_10(n) > int_log_10(d)).count() as _
+        continued_sqroot_two().take(self.n as _).filter(|&(n, d)| int_log_10(n) > int_log_10(d)).count() as _
     }
 }
 
 // --- //
+
+/// iterator for continued fractions that approach sqrt(2)
+fn continued_sqroot_two() -> impl Iterator<Item=(isize,isize)> {
+    ContinuedRootTwo { n: 1, d: 1 }
+}
 
 struct ContinuedRootTwo {
     n: isize,
     d: isize,
 }
 
-fn continued_root_two() -> ContinuedRootTwo {
-    ContinuedRootTwo { n: 1, d: 1 }
-}
-
 impl Iterator for ContinuedRootTwo {
     type Item = (isize, isize);
 
     fn next(&mut self) -> Option<Self::Item> {
-        // Keeping at most 16 digits, to prevent overflows. Perfectly fine in the context of this problem.
-        if self.n > pow_10(16) {
+        if self.n >THRESHOLD {
             self.n /= 10;
             self.d /= 10;
         }

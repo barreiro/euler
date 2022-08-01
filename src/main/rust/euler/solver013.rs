@@ -110,18 +110,17 @@ const INPUT_013: &[&str] = &[
 
 pub struct Solver013<'a> {
     pub n: isize,
-    pub input: &'a [&'a str],
+    pub input: Vec<&'a str>,
 }
 
 impl<'a> Default for Solver013<'a> {
     fn default() -> Self {
-        Solver013 { n: 10, input: INPUT_013 }
+        Solver013 { n: 10, input: INPUT_013.to_vec() }
     }
 }
 
 impl<'a> Solver for Solver013<'a> {
     fn solve(&self) -> isize {
-        let sum = self.input.iter().map(|&s| s.get(..=self.n as _).unwrap().parse::<isize>().unwrap()).sum();
-        first_digits(sum, self.n)
+        first_digits(self.input.iter().map(|&s| s[..=self.n as _].parse::<isize>().unwrap()).sum(), self.n)
     }
 }

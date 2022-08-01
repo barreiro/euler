@@ -22,8 +22,8 @@ impl Solver for Solver052 {
     fn solve(&self) -> isize {
         // start on the number 123...n and do a preliminary filter based on the sum of the digits
         (from_digits((1..=self.n).rev().collect())..).filter(|&candidate| {
-            let candidate_sum = digits_sum(candidate);
-            (2..=self.n).map(|m| m * candidate).all(|multiple| digits_sum(multiple) == candidate_sum)
+            let candidate_sum = digits_sum(&candidate);
+            (2..=self.n).map(|m| m * candidate).all(|multiple| digits_sum(&multiple) == candidate_sum)
         }).find(|&candidate| {
             let set = to_digits(candidate).iter().collect::<BitSet>();
             (2..=self.n).map(|m| m * candidate).all(|multiple| to_digits(multiple).iter().all(|&m| set.contains(m)))
