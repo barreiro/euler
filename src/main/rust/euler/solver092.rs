@@ -13,7 +13,8 @@ use euler::Solver;
 // Therefore any chain that arrives at 1 or 89 will become stuck in an endless loop. What is most amazing is that EVERY starting number will eventually arrive at 1 or 89.
 // How many starting numbers below ten million will arrive at 89?
 
-const HAPPY: isize = 1; // numbers that converge to 1 are known as "happy numbers"
+// numbers that converge to 1 are known as "happy numbers"
+const HAPPY: isize = 1;
 const UNHAPPY: isize = 89;
 
 pub struct Solver092 {
@@ -35,14 +36,6 @@ impl Solver for Solver092 {
                 _ => n = digits_square_sum(n)
             }
         });
-
-        // let mut cache = (1..=ceil).map(|n| !is_happy(n)).collect::<Vec<_>>();
-        // cache.insert(0, false);
-        // (1..pow_10(self.n)).filter(|&n| cache[digits_square_sum(n) as usize]).count() as _
-
-        // let cache = (1..=ceil).filter(|&n| !is_happy(n)).collect::<BitSet>();
-        // (1..pow_10(self.n)).filter(|&n| cache.contains(digits_square_sum(n))).count() as _
-
         let mut f_cache = (0..=ceil).map(|_| (0..=self.n).map(|_| None).collect()).collect();
 
         // find the sums that can lead to UNHAPPY. loop and them use the f(n,k) function to calculate the number of digit combinations that yield that sum
@@ -61,7 +54,7 @@ fn f(n: usize, k: usize, cache: &mut Vec<Vec<Option<isize>>>) -> isize {
             } else {
                 (0..=9).map(|d| n as isize - square(d)).filter(|&nd| nd >= 0).map(|nd| f(nd as usize, k - 1, cache)).sum()
             }
-        )
+        );
     }
     cache[n][k].unwrap()
 }

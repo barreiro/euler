@@ -51,7 +51,7 @@ impl Solver for Solver011 {
                     row *= grid[n][m - i];
                     column *= grid[n - i][m];
                     diag_a *= grid[n - i][m - i];
-                    diag_b *= grid[n - i][m + i + 1 - self.n as usize]
+                    diag_b *= grid[n - i][m + i + 1 - self.n as usize];
                 }
                 greatest = greatest.max(row.max(column.max(diag_a.max(diag_b))));
             }

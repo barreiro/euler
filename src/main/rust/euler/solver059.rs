@@ -22,7 +22,7 @@ use euler::Solver;
 // Your task has been made easy, as the encryption key consists of three lower case characters.
 // Using p059_cipher.txt (right click and 'Save Link/Target As...'), a file containing the encrypted ASCII codes, and the knowledge that the plain text must contain common English words, decrypt the message and find the sum of the ASCII values in the original text.
 
-const BASE_PATH: &str = "src/main/resources/net/projecteuler/barreiro/problem/";
+const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem059-data.txt";
 const KEY_SIZE: usize = 3;
 
 pub struct Solver059 {
@@ -32,9 +32,7 @@ pub struct Solver059 {
 
 impl Default for Solver059 {
     fn default() -> Self {
-        let location = BASE_PATH.to_string() + "problem059-data.txt";
-        let path = Path::new(location.trim());
-        Solver059 { n: 1455, input: read_to_string(path).expect("Unable to read file") }
+        Solver059 { n: 1455, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
     }
 }
 

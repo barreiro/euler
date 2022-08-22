@@ -33,11 +33,11 @@ impl Solver for Solver087 {
         let primes_apply = |action: fn(isize) -> isize| primes.iter().map(|&p| action(p)).take_while(|&p| p < self.n).collect::<Vec<_>>();
         let (squares, cubes, fourths) = (primes_apply(square), primes_apply(cube), primes_apply(fourth));
 
-        fourths.iter().for_each(|&f| {
+        for f in fourths {
             cubes.iter().map(|c| c + f).take_while(|&cf| cf < self.n).for_each(|cf| {
-                squares.iter().map(|&s| s + cf).take_while(|&scf| scf < self.n).for_each(|scf| { solutions.insert(scf); })
-            })
-        });
+                squares.iter().map(|&s| s + cf).take_while(|&scf| scf < self.n).for_each(|scf| { solutions.insert(scf); });
+            });
+        }
 
         solutions.len() as _
     }

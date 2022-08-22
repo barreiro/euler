@@ -26,7 +26,7 @@ pub fn partition_with_constrains(value: isize, constrains: &[isize]) -> isize {
     partition_with_constrains_memoize(value as _, value as _, 0, constrains, &mut vec![vec![0; 1 + value as usize]; 1 + value as usize])
 }
 
-fn partition_with_constrains_memoize(total: usize, remaining: usize, level: usize, constrains: &[isize], cache: &mut Vec<Vec<isize>>) -> isize {
+fn partition_with_constrains_memoize(total: usize, remaining: usize, _level: usize, constrains: &[isize], cache: &mut Vec<Vec<isize>>) -> isize {
     if remaining == 0 || remaining == constrains[0] as _ {
         1
     } else if remaining < constrains[0] as _ {
@@ -34,7 +34,7 @@ fn partition_with_constrains_memoize(total: usize, remaining: usize, level: usiz
     } else {
         if cache[total][remaining] == 0 {
             let ceil = remaining.min(total);
-            cache[total][remaining] = constrains.iter().map(|&c| c as _).take_while(|&c| c <= ceil).map(|c| partition_with_constrains_memoize(c, remaining - c, level + 1, constrains, cache)).sum();
+            cache[total][remaining] = constrains.iter().map(|&c| c as _).take_while(|&c| c <= ceil).map(|c| partition_with_constrains_memoize(c, remaining - c, _level + 1, constrains, cache)).sum();
         }
         cache[total][remaining]
     }
@@ -213,13 +213,13 @@ impl<I, F, R> Combinations<I, F, R> where F: Fn(&[I]) -> Option<R> {
 // --- //
 
 /// iteration over all Pythagorean triples
-/// (a < b < c) but each can have smaller values later on the iteration
+/// `(a < b < c)` but each can have smaller values later on the iteration
 pub fn pythagorean_triplets() -> impl Iterator<Item=(isize, isize, isize)> {
     PythagoreanTriplets { m: 1, n: 0 }
 }
 
 /// iteration over all Pythagorean triples
-/// (a < b < c) but each can have smaller values later on the iteration
+/// `(a < b < c)` but each can have smaller values later on the iteration
 pub fn pythagorean_triplets_lower_bound(bound: isize) -> impl Iterator<Item=(isize, isize, isize)> {
     PythagoreanTriplets { m: 1, n: 0 }.take_while(move |&(a, b, c)| c - b != 2 && a < square(bound))
 }
@@ -254,6 +254,7 @@ impl Iterator for PythagoreanTriplets {
 
 // --- //
 
+/// iterator on palindromes (numbers that read the same in both ways)
 pub fn palindromes() -> impl Iterator<Item=Vec<isize>> {
     Palindromes { digits: vec![0] }
 }

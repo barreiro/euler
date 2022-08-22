@@ -41,23 +41,23 @@ impl Solver for Solver061 {
     fn solve(&self) -> isize {
         let (mut set, floor, ceil, scale) = (Vec::with_capacity(self.input.len()), pow_10(self.n - 1), pow_10(self.n), pow_10(self.n / 2));
         let map = self.input.iter().map(|f| (f, (1..).map(f).skip_while(|&y| y < floor).take_while(|&y| y < ceil).collect())).collect();
-        find(map, floor..ceil, floor, scale, &mut set);
+        find(&map, floor..ceil, floor, scale, &mut set);
         set.iter().sum::<isize>()
     }
 }
 
 // require BTreeMap for consistency when testing ¯\_(ツ)_/¯
-fn find(predicates: BTreeMap<&fn(isize) -> isize, Vec<isize>>, range: Range<isize>, floor: isize, scale: isize, set: &mut Vec<isize>) -> bool {
+fn find(predicates: &BTreeMap<&fn(isize) -> isize, Vec<isize>>, range: Range<isize>, floor: isize, scale: isize, set: &mut Vec<isize>) -> bool {
     if predicates.is_empty() {
         return set.last().unwrap() % scale == set.first().unwrap() / scale;
     }
-    for (p, v) in &predicates {
+    for (p, v) in predicates {
         let (start, end) = (v.binary_search(&range.start).unwrap_or_else(identity), v.binary_search(&range.end).unwrap_or_else(identity));
         for &candidate in v[start..end].iter() {
             let (mut reduced_predicates, f) = (predicates.clone(), (candidate % scale) * scale);
             reduced_predicates.remove(p);
             set.push(candidate);
-            if f > floor && find(reduced_predicates, f..f + scale, floor, scale, set) {
+            if f > floor && find(&reduced_predicates, f..f + scale, floor, scale, set) {
                 return true;
             }
             set.pop();

@@ -105,6 +105,11 @@ pub fn main() {
     solve(93, Solver093::default());
     solve(94, Solver094::default());
     solve(95, Solver095::default());
+    solve(96, Solver096::default());
+    solve(97, Solver097::default());
+    solve(98, Solver098::default());
+    solve(99, Solver099::default());
+    solve(100, Solver100::default());
 }
 
 mod euler {
@@ -203,6 +208,11 @@ mod euler {
     pub use self::solver093::Solver093;
     pub use self::solver094::Solver094;
     pub use self::solver095::Solver095;
+    pub use self::solver096::Solver096;
+    pub use self::solver097::Solver097;
+    pub use self::solver098::Solver098;
+    pub use self::solver099::Solver099;
+    pub use self::solver100::Solver100;
 
     pub trait Solver {
         fn solve(&self) -> isize;
@@ -216,11 +226,13 @@ mod euler {
         mod algorithm_test;
 
         pub mod bit;
+        pub mod cast;
         pub mod continued_fraction;
         pub mod combinatorics;
         pub mod factor;
         pub mod long;
         pub mod prime;
+        pub mod vec;
     }
 
     pub mod solver001;
@@ -318,4 +330,9 @@ mod euler {
     pub mod solver093;
     pub mod solver094;
     pub mod solver095;
+    pub mod solver096;
+    pub mod solver097;
+    pub mod solver098;
+    pub mod solver099;
+    pub mod solver100;
 }

@@ -49,6 +49,6 @@ fn recursive_product_sum(p: isize, s: isize, len: usize, floor: isize, product_s
 
     // recursively apply with `i >= floor` while maintaining `(p * i) - (s + i) + (len + 1) < product_sum.len()`
     if (product_sum.len() + len + 1) as isize + s >= p * floor {
-        (floor..div_ceil((product_sum.len() - len - 1) as isize + s, p - 1)).for_each(|i| recursive_product_sum(p * i, s + i, len + 1, i, product_sum))
+        (floor..div_ceil((product_sum.len() - len - 1) as isize + s, p - 1)).for_each(|i| recursive_product_sum(p * i, s + i, len + 1, i, product_sum));
     }
 }

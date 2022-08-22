@@ -33,7 +33,7 @@ impl Solver for Solver063 {
                 }
                 if carry != 0 {
                     // with a small ceiling values would probably need to split the carry into buckets
-                    pow.push(carry)
+                    pow.push(carry);
                 }
             }
             (pow.len() as isize - 1) * 15 + int_log_10(*pow.last().unwrap())

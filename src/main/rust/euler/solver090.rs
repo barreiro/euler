@@ -47,7 +47,7 @@ impl Solver for Solver090 {
             s.resize(self.n as _, 0);
             s.sort_unstable(); // needs to be sorted for permutations_of_set_with()
             s
-        }).map(|s| permutations_of_set_with(s.to_vec(), |p| Some(p.to_vec())).collect::<Vec<_>>()).collect::<HashSet<_>>();
+        }).map(|s| permutations_of_set_with(s, |p| Some(p.to_vec())).collect::<Vec<_>>()).collect::<HashSet<_>>();
 
         // create all combinations from digits to form the dice, replacing 9 with 6.
         let dice = combinations_with((0..=9).map(|x| if x == 9 { 6 } else { x }).collect(), DICE_SIZE, |c| Some(c.to_vec())).collect::<Vec<_>>();
@@ -81,12 +81,10 @@ impl<F> Iterator for Cartesian<F> where F: Fn(&[usize]) -> bool {
                         return None;
                     } else if (self.predicate)(&self.indexes) {
                         return Some(true);
-                    } else {
-                        break;
                     }
-                } else {
-                    (i..self.indexes.len()).for_each(|j| if self.indexes[i - 1] != 0 { self.indexes[j] = self.indexes[i - 1] - 1 });
+                    break;
                 }
+                (i..self.indexes.len()).for_each(|j| if self.indexes[i - 1] != 0 { self.indexes[j] = self.indexes[i - 1] - 1 })
             }
         }
     }

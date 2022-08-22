@@ -93,6 +93,11 @@ pub const fn floor_sqrt(value: isize) -> isize {
     exact_sqrt(value).0
 }
 
+/// calculates an approximation of the square root
+pub const fn floor_sqrt_usize(value: usize) -> usize {
+    exact_sqrt(value as _).0 as _
+}
+
 /// calculates an overestimation of the square root
 pub const fn ceil_sqrt(value: isize) -> isize {
     let (root, remainder) = exact_sqrt(value);
@@ -234,7 +239,7 @@ pub const fn triangle(value: isize) -> isize {
 }
 
 pub const fn is_triangle(value: isize) -> bool {
-    value == triangle(int_sqrt(value << 1))
+    is_square((value << 3) + 1)
 }
 
 pub const fn pentagonal(value: isize) -> isize {
@@ -313,6 +318,13 @@ pub const fn concatenation(one: isize, two: isize) -> isize {
 }
 
 // --- //
+
+/// checks if a value has repeated digits
+pub fn unique_digits(value: isize) -> bool {
+    let mut digits = to_digits(value);
+    digits.sort_unstable();
+    (1..digits.len()).all(|i| digits[i] != digits[i - 1])
+}
 
 /// checks if two values are permutations of one another, i.e. have the same digits but it different order
 pub fn is_permutation(a: isize, b: isize) -> bool {
@@ -416,7 +428,7 @@ impl Iterator for IncrementingDigits {
         if !self.increase() && !self.rotate() {
             self.expand();
         }
-        Some(self.array.to_vec())
+        Some(self.array.clone())
     }
 }
 
@@ -450,21 +462,32 @@ impl IncrementingDigits {
 
 // --- //
 
-/// efficiently computes ( base ^ exp ) mod modulo
+/// efficiently computes `(base ^ exp) mod modulo`
 pub const fn power_modulo(base: isize, exp: isize, modulo: isize) -> isize {
     let (mut result, mut b, mut e) = (1, base % modulo, exp);
-    if (modulo - 1).checked_mul(modulo - 1).is_none() {
-        return 0;
-    }
-
     while e > 0 {
         if e & 1 != 0 {
-            result *= b;
-            result %= modulo;
+            result = safe_mul_mod(result, b, modulo);
         }
         e >>= 1;
-        b *= b;
-        b %= modulo;
+        b = safe_mul_mod(b, b, modulo);
     }
-    if result < 0 { result + modulo } else { result }
+    result
+}
+
+/// computes `(a * b) mod modulo` without overflowing the multiplication
+pub const fn safe_mul_mod(a: isize, mut b: isize, modulo: isize) -> isize {
+    if let Some(result) = a.checked_mul(b) {
+        result % modulo
+    } else {
+        let (mut i, mut j) = (0, a);
+        while b != 0 {
+            if b & 1 != 0 {
+                i = (i + j) % modulo;
+            }
+            j = (j << 1) % modulo;
+            b >>= 1;
+        }
+        i % modulo
+    }
 }

@@ -16,7 +16,7 @@ use euler::Solver;
 // If the word value is a triangle number then we shall call the word a triangle word.
 // Using words.txt (right click and 'Save Link/Target As...'), a 16K text file containing nearly two-thousand common English words, how many are triangle words?
 
-const BASE_PATH: &str = "src/main/resources/net/projecteuler/barreiro/problem/";
+const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem042-data.txt";
 
 pub struct Solver042 {
     pub n: isize,
@@ -25,9 +25,7 @@ pub struct Solver042 {
 
 impl Default for Solver042 {
     fn default() -> Self {
-        let location = BASE_PATH.to_string() + "problem042-data.txt";
-        let path = Path::new(location.trim());
-        Solver042 { n: 1786, input: read_to_string(path).expect("Unable to read file") }
+        Solver042 { n: 1786, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
     }
 }
 

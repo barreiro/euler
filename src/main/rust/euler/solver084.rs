@@ -94,7 +94,7 @@ impl Solver for Solver084 {
             // fill probability of moving from square to square based on the dice roll
             let mut roll = vec![0.0; MARKOV_SIZE];
             (1..=self.n as _).for_each(|dice1| (1..=self.n as _).for_each(|dice2| {
-                let landing = (square + dice1 + dice2) % BOARD_DIM + if dice1 != dice2 { 0 } else { (1 + square / BOARD_DIM) * BOARD_DIM };
+                let landing = (square + dice1 + dice2) % BOARD_DIM + if dice1 == dice2 { (1 + square / BOARD_DIM) * BOARD_DIM } else { 0 };
                 roll[if landing >= MARKOV_SIZE { JAIL } else { landing }] += roll_probability;
             }));
 

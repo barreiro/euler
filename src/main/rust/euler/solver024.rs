@@ -26,7 +26,7 @@ impl Default for Solver024 {
 
 impl Solver for Solver024 {
     fn solve(&self) -> isize {
-        let (mut value, mut unplaced, mut sum) = (self.n as usize - 1, self.base.to_vec(), 0);
+        let (mut value, mut unplaced, mut sum) = (self.n as usize - 1, self.base.clone(), 0);
 
         // use a kind of factorization of N over the factorials and in the end convert the digits to a number
         for l in (1..unplaced.len() as _).rev() {

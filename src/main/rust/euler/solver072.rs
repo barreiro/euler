@@ -29,7 +29,7 @@ impl Solver for Solver072 {
 }
 
 fn farey_size(n: usize, cache: &mut [usize]) -> usize {
-    let recursion = |m| if cache[m] != 0 { cache[m] } else { farey_size(m, cache) };
+    let recursion = |m| if cache[m] == 0 { farey_size(m, cache) } else { cache[m] };
     let value = (((n + 3) * n) >> 1) - (2..=n).map(|d| n / d).map(recursion).sum::<usize>();
     cache[n] = value;
     value

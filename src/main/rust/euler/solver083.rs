@@ -17,7 +17,7 @@ use euler::Solver;
 //
 // Find the minimal path sum from the top left to the bottom right by moving left, right, up, and down in matrix.txt (right click and "Save Link/Target As..."), a 31K text file containing an 80 by 80 matrix.
 
-const BASE_PATH: &str = "src/main/resources/net/projecteuler/barreiro/problem/";
+const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem083-data.txt";
 
 pub struct Solver083 {
     pub n: isize,
@@ -26,9 +26,7 @@ pub struct Solver083 {
 
 impl Default for Solver083 {
     fn default() -> Self {
-        let location = BASE_PATH.to_string() + "problem083-data.txt";
-        let path = Path::new(location.trim());
-        Solver083 { n: 80, input: read_to_string(path).expect("Unable to read file") }
+        Solver083 { n: 80, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
     }
 }
 
@@ -47,15 +45,14 @@ impl Solver for Solver083 {
 
         // iterate over the sum matrix, finding better paths that go up or left.
         while modified.last() == Some(&(last, last)) {
-            modified.iter().for_each(|&(a, b)| {
-                let candidate = min_neighbour(a, b , last, &sum) + matrix[a][b];
+            for (a, b) in modified {
+                let candidate = min_neighbour(a, b, last, &sum) + matrix[a][b];
                 if sum[a][b] > candidate {
-                    sum [a][b] = candidate;
-                    changes.push((a,b));
+                    sum[a][b] = candidate;
+                    changes.push((a, b));
                 }
-            });
-
-            modified = changes.drain(0..).collect();
+            }
+            modified = changes.drain(..).collect()
         }
         sum[last][last]
     }
@@ -80,10 +77,8 @@ fn min_neighbour(a: usize, b: usize, last: usize, m: &[Vec<isize>]) -> isize {
 
 fn str_to_matrix(solver: &Solver083) -> Vec<Vec<isize>> {
     let mut parsed = vec![];
-    for (l, line) in solver.input.split('\n').enumerate() {
-        if l < solver.n as usize {
-            parsed.push(line.split(',').take(solver.n as _).filter_map(|s| s.parse().ok()).collect());
-        }
+    for line in solver.input.lines().take(solver.n as _) {
+        parsed.push(line.split(',').take(solver.n as _).filter_map(|s| s.parse().ok()).collect());
     }
     parsed
 }

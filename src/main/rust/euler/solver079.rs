@@ -5,7 +5,8 @@ use std::collections::{HashMap, HashSet};
 use std::fs::read_to_string;
 use std::path::Path;
 
-use euler::algorithm::long::{DEFAULT_RADIX, from_digits};
+use euler::algorithm::cast::Cast;
+use euler::algorithm::long::from_digits;
 use euler::Solver;
 
 // A common security method used for online banking is to ask the user for three random characters from a passcode.
@@ -15,7 +16,7 @@ use euler::Solver;
 //
 // Given that the three characters are always asked for in order, analyse the file so as to determine the shortest possible secret passcode of unknown length.
 
-const BASE_PATH: &str = "src/main/resources/net/projecteuler/barreiro/problem/";
+const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem079-data.txt";
 
 pub struct Solver079 {
     pub n: isize,
@@ -24,16 +25,14 @@ pub struct Solver079 {
 
 impl Default for Solver079 {
     fn default() -> Self {
-        let location = BASE_PATH.to_string() + "problem079-data.txt";
-        let path = Path::new(location.trim());
-        Solver079 { n: 50, input: read_to_string(path).expect("Unable to read file") }
+        Solver079 { n: 50, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
     }
 }
 
 impl Solver for Solver079 {
     fn solve(&self) -> isize {
-        let (mut before, to_chars) = (HashMap::new(), |s: &str| s.chars().map(|c| c.to_digit(DEFAULT_RADIX as _).unwrap() as _).collect::<Vec<_>>());
-        self.input.split('\n').take(self.n as _).map(to_chars).for_each(|v| {
+        let (mut before, to_chars) = (HashMap::new(), |s: &str| s.chars().map(Cast::isize).collect::<Vec<_>>());
+        self.input.lines().take(self.n as _).map(to_chars).for_each(|v| {
             (0..v.len()).for_each(|i| {
                 let entry = before.entry(v[i]).or_insert_with(HashSet::new);
                 (0..i).for_each(|j| { entry.insert(v[j]); });

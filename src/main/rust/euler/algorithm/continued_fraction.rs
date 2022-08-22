@@ -13,7 +13,7 @@ const fn transform(n: isize, floor: isize, multiplier: isize, fractional: isize)
     (a, b, c)
 }
 
-/// length of cycle of sqrt(n), by applying transformations until c == 1 (or a == 2 * floor)
+/// length of cycle of sqrt(n), by applying transformations until `c == 1` (or `a == 2 * floor`)
 pub fn continued_expansion_sqrt_cycle_len(n: isize) -> isize {
     // this is an optimization of continued_expansion_sqrt(n) that does not store values
     let floor = floor_sqrt(n);
@@ -29,25 +29,24 @@ pub fn continued_expansion_sqrt_cycle_len(n: isize) -> isize {
     }).count() as isize + 1
 }
 
-/// continued fraction expansion of sqrt(n), by applying transformations until c == 1 (or a == 2 * floor)
+/// continued fraction expansion of `sqrt(n)`, by applying transformations until `c == 1` (or `a == 2 * floor`)
 pub fn continued_expansion_sqrt(n: isize) -> Vec<isize> {
     let (floor, remainder) = exact_sqrt(n);
     if remainder == 0 {
         return vec![0];
     }
-    let (mut multiplier, mut fractional, mut expansion) = (1, floor, Vec::new());
-    expansion.push(floor);
+    let (mut multiplier, mut fractional, mut expansion) = (1, floor, vec![floor]);
     (0..n).take_while(|_| {
         let (a, b, c) = transform(n, floor, multiplier, fractional);
         expansion.push(a);
         fractional = b;
         multiplier = c;
         multiplier != 1
-    }).for_each(|_| ());
+    }).last();
     expansion
 }
 
-/// continued fraction expansion of rational n/d, by applying Eucledean algorithm
+/// continued fraction expansion of rational `n/d`, by applying Eucledean algorithm
 pub fn continued_expansion_rational(mut n: isize, mut d: isize) -> Vec<isize> {
     let mut expansion = vec![];
     while d != 0 {
@@ -60,7 +59,7 @@ pub fn continued_expansion_rational(mut n: isize, mut d: isize) -> Vec<isize> {
 
 // --- //
 
-/// convenience function that calculates a += b * c
+/// convenience function that calculates `a += b * c`
 pub fn add_mul(a: &mut Vec<isize>, b: &[isize], c: isize, threshold: isize) {
     while a.len() < b.len() { a.push(0); }
     for i in 0..b.len() {
@@ -89,7 +88,7 @@ pub fn convergent_cyclic(expansion: &[isize]) -> impl Iterator<Item=(Vec<isize>,
 }
 
 // closure that approximates a real value by iterating the convergent
-pub struct Convergent<'a> {
+struct Convergent<'a> {
     f: Box<dyn Fn(usize) -> Option<isize> + 'a>,
     previous: (Vec<isize>, Vec<isize>),
     last: (Vec<isize>, Vec<isize>),
@@ -101,14 +100,12 @@ impl<'a> Iterator for Convergent<'a> {
     type Item = (Vec<isize>, Vec<isize>);
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.i += 1;
-        if let Some(value) = (*self.f)(self.i - 1) {
+        (*self.f)(self.i).map(|value| {
+            self.i += 1;
             add_mul(&mut self.previous.0, &self.last.0, value, self.threshold);
             add_mul(&mut self.previous.1, &self.last.1, value, self.threshold);
             swap(&mut self.last, &mut self.previous);
-            Some((self.last.0.to_vec(), self.last.1.to_vec()))
-        } else {
-            None
-        }
+            (self.last.0.clone(), self.last.1.clone())
+        })
     }
 }

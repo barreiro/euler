@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::DEFAULT_RADIX;
+use euler::algorithm::cast::Cast;
 use euler::Solver;
 
 // The four adjacent digits in the 1000-digit number that have the greatest product are 9 × 9 × 8 × 9 = 5832.
@@ -42,7 +42,7 @@ impl Default for Solver008 {
 
 impl Solver for Solver008 {
     fn solve(&self) -> isize {
-        let digits = self.input.chars().filter_map(|c| c.to_digit(DEFAULT_RADIX as _).map(|d| d as _)).collect::<Vec<_>>();
+        let digits = self.input.chars().map(Cast::isize).collect::<Vec<_>>();
         digits.windows(self.n as _).map(|w| w.iter().product()).max().unwrap_or_default()
     }
 }

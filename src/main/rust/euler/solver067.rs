@@ -22,7 +22,7 @@ use euler::Solver;
 // If you could check one trillion (1012) routes every second it would take over twenty billion years to check them all.
 // There is an efficient algorithm to solve it. ;o)
 
-const BASE_PATH: &str = "src/main/resources/net/projecteuler/barreiro/problem/";
+const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem067-data.txt";
 
 pub struct Solver067 {
     pub n: isize,
@@ -31,9 +31,7 @@ pub struct Solver067 {
 
 impl Default for Solver067 {
     fn default() -> Self {
-        let location = BASE_PATH.to_string() + "problem067-data.txt";
-        let path = Path::new(location.trim());
-        Solver067 { n: 100, input: read_to_string(path).expect("Unable to read file") }
+        Solver067 { n: 100, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file")  }
     }
 }
 
@@ -47,7 +45,7 @@ impl Solver for Solver067 {
 fn best_sum(level: isize, index: isize, heap: &[isize], cache: &mut [isize]) -> isize {
     let heap_index = (arithmetic_sum(level) + index) as usize;
     if heap_index < heap.len() && cache[heap_index] == 0 {
-        cache[heap_index] = heap[heap_index] + best_sum(level + 1, index, heap, cache).max(best_sum(level + 1, index + 1, heap, cache))
+        cache[heap_index] = heap[heap_index] + best_sum(level + 1, index, heap, cache).max(best_sum(level + 1, index + 1, heap, cache));
     }
     *cache.get(heap_index).unwrap_or(&0)
 }
@@ -56,7 +54,7 @@ fn best_sum(level: isize, index: isize, heap: &[isize], cache: &mut [isize]) -> 
 
 fn str_to_heap(level: isize, data: &str) -> Vec<isize> {
     let mut parsed = vec![];
-    for (l, line) in data.split('\n').enumerate() {
+    for (l, line) in data.lines().enumerate() {
         if l < level as usize {
             line.split_whitespace().filter_map(|s| s.parse().ok()).for_each(|value| parsed.push(value));
         }

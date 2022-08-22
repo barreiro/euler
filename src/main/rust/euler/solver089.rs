@@ -58,7 +58,7 @@ impl FromStr for Roman {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(Roman {
-            digits: s.chars().flat_map(|c| match c {
+            digits: s.chars().filter_map(|c| match c {
                 'I' => Some(1),
                 'V' => Some(5),
                 'X' => Some(10),

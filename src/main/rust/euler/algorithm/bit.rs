@@ -54,7 +54,12 @@ impl BitSet {
         self.bits.iter().all(|&b| b == 0)
     }
 
-    fn locate(&self, n: isize) -> (usize, usize) {
+    /// removes all elements in the set
+    pub fn clear(&mut self) {
+        self.bits.fill(0);
+    }
+
+    const fn locate(&self, n: isize) -> (usize, usize) {
         if n < i32::MAX as _ {
             ((n as i32 / self.step as i32) as _, (n as i32 % self.step as i32) as _)
         } else {
@@ -76,5 +81,37 @@ impl<'a> FromIterator<&'a isize> for BitSet {
         let mut bit_set = BitSet::new();
         iter.into_iter().for_each(|&i| { bit_set.insert(i); });
         bit_set
+    }
+}
+
+// --- //
+
+impl<'a> IntoIterator for &'a BitSet {
+    type Item = isize;
+    type IntoIter = BitSetIterator<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        BitSetIterator { set: self, index: 0, seen: 0 }
+    }
+}
+
+pub struct BitSetIterator<'a> {
+    set: &'a BitSet,
+    index: isize,
+    seen: usize,
+}
+
+impl<'a> Iterator for BitSetIterator<'a> {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        (self.seen < self.set.len()).then(|| {
+            while !self.set.contains(self.index) {
+                self.index += 1;
+            }
+            self.seen += 1;
+            self.index += 1;
+            self.index - 1
+        })
     }
 }

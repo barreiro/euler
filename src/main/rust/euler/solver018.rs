@@ -55,7 +55,7 @@ impl<'a> Solver for Solver018<'a> {
 fn best_sum(level: isize, index: isize, heap: &[isize], cache: &mut [isize]) -> isize {
     let heap_index = (arithmetic_sum(level) + index) as usize;
     if heap_index < heap.len() && cache[heap_index] == 0 {
-        cache[heap_index] = heap[heap_index] + best_sum(level + 1, index, heap, cache).max(best_sum(level + 1, index + 1, heap, cache))
+        cache[heap_index] = heap[heap_index] + best_sum(level + 1, index, heap, cache).max(best_sum(level + 1, index + 1, heap, cache));
     }
     *cache.get(heap_index).unwrap_or(&0)
 }

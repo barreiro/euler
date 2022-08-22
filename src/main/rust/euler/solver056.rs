@@ -55,6 +55,6 @@ impl Iterator for VectorizedPower {
 
         // with a small cell_threshold values would probably need to split the carry into cells as well
         carry.iter().for_each(|&c| self.power.push(c));
-        Some(self.power.to_vec())
+        Some(self.power.clone())
     }
 }

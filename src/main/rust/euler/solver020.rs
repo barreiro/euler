@@ -25,13 +25,13 @@ impl Solver for Solver020 {
         let mut factorial = vec![1];
         (2..=self.n).for_each(|n| {
             let mut carry = None;
-            factorial.iter_mut().for_each(|cell| {
+            for cell in factorial.iter_mut() {
                 let value = *cell * n + carry.unwrap_or_default();
 
                 // adjust the buckets that grow beyond the ceiling value, carrying to next bucket
                 carry = if value > CELL_THRESHOLD { Some(value / CELL_THRESHOLD) } else { None };
                 *cell = if value > CELL_THRESHOLD { value % CELL_THRESHOLD } else { value };
-            });
+            }
             carry.iter().for_each(|&c| factorial.push(c));
         });
         factorial.iter().map(digits_sum).sum()

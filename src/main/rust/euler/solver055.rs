@@ -23,10 +23,10 @@ use euler::Solver;
 //
 // NOTE: Wording was modified slightly on 24 April 2007 to emphasise the theoretical nature of Lychrel numbers.
 
-const THRESHOLD: isize = 50;
+const THRESHOLD: usize = 50;
 
 pub struct Solver055 {
-    pub n: isize
+    pub n: isize,
 }
 
 impl Default for Solver055 {
@@ -37,31 +37,25 @@ impl Default for Solver055 {
 
 impl Solver for Solver055 {
     fn solve(&self) -> isize {
-        // Sums two numbers in the digit representation provided by incrementing_digits
-        let digits_sum = |a: &Vec<_>, b: &Vec<_>| {
-            let (dim, mut carry) = (a.len().max(b.len()), 0);
-            let mut result = Vec::with_capacity(dim + 1);
+        // sums a number in digit representation with it's reverse
+        let mirror_sum = |a: &[isize]| {
+            let (dim, mut carry, mut result) = (a.len(), 0, Vec::with_capacity(a.len() + 1));
             for i in 0..dim {
-                let c = carry + a.get(i).map_or(0, |d| *d) + b.get(i).map_or(0, |d| *d);
+                let c = carry + a[i] + a[dim - i - 1];
                 carry = c / DEFAULT_RADIX;
                 result.push(c % DEFAULT_RADIX);
             }
-            if carry != 0 {
-                result.push(carry);
-            }
+            (carry != 0).then(|| result.push(carry));
             result
         };
 
-        let is_lychrel = |value: &Vec<_>| {
-            let mut a = value.to_vec();
-            (1..THRESHOLD).all(|_| {
-                let b = a.clone();
-                a.reverse();
-                a = digits_sum(&a, &b);
-                !is_palindrome_digits(&a)
-            })
+        let is_lychrel = |mut value: Vec<_>| {
+            (0..THRESHOLD).all(|_| {
+                value = mirror_sum(&value);
+                !is_palindrome_digits(&value)
+            }).then_some(())
         };
 
-        incrementing_digits(1).take(self.n as _).filter(is_lychrel).count() as _
+        incrementing_digits(1).take(self.n as _).filter_map(is_lychrel).count() as _
     }
 }

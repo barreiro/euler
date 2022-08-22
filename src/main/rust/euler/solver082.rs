@@ -19,7 +19,7 @@ use euler::Solver;
 //
 // Find the minimal path sum from the left column to the right column in matrix.txt (right click and "Save Link/Target As..."), a 31K text file containing an 80 by 80 matrix.
 
-const BASE_PATH: &str = "src/main/resources/net/projecteuler/barreiro/problem/";
+const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem082-data.txt";
 
 pub struct Solver082 {
     pub n: isize,
@@ -28,9 +28,7 @@ pub struct Solver082 {
 
 impl Default for Solver082 {
     fn default() -> Self {
-        let location = BASE_PATH.to_string() + "problem082-data.txt";
-        let path = Path::new(location.trim());
-        Solver082 { n: 80, input: read_to_string(path).expect("Unable to read file") }
+        Solver082 { n: 80, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
     }
 }
 
@@ -61,10 +59,8 @@ impl Solver for Solver082 {
 
 fn str_to_matrix(solver: &Solver082) -> Vec<Vec<isize>> {
     let mut parsed = vec![];
-    for (l, line) in solver.input.split('\n').enumerate() {
-        if l < solver.n as usize {
-            parsed.push(line.split(',').take(solver.n as _).filter_map(|s| s.parse().ok()).collect());
-        }
+    for line in solver.input.lines().take(solver.n as _) {
+        parsed.push(line.split(',').take(solver.n as _).filter_map(|s| s.parse().ok()).collect());
     }
     parsed
 }
