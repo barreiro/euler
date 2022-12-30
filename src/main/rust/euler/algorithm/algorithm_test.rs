@@ -1,22 +1,22 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::combinatorics::partition;
-use euler::algorithm::combinatorics::partition_with_constrains;
-use euler::algorithm::combinatorics::permutations_with;
-use euler::algorithm::factor::sum_of_factors;
-use euler::algorithm::long::exact_root;
-use euler::algorithm::long::factorial;
-use euler::algorithm::long::floor_sqrt;
-use euler::algorithm::long::gcd;
-use euler::algorithm::long::int_sqrt;
-use euler::algorithm::long::is_palindrome;
-use euler::algorithm::long::power_modulo;
-use euler::algorithm::prime::descending_primes;
-use euler::algorithm::prime::miller_rabin;
-use euler::algorithm::prime::prime_factors;
-use euler::algorithm::prime::primes_up_to;
-use euler::algorithm::prime::primes_wheel_up_to;
+use algorithm::combinatorics::partition;
+use algorithm::combinatorics::partition_with_constrains;
+use algorithm::combinatorics::permutations_of_digits_with;
+use algorithm::factor::sum_of_factors;
+use algorithm::filter::is_palindrome;
+use algorithm::long::factorial;
+use algorithm::long::gcd;
+use algorithm::long::pow_mod;
+use algorithm::prime::descending_primes;
+use algorithm::prime::miller_rabin;
+use algorithm::prime::prime_factors;
+use algorithm::prime::primes_up_to;
+use algorithm::prime::primes_wheel_up_to;
+use algorithm::root::exact_root;
+use algorithm::root::floor_sqrt;
+use algorithm::root::int_sqrt;
 
 #[test]
 fn gcd_test() {
@@ -29,6 +29,23 @@ fn gcd_test() {
     assert_eq!(gcd(7966496, 314080416), 32);
     assert_eq!(gcd(24826148, 45296490), 526);
 }
+
+#[test]
+fn modular_exponentiation_test() {
+    assert_eq!((0..10).map(|exp| pow_mod(3, exp, 7)).collect::<Vec<_>>(), [1, 3, 2, 6, 4, 5, 1, 3, 2, 6]);
+
+    assert_eq!(445, pow_mod(4, 13, 497));
+}
+
+// --- filter.rs
+
+#[test]
+fn palindrome_test() {
+    assert!(is_palindrome(&88) && is_palindrome(&84048) && is_palindrome(&38411483) && is_palindrome(&384101483));
+    assert!(!is_palindrome(&15) && !is_palindrome(&15846) && !is_palindrome(&9840486) && !is_palindrome(&38413483));
+}
+
+// --- root.rs
 
 #[test]
 fn int_sqrt_test() {
@@ -54,11 +71,7 @@ fn cube_root_test() {
     assert_eq!(exact_root(100000000, 3), (464, 102656));
 }
 
-#[test]
-fn palindrome_test() {
-    assert!(is_palindrome(88) && is_palindrome(84048) && is_palindrome(38411483) && is_palindrome(384101483));
-    assert!(!is_palindrome(15) && !is_palindrome(15846) && !is_palindrome(9840486) && !is_palindrome(38413483));
-}
+// --- factor.rs
 
 #[test]
 fn sum_of_factors_test() {
@@ -68,13 +81,6 @@ fn sum_of_factors_test() {
     assert_eq!(sum_of_factors(220), 284);
     assert_eq!(sum_of_factors(284), 220);
     assert_eq!(sum_of_factors(12496), 14288);
-}
-
-#[test]
-fn modular_exponentiation_test() {
-    assert_eq!((0..10).map(|exp| power_modulo(3, exp, 7)).collect::<Vec<_>>(), [1, 3, 2, 6, 4, 5, 1, 3, 2, 6]);
-
-    assert_eq!(445, power_modulo(4, 13, 497));
 }
 
 // --- prime.rs
@@ -117,15 +123,15 @@ fn miller_rabin_long_test() {
 #[test]
 fn partition_test() {
     let natural = vec![1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231, 297, 385, 490, 627, 792, 1002, 1255, 1575, 1958, 2436, 3010, 3718, 4565, 5604, 6842, 8349, 10143, 12310, 14883, 17977, 21637, 26015, 31185, 37338, 44583, 53174, 63261, 75175, 89134, 105558, 124754, 147273, 173525];
-    natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition(n as _), p));
-    natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition_with_constrains(n as _, &(1..=n as _).collect::<Vec<_>>()), p));
+    natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition(n as u64), p));
+    natural.iter().enumerate().for_each(|(n, &p)| assert_eq!(partition_with_constrains(n as u64, &(1..=n as u64).collect::<Vec<_>>()), p));
 }
 
 #[test]
 fn permutation_test() {
-    assert_eq!(factorial(5 + 1) as usize, permutations_with(0, 5, |p| Some(p.to_vec())).count());
+    assert_eq!(factorial(5 + 1) as usize, permutations_of_digits_with(0, 5, |p| Some(p.to_vec())).count());
 
-    let mut perm = permutations_with(0, 1, |p| Some(p.to_vec()));
+    let mut perm = permutations_of_digits_with(0, 1, |p| Some(p.to_vec()));
     assert_eq!(Some(vec![0, 1]), perm.next());
     assert_eq!(Some(vec![1, 0]), perm.next());
     assert_eq!(None, perm.next());

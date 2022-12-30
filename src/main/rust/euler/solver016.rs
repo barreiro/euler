@@ -1,27 +1,28 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::{digits_sum, pow_10};
-use euler::Solver;
+use algorithm::cast::to_i64;
+use algorithm::digits::digits_sum;
+use algorithm::root::pow_10;
+use Solver;
 
-// 2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
-// What is the sum of the digits of the number 2^1000?
+const BASE: u64 = 2;
+const CELL_THRESHOLD: u64 = pow_10(15);
 
-const BASE: isize = 2;
-const CELL_THRESHOLD: isize = pow_10(15);
-
+/// `2^15 = 32768` and the sum of its digits is `3 + 2 + 7 + 6 + 8 = 26`.
+/// What is the sum of the digits of the number `2^1000`?
 pub struct Solver016 {
-    pub n: isize,
+    pub n: u64,
 }
 
 impl Default for Solver016 {
     fn default() -> Self {
-        Solver016 { n: 1000 }
+        Self { n: 1000 }
     }
 }
 
 impl Solver for Solver016 {
-    fn solve(&self) -> isize {
+    fn solve(&self) -> i64 {
         // each element is a digit. Each iteration we double every digit and adjust
         let mut values = vec![1];
 
@@ -35,6 +36,6 @@ impl Solver for Solver016 {
             }
         }));
 
-        values.iter().map(digits_sum).sum()
+        values.into_iter().map(digits_sum).map(to_i64).sum()
     }
 }

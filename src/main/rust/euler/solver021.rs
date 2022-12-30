@@ -1,31 +1,32 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::factor::sum_of_factors;
-use euler::Solver;
+use algorithm::cast::{Cast, UCast};
+use algorithm::factor::sum_of_factors;
+use Solver;
 
-// Let d(n) be defined as the sum of proper divisors of n (numbers less than n which divide evenly into n).
-// If d(a) = b and d(b) = a, where a ≠ b, then a and b are an amicable pair and each of a and b are called amicable numbers.
-// For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44, 55 and 110; therefore d(220) = 284. The proper divisors of 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
-// Evaluate the sum of all the amicable numbers under 10000.
-
+/// Let `d(n)` be defined as the sum of proper divisors of `n` (numbers less than `n` which divide evenly into `n`).
+/// If `d(a) = b` and `d(b) = a`, where `a ≠ b`, then `a` and `b` are an amicable pair and each of `a` and `b` are called amicable numbers.
+/// For example, the proper divisors of `220` are `1, 2, 4, 5, 10, 11, 20, 22, 44, 55` and `110`; therefore `d(220) = 284`.
+/// The proper divisors of `284` are `1, 2, 4, 71` and `142`; so `d(284) = 220`.
+/// Evaluate the sum of all the amicable numbers under `10000`.
 pub struct Solver021 {
-    pub n: isize,
+    pub n: i64,
 }
 
 impl Default for Solver021 {
     fn default() -> Self {
-        Solver021 { n: 10000 }
+        Self { n: 10000 }
     }
 }
 
 impl Solver for Solver021 {
-    fn solve(&self) -> isize {
-        let mut factor_sum = Vec::with_capacity(self.n as _);
+    fn solve(&self) -> i64 {
+        let mut factor_sum = Vec::with_capacity(self.n.as_u64().as_usize());
         (0..self.n).filter_map(|i| {
             let sum = sum_of_factors(i);
             factor_sum.push(sum);
-            Some(sum + i).filter(|_| sum < i && factor_sum[sum as usize] == i)
+            Some(sum + i).filter(|_| sum < i && factor_sum[sum.as_u64().as_usize()] == i)
         }).sum()
     }
 }

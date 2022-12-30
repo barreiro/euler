@@ -3,74 +3,71 @@
 
 use std::cmp::Ordering;
 use std::cmp::Ordering::{Equal, Greater, Less};
-use std::fs::read_to_string;
 use std::ops::Sub;
-use std::path::Path;
 use std::str::FromStr;
 
-use euler::Solver;
+use algorithm::cast::Cast;
+use algorithm::io::load_default_data;
+use Solver;
 
-// In the card game poker, a hand consists of five cards and are ranked, from lowest to highest, in the following way:
-//
-//       High Card: Highest value card.
-//        One Pair: Two cards of the same value.
-//       Two Pairs: Two different pairs.
-// Three of a Kind: Three cards of the same value.
-//        Straight: All cards are consecutive values.
-//           Flush: All cards of the same suit.
-//      Full House: Three of a kind and a pair.
-//  Four of a Kind: Four cards of the same value.
-//  Straight Flush: All cards are consecutive values of same suit.
-//     Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
-//
-// The cards are valued in the order: 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace.
-//
-// If two players have the same ranked hands then the rank made up of the highest value wins; for example, a pair of eights beats a pair of fives (see example 1 below). But if two ranks tie, for example, both players have a pair of queens, then highest cards in each hand are compared (see example 4 below); if the highest cards tie then the next highest cards are compared, and so on.
-//
-// Consider the following five hands dealt to two players:
-//
-// Hand Player 1           Player 2            Winner
-//
-// 1    5H 5C 6S 7S KD     2C 3S 8S 8D TD      Player 2
-//      Pair of Fives      Pair of Eights
-//
-// 2    5D 8C 9S JS AC     2C 5C 7D 8S QH      Player 1
-//      Highest card Ace   Highest card Queen
-//
-// 3    2D 9C AS AH AC     3D 6D 7D TD QD      Player 2
-//      Three Aces         Flush with Diamonds
-//
-// 4    4D 6S 9H QH QC     3D 6D 7H QD QS      Player 1
-//      Pair of Queens     Pair of Queens
-//      Highest card Nine  Highest card Seven
-//
-// 5    2H 2D 4C 4D 4S     3C 3D 3S 9S 9D      Player 1
-//      Full House         Full House
-//      With Three Fours   With Three Threes
-//
-// The file, poker.txt, contains one-thousand random hands dealt to two players. Each line of the file contains ten cards (separated by a single space): the first five are Player 1's cards and the last five are Player 2's cards. You can assume that all hands are valid (no invalid characters or repeated cards), each player's hand is in no specific order, and in each hand there is a clear winner.
-//
-// How many hands does Player 1 win?
-
-const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem054-data.txt";
-
+/// In the card game poker, a hand consists of five cards and are ranked, from lowest to highest, in the following way:
+///
+///       High Card: Highest value card.
+///        One Pair: Two cards of the same value.
+///       Two Pairs: Two different pairs.
+/// Three of a Kind: Three cards of the same value.
+///        Straight: All cards are consecutive values.
+///           Flush: All cards of the same suit.
+///      Full House: Three of a kind and a pair.
+///  Four of a Kind: Four cards of the same value.
+///  Straight Flush: All cards are consecutive values of same suit.
+///     Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
+///
+/// The cards are valued in the order: `2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace`.
+///
+/// If two players have the same ranked hands then the rank made up of the highest value wins; for example, a pair of eights beats a pair of fives (see example 1 below). But if two ranks tie, for example, both players have a pair of queens, then highest cards in each hand are compared (see example 4 below); if the highest cards tie then the next highest cards are compared, and so on.
+///
+/// Consider the following five hands dealt to two players:
+///
+/// Hand Player 1           Player 2            Winner
+///
+/// `  1 5H 5C 6S 7S KD     2C 3S 8S 8D TD      Player 2`
+///      Pair of Fives      Pair of Eights
+///
+/// `  2 5D 8C 9S JS AC     2C 5C 7D 8S QH      Player 1`
+///      Highest card Ace   Highest card Queen
+///
+/// `  3 2D 9C AS AH AC     3D 6D 7D TD QD      Player 2`
+///      Three Aces         Flush with Diamonds
+///
+/// `  4 4D 6S 9H QH QC     3D 6D 7H QD QS      Player 1`
+///      Pair of Queens     Pair of Queens
+///      Highest card Nine  Highest card Seven
+///
+/// `  5 2H 2D 4C 4D 4S     3C 3D 3S 9S 9D      Player 1`
+///      Full House         Full House
+///      With Three Fours   With Three Threes
+///
+/// The file, `poker.txt`, contains one-thousand random hands dealt to two players. Each line of the file contains ten cards (separated by a single space): the first five are `Player 1`'s cards and the last five are `Player 2`'s cards. You can assume that all hands are valid (no invalid characters or repeated cards), each player's hand is in no specific order, and in each hand there is a clear winner.
+///
+/// How many hands does `Player 1` win?
 pub struct Solver054 {
-    pub n: isize,
+    pub n: usize,
     pub input: String,
 }
 
 impl Default for Solver054 {
     fn default() -> Self {
-        Solver054 { n: 1000, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
+        Self { n: 1000, input: load_default_data(54) }
     }
 }
 
 impl Solver for Solver054 {
-    fn solve(&self) -> isize {
-        self.input.lines().take(self.n as _).map(|s| {
+    fn solve(&self) -> i64 {
+        self.input.lines().take(self.n).map(|s| {
             let cards = s.split_whitespace().map(|c| c.parse().unwrap()).collect::<Vec<_>>();
-            (Hand::from(&cards[0..cards.len() >> 1]), Hand::from(&cards[cards.len() >> 1..cards.len()]))
-        }).filter(|(h1, h2)| h1 > h2).count() as _
+            (Hand::from(&cards[0..cards.len() / 2]), Hand::from(&cards[cards.len() / 2..cards.len()]))
+        }).filter(|(h1, h2)| h1 > h2).count().as_i64()
     }
 }
 
@@ -98,19 +95,19 @@ impl FromStr for Rank {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "2" => Ok(Rank::Two),
-            "3" => Ok(Rank::Three),
-            "4" => Ok(Rank::Four),
-            "5" => Ok(Rank::Five),
-            "6" => Ok(Rank::Six),
-            "7" => Ok(Rank::Seven),
-            "8" => Ok(Rank::Eight),
-            "9" => Ok(Rank::Nine),
-            "T" => Ok(Rank::Ten),
-            "J" => Ok(Rank::Jack),
-            "Q" => Ok(Rank::Queen),
-            "K" => Ok(Rank::King),
-            "A" => Ok(Rank::Ace),
+            "2" => Ok(Self::Two),
+            "3" => Ok(Self::Three),
+            "4" => Ok(Self::Four),
+            "5" => Ok(Self::Five),
+            "6" => Ok(Self::Six),
+            "7" => Ok(Self::Seven),
+            "8" => Ok(Self::Eight),
+            "9" => Ok(Self::Nine),
+            "T" => Ok(Self::Ten),
+            "J" => Ok(Self::Jack),
+            "Q" => Ok(Self::Queen),
+            "K" => Ok(Self::King),
+            "A" => Ok(Self::Ace),
             _ => Err("Unknown Rank"),
         }
     }
@@ -137,10 +134,10 @@ impl FromStr for Suite {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "C" => Ok(Suite::Clubs),
-            "D" => Ok(Suite::Diamonds),
-            "H" => Ok(Suite::Hearts),
-            "S" => Ok(Suite::Spades),
+            "C" => Ok(Self::Clubs),
+            "D" => Ok(Self::Diamonds),
+            "H" => Ok(Self::Hearts),
+            "S" => Ok(Self::Spades),
             _ => Err("Unknown Suite"),
         }
     }
@@ -157,7 +154,7 @@ impl FromStr for Card {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (rank, suite) = s.split_at(1);
-        Ok(Card { rank: rank.parse().unwrap(), suite: suite.parse().unwrap() })
+        Ok(Self { rank: rank.parse().unwrap(), suite: suite.parse().unwrap() })
     }
 }
 
@@ -247,7 +244,7 @@ impl From<&[Card]> for Hand {
     fn from(c: &[Card]) -> Self {
         let mut cards = [c[0], c[1], c[2], c[3], c[4]];
         cards.sort_unstable();
-        Hand { cards }
+        Self { cards }
     }
 }
 

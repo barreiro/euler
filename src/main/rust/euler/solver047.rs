@@ -1,44 +1,46 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use euler::algorithm::long::int_sqrt;
-use euler::Solver;
+use std::convert::TryFrom;
+use algorithm::cast::Cast;
+use algorithm::root::floor_sqrt_u64;
+use Solver;
 
-// The first two consecutive numbers to have two distinct prime factors are:
-// 14 = 2 × 7
-// 15 = 3 × 5
-// The first three consecutive numbers to have three distinct prime factors are:
-// 644 = 22 × 7 × 23
-// 645 = 3 × 5 × 43
-// 646 = 2 × 17 × 19.
-// Find the first four consecutive integers to have four distinct prime factors each. What is the first of these numbers?
-
+/// The first two consecutive numbers to have two distinct prime factors are:
+/// `14 = 2 × 7`
+/// `15 = 3 × 5`
+/// The first three consecutive numbers to have three distinct prime factors are:
+/// `644 = 22 × 7 × 23`
+/// `645 = 3 × 5 × 43`
+/// `646 = 2 × 17 × 19`.
+/// Find the first four consecutive integers to have four distinct prime factors each. What is the first of these numbers?
 pub struct Solver047 {
-    pub n: isize
+    pub n: u64,
 }
 
 impl Default for Solver047 {
     fn default() -> Self {
-        Solver047 { n: 4 }
+        Self { n: 4 }
     }
 }
 
+#[allow(clippy::maybe_infinite_iter)]
 impl Solver for Solver047 {
-    fn solve(&self) -> isize {
+    fn solve(&self) -> i64 {
         let mut primes = vec![2];
         (3..).scan(0, |count, l| {
             *count = if is_num_prime_factors(l, &mut primes, self.n) { *count + 1 } else { 0 };
             if *count == self.n { Some(l - self.n + 1) } else { Some(0) }
-        }).find(|&a| a != 0).unwrap()
+        }).find(|&a| a != 0).as_i64()
     }
 }
 
 // Similar to primes.prime_factors() but optimized for this problem
-fn is_num_prime_factors(n: isize, primes: &mut Vec<isize>, expected: isize) -> bool {
-    let (mut count, mut value, small, stop) = (0, n, n <= i32::MAX as _, int_sqrt(n));
+fn is_num_prime_factors(n: u64, primes: &mut Vec<u64>, expected: u64) -> bool {
+    let (mut count, mut value, small, stop) = (0, n, i32::try_from(n).is_ok(), floor_sqrt_u64(n));
     for &factor in primes.iter() {
         let mut divides = false;
-        while if small { value as i32 % factor as i32 == 0 } else { value % factor == 0 } {
+        while if small { i32::try_from(value).unwrap() % i32::try_from(factor).unwrap() == 0 } else { value % factor == 0 } {
             value /= factor;
             divides = true;
         }

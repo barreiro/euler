@@ -3,113 +3,114 @@
 
 pub use euler::*;
 
-fn solve(n: usize, solver: impl Solver) {
-    let now = std::time::Instant::now();
-    println!("Solution for problem {:03} is {:16} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_secs_f64() * 1000.0);
-}
-
 /// solves all the problems! (the Euler ones)
+#[allow(clippy::too_many_lines)]
 pub fn main() {
-    solve(1, Solver001::default());
-    solve(2, Solver002::default());
-    solve(3, Solver003::default());
-    solve(4, Solver004::default());
-    solve(5, Solver005::default());
-    solve(6, Solver006::default());
-    solve(7, Solver007::default());
-    solve(8, Solver008::default());
-    solve(9, Solver009::default());
-    solve(10, Solver010::default());
-    solve(11, Solver011::default());
-    solve(12, Solver012::default());
-    solve(13, Solver013::default());
-    solve(14, Solver014::default());
-    solve(15, Solver015::default());
-    solve(16, Solver016::default());
-    solve(17, Solver017::default());
-    solve(18, Solver018::default());
-    solve(19, Solver019::default());
-    solve(20, Solver020::default());
-    solve(21, Solver021::default());
-    solve(22, Solver022::default());
-    solve(23, Solver023::default());
-    solve(24, Solver024::default());
-    solve(25, Solver025::default());
-    solve(26, Solver026::default());
-    solve(27, Solver027::default());
-    solve(28, Solver028::default());
-    solve(29, Solver029::default());
-    solve(30, Solver030::default());
-    solve(31, Solver031::default());
-    solve(32, Solver032::default());
-    solve(33, Solver033::default());
-    solve(34, Solver034::default());
-    solve(35, Solver035::default());
-    solve(36, Solver036::default());
-    solve(37, Solver037::default());
-    solve(38, Solver038::default());
-    solve(39, Solver039::default());
-    solve(40, Solver040::default());
-    solve(41, Solver041::default());
-    solve(42, Solver042::default());
-    solve(43, Solver043::default());
-    solve(44, Solver044::default());
-    solve(45, Solver045::default());
-    solve(46, Solver046::default());
-    solve(47, Solver047::default());
-    solve(48, Solver048::default());
-    solve(49, Solver049::default());
-    solve(50, Solver050::default());
-    solve(51, Solver051::default());
-    solve(52, Solver052::default());
-    solve(53, Solver053::default());
-    solve(54, Solver054::default());
-    solve(55, Solver055::default());
-    solve(56, Solver056::default());
-    solve(57, Solver057::default());
-    solve(58, Solver058::default());
-    solve(59, Solver059::default());
-    solve(60, Solver060::default());
-    solve(61, Solver061::default());
-    solve(62, Solver062::default());
-    solve(63, Solver063::default());
-    solve(64, Solver064::default());
-    solve(65, Solver065::default());
-    solve(66, Solver066::default());
-    solve(67, Solver067::default());
-    solve(68, Solver068::default());
-    solve(69, Solver069::default());
-    solve(70, Solver070::default());
-    solve(71, Solver071::default());
-    solve(72, Solver072::default());
-    solve(73, Solver073::default());
-    solve(74, Solver074::default());
-    solve(75, Solver075::default());
-    solve(76, Solver076::default());
-    solve(77, Solver077::default());
-    solve(78, Solver078::default());
-    solve(79, Solver079::default());
-    solve(80, Solver080::default());
-    solve(81, Solver081::default());
-    solve(82, Solver082::default());
-    solve(83, Solver083::default());
-    solve(84, Solver084::default());
-    solve(85, Solver085::default());
-    solve(86, Solver086::default());
-    solve(87, Solver087::default());
-    solve(88, Solver088::default());
-    solve(89, Solver089::default());
-    solve(90, Solver090::default());
-    solve(91, Solver091::default());
-    solve(92, Solver092::default());
-    solve(93, Solver093::default());
-    solve(94, Solver094::default());
-    solve(95, Solver095::default());
-    solve(96, Solver096::default());
-    solve(97, Solver097::default());
-    solve(98, Solver098::default());
-    solve(99, Solver099::default());
-    solve(100, Solver100::default());
+    let solve = |n, solver: &dyn Solver| {
+        let now = std::time::Instant::now();
+        println!("Solution for problem {:03} is {:16} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_secs_f64() * 1000.0);
+    };
+
+    solve(1, &Solver001::default());
+    solve(2, &Solver002::default());
+    solve(3, &Solver003::default());
+    solve(4, &Solver004::default());
+    solve(5, &Solver005::default());
+    solve(6, &Solver006::default());
+    solve(7, &Solver007::default());
+    solve(8, &Solver008::default());
+    solve(9, &Solver009::default());
+    solve(10, &Solver010::default());
+    solve(11, &Solver011::default());
+    solve(12, &Solver012::default());
+    solve(13, &Solver013::default());
+    solve(14, &Solver014::default());
+    solve(15, &Solver015::default());
+    solve(16, &Solver016::default());
+    solve(17, &Solver017::default());
+    solve(18, &Solver018::default());
+    solve(19, &Solver019::default());
+    solve(20, &Solver020::default());
+    solve(21, &Solver021::default());
+    solve(22, &Solver022::default());
+    solve(23, &Solver023::default());
+    solve(24, &Solver024::default());
+    solve(25, &Solver025::default());
+    solve(26, &Solver026::default());
+    solve(27, &Solver027::default());
+    solve(28, &Solver028::default());
+    solve(29, &Solver029::default());
+    solve(30, &Solver030::default());
+    solve(31, &Solver031::default());
+    solve(32, &Solver032::default());
+    solve(33, &Solver033::default());
+    solve(34, &Solver034::default());
+    solve(35, &Solver035::default());
+    solve(36, &Solver036::default());
+    solve(37, &Solver037::default());
+    solve(38, &Solver038::default());
+    solve(39, &Solver039::default());
+    solve(40, &Solver040::default());
+    solve(41, &Solver041::default());
+    solve(42, &Solver042::default());
+    solve(43, &Solver043::default());
+    solve(44, &Solver044::default());
+    solve(45, &Solver045::default());
+    solve(46, &Solver046::default());
+    solve(47, &Solver047::default());
+    solve(48, &Solver048::default());
+    solve(49, &Solver049::default());
+    solve(50, &Solver050::default());
+    solve(51, &Solver051::default());
+    solve(52, &Solver052::default());
+    solve(53, &Solver053::default());
+    solve(54, &Solver054::default());
+    solve(55, &Solver055::default());
+    solve(56, &Solver056::default());
+    solve(57, &Solver057::default());
+    solve(58, &Solver058::default());
+    solve(59, &Solver059::default());
+    solve(60, &Solver060::default());
+    solve(61, &Solver061::default());
+    solve(62, &Solver062::default());
+    solve(63, &Solver063::default());
+    solve(64, &Solver064::default());
+    solve(65, &Solver065::default());
+    solve(66, &Solver066::default());
+    solve(67, &Solver067::default());
+    solve(68, &Solver068::default());
+    solve(69, &Solver069::default());
+    solve(70, &Solver070::default());
+    solve(71, &Solver071::default());
+    solve(72, &Solver072::default());
+    solve(73, &Solver073::default());
+    solve(74, &Solver074::default());
+    solve(75, &Solver075::default());
+    solve(76, &Solver076::default());
+    solve(77, &Solver077::default());
+    solve(78, &Solver078::default());
+    solve(79, &Solver079::default());
+    solve(80, &Solver080::default());
+    solve(81, &Solver081::default());
+    solve(82, &Solver082::default());
+    solve(83, &Solver083::default());
+    solve(84, &Solver084::default());
+    solve(85, &Solver085::default());
+    solve(86, &Solver086::default());
+    solve(87, &Solver087::default());
+    solve(88, &Solver088::default());
+    solve(89, &Solver089::default());
+    solve(90, &Solver090::default());
+    solve(91, &Solver091::default());
+    solve(92, &Solver092::default());
+    solve(93, &Solver093::default());
+    solve(94, &Solver094::default());
+    solve(95, &Solver095::default());
+    solve(96, &Solver096::default());
+    solve(97, &Solver097::default());
+    solve(98, &Solver098::default());
+    solve(99, &Solver099::default());
+    solve(100, &Solver100::default());
 }
 
 mod euler {
@@ -215,12 +216,13 @@ mod euler {
     pub use self::solver100::Solver100;
 
     pub trait Solver {
-        fn solve(&self) -> isize;
+        fn solve(&self) -> i64;
     }
 
     #[cfg(test)]
     mod solver_test;
 
+    #[allow(clippy::module_name_repetitions)]
     pub mod algorithm {
         #[cfg(test)]
         mod algorithm_test;
@@ -229,9 +231,13 @@ mod euler {
         pub mod cast;
         pub mod continued_fraction;
         pub mod combinatorics;
+        pub mod digits;
         pub mod factor;
+        pub mod filter;
+        pub mod io;
         pub mod long;
         pub mod prime;
+        pub mod root;
         pub mod vec;
     }
 

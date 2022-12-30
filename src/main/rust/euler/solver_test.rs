@@ -1,11 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::fs::read_to_string;
-use std::path::Path;
-
+use algorithm::io::load_default_test_data;
+use algorithm::long::{heptagonal, hexagonal, pentagonal, triangle};
+use algorithm::root::square;
 use euler::*;
-use euler::algorithm::long::{heptagonal, hexagonal, pentagonal, square, triangle};
 
 #[test]
 fn solver_001_test() {
@@ -1109,8 +1108,8 @@ fn solver_096_test() {
     assert_eq!(Solver096::default().solve(), 24702);
 
     assert_eq!(Solver096 { n: 1, ..Default::default() }.solve(), 483);
-    assert_eq!(Solver096 { n: 10, input: read_to_string(Path::new("src/test/resources/net/projecteuler/barreiro/problem/problem096-test-data.txt")).expect("Unable to read file") }.solve(), 6765);
-    // assert_eq!(Solver096 { n: 375, input: read_to_string(Path::new("src/test/resources/net/projecteuler/barreiro/problem/problem096-test-data.txt")).expect("Unable to read file") }.solve(), 90611);
+    assert_eq!(Solver096 { n: 10, input: load_default_test_data(96) }.solve(), 6765);
+    // assert_eq!(Solver096 { n: 375, input: load_default_test_data(96) }.solve(), 90611);
 }
 
 #[test]

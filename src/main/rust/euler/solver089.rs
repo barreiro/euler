@@ -1,63 +1,61 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::fs::read_to_string;
-use std::path::Path;
 use std::str::FromStr;
 
-use euler::algorithm::long::to_digits;
-use euler::Solver;
+use algorithm::cast::{Cast, UCast};
+use algorithm::digits::digits_iter;
+use algorithm::io::load_default_data;
+use Solver;
 
-// For a number written in Roman numerals to be considered valid there are basic rules which must be followed.
-// Even though the rules allow some numbers to be expressed in more than one way there is always a "best" way of writing a particular number.
-//
-// For example, it would appear that there are at least six ways of writing the number sixteen:
-//
-// IIIIIIIIIIIIIIII
-// VIIIIIIIIIII
-// VVIIIIII
-// XIIIIII
-// VVVI
-// XVI
-//
-// However, according to the rules only XIIIIII and XVI are valid, and the last example is considered to be the most efficient, as it uses the least number of numerals.
-//
-// The 11K text file, roman.txt (right click and 'Save Link/Target As...'), contains one thousand numbers written in valid, but not necessarily minimal, Roman numerals; see About... Roman Numerals for the definitive rules for this problem.
-// Find the number of characters saved by writing each of these in their minimal form.
-//
-// Note: You can assume that all the Roman numerals in the file contain no more than four consecutive identical units.
-
-const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem089-data.txt";
 const MINIMAL_FORM: &[usize] = &[0, 1, 2, 3, 2, 1, 2, 3, 4, 2];
 
+/// For a number written in Roman numerals to be considered valid there are basic rules which must be followed.
+/// Even though the rules allow some numbers to be expressed in more than one way there is always a "best" way of writing a particular number.
+///
+/// For example, it would appear that there are at least six ways of writing the number sixteen:
+///
+/// `IIIIIIIIIIIIIIII`
+/// `VIIIIIIIIIII`
+/// `VVIIIIII`
+/// `XIIIIII`
+/// `VVVI`
+/// `XVI`
+///
+/// However, according to the rules only `XIIIIII` and `XVI` are valid, and the last example is considered to be the most efficient, as it uses the least number of numerals.
+///
+/// The 11K text file, `roman.txt` (right click and 'Save Link/Target As...'), contains one thousand numbers written in valid, but not necessarily minimal, Roman numerals; see About... Roman Numerals for the definitive rules for this problem.
+/// Find the number of characters saved by writing each of these in their minimal form.
+///
+/// Note: You can assume that all the Roman numerals in the file contain no more than four consecutive identical units.
 pub struct Solver089 {
-    pub n: isize,
+    pub n: usize,
     pub input: String,
 }
 
 impl Default for Solver089 {
     fn default() -> Self {
-        Solver089 { n: 1_000, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
+        Self { n: 1_000, input: load_default_data(89) }
     }
 }
 
 impl Solver for Solver089 {
-    fn solve(&self) -> isize {
-        self.input.lines().take(self.n as _).map(|s| (s.len() - s.parse::<Roman>().unwrap().minimal_len()) as isize).sum()
+    fn solve(&self) -> i64 {
+        self.input.lines().take(self.n).map(|s| (s.len() - s.parse::<Roman>().unwrap().minimal_len()).as_i64()).sum()
     }
 }
 
 // --- //
 
 struct Roman {
-    digits: Vec<usize>,
+    digits: Vec<u64>,
 }
 
 impl FromStr for Roman {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Roman {
+        Ok(Self {
             digits: s.chars().filter_map(|c| match c {
                 'I' => Some(1),
                 'V' => Some(5),
@@ -75,12 +73,12 @@ impl FromStr for Roman {
 impl Roman {
     fn minimal_len(&self) -> usize {
         // conversion from roman to decimal. sum all digits and then subtract twice the 'out of order'
-        let value = self.digits.iter().scan(usize::MAX, |previous, &d| {
-            let v = (d > *previous).then(|| d - 2 * *previous).or(Some(d));
+        let value = self.digits.iter().scan(u64::MAX, |previous, &d| {
+            let v = if d > *previous { d - 2 * *previous } else { d };
             *previous = d;
-            v
-        }).sum::<usize>();
-        
-        value / 1000 + to_digits(value as isize % 1000).iter().map(|&d| MINIMAL_FORM[d as usize]).sum::<usize>()
+            Some(v)
+        }).sum::<u64>();
+
+        value.as_usize() / 1000 + digits_iter(value % 1000).map(|d| MINIMAL_FORM[d.as_usize()]).sum::<usize>()
     }
 }

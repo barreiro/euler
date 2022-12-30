@@ -4,18 +4,19 @@
 use std::iter::FromIterator;
 
 #[derive(Default)]
+#[must_use]
 pub struct BitSet {
-    bits: Vec<usize>,
-    step: usize,
+    bits: Vec<u64>,
+    step: u32,
 }
 
 impl BitSet {
-    pub fn new() -> BitSet {
-        BitSet { bits: vec![0, 0, 0, 0], step: usize::BITS as usize }
+    pub fn new() -> Self {
+        Self { bits: vec![0, 0, 0, 0], step: usize::BITS }
     }
 
     /// adds a value to the set. returns 'true' the set did not have this value present
-    pub fn insert(&mut self, n: isize) -> bool {
+    pub fn insert(&mut self, n: u64) -> bool {
         let (index, position) = self.locate(n);
         if index >= self.bits.len() {
             // resize aggressively to twice the current size
@@ -27,7 +28,7 @@ impl BitSet {
     }
 
     /// removes a value from the set. return 'true' if the set did have this value present
-    pub fn remove(&mut self, n: isize) -> bool {
+    pub fn remove(&mut self, n: u64) -> bool {
         let (index, position) = self.locate(n);
         if index < self.bits.len() {
             let previous = self.bits[index] & (1 << position) == 0;
@@ -39,17 +40,20 @@ impl BitSet {
     }
 
     /// verifies if a value is present in the set
-    pub fn contains(&self, n: isize) -> bool {
+    #[must_use]
+    pub fn contains(&self, n: u64) -> bool {
         let (index, position) = self.locate(n);
         index < self.bits.len() && self.bits[index] & (1 << position) != 0
     }
 
     /// number of elements in the set
+    #[must_use]
     pub fn len(&self) -> usize {
         self.bits.iter().map(|b| b.count_ones() as usize).sum()
     }
 
     /// verifies if the set does not contain any element
+    #[must_use]
     pub fn is_empty(&self) -> bool {
         self.bits.iter().all(|&b| b == 0)
     }
@@ -59,26 +63,27 @@ impl BitSet {
         self.bits.fill(0);
     }
 
-    const fn locate(&self, n: isize) -> (usize, usize) {
-        if n < i32::MAX as _ {
-            ((n as i32 / self.step as i32) as _, (n as i32 % self.step as i32) as _)
+    #[allow(clippy::cast_possible_truncation)]
+    const fn locate(&self, n: u64) -> (usize, u64) {
+        if n <= u32::MAX as u64 {
+            ((n as u32 / self.step) as usize, (n as u32 % self.step) as u64)
         } else {
-            (n as usize / self.step, n as usize % self.step)
+            (n as usize / self.step as usize, n % self.step as u64)
         }
     }
 }
 
-impl FromIterator<isize> for BitSet {
-    fn from_iter<I: IntoIterator<Item=isize>>(iter: I) -> BitSet {
-        let mut bit_set = BitSet::new();
+impl FromIterator<u64> for BitSet {
+    fn from_iter<I: IntoIterator<Item=u64>>(iter: I) -> Self {
+        let mut bit_set = Self::new();
         iter.into_iter().for_each(|i| { bit_set.insert(i); });
         bit_set
     }
 }
 
-impl<'a> FromIterator<&'a isize> for BitSet {
-    fn from_iter<I: IntoIterator<Item=&'a isize>>(iter: I) -> BitSet {
-        let mut bit_set = BitSet::new();
+impl<'a> FromIterator<&'a u64> for BitSet {
+    fn from_iter<I: IntoIterator<Item=&'a u64>>(iter: I) -> Self {
+        let mut bit_set = Self::new();
         iter.into_iter().for_each(|&i| { bit_set.insert(i); });
         bit_set
     }
@@ -87,7 +92,7 @@ impl<'a> FromIterator<&'a isize> for BitSet {
 // --- //
 
 impl<'a> IntoIterator for &'a BitSet {
-    type Item = isize;
+    type Item = u64;
     type IntoIter = BitSetIterator<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -97,12 +102,12 @@ impl<'a> IntoIterator for &'a BitSet {
 
 pub struct BitSetIterator<'a> {
     set: &'a BitSet,
-    index: isize,
+    index: u64,
     seen: usize,
 }
 
 impl<'a> Iterator for BitSetIterator<'a> {
-    type Item = isize;
+    type Item = u64;
 
     fn next(&mut self) -> Option<Self::Item> {
         (self.seen < self.set.len()).then(|| {

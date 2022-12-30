@@ -2,37 +2,34 @@
 // Rust solvers for Project Euler problems
 
 use std::cmp::min;
-use std::fs::read_to_string;
-use std::path::Path;
 
-use euler::Solver;
+use algorithm::io::{load_default_data, str_to_matrix};
+use Solver;
 
-// In the 5 by 5 matrix below, the minimal path sum from the top left to the bottom right, by moving left, right, up, and down, is indicated in bold red and is equal to 2297.
-//
-// 131 673 234 103  18
-// 201  96 342 965 150
-// 630 803 746 422 111
-// 537 699 497 121 956
-// 805 732 524  37 331
-//
-// Find the minimal path sum from the top left to the bottom right by moving left, right, up, and down in matrix.txt (right click and "Save Link/Target As..."), a 31K text file containing an 80 by 80 matrix.
-
-const INPUT_FILE: &str = "src/main/resources/net/projecteuler/barreiro/problem/problem083-data.txt";
-
+/// In the `5` by `5` matrix below, the minimal path sum from the top left to the bottom right, by moving left, right, up, and down, is indicated in bold red and is equal to `2297`.
+///
+/// `131 673 234 103  18`
+/// `201  96 342 965 150`
+/// `630 803 746 422 111`
+/// `537 699 497 121 956`
+/// `805 732 524  37 331`
+///
+/// Find the minimal path sum from the top left to the bottom right by moving left, right, up, and down in `matrix.txt` (right click and "Save Link/Target As..."), a 31K text file containing an `80` by `80` matrix.
 pub struct Solver083 {
-    pub n: isize,
+    pub n: usize,
     pub input: String,
 }
 
 impl Default for Solver083 {
     fn default() -> Self {
-        Solver083 { n: 80, input: read_to_string(Path::new(INPUT_FILE)).expect("Unable to read file") }
+        Self { n: 80, input: load_default_data(83) }
     }
 }
 
+#[allow(clippy::iter_with_drain)]
 impl Solver for Solver083 {
-    fn solve(&self) -> isize {
-        let (matrix, last) = (str_to_matrix(self), (self.n - 1) as usize);
+    fn solve(&self) -> i64 {
+        let (matrix, last) = (str_to_matrix(&self.input, self.n), self.n - 1);
         let (mut sum, mut changes, mut modified) = (matrix.clone(), Vec::with_capacity(last * last), (0..=last).flat_map(|a| (0..=last).map(move |b| (a, b))).collect::<Vec<_>>());
 
         // Dijkstra algorithm ends up being slower than just folding the matrix from bottom right to top left
@@ -52,15 +49,15 @@ impl Solver for Solver083 {
                     changes.push((a, b));
                 }
             }
-            modified = changes.drain(..).collect()
+            modified = changes.drain(..).collect();
         }
         sum[last][last]
     }
 }
 
-fn min_neighbour(a: usize, b: usize, last: usize, m: &[Vec<isize>]) -> isize {
-    let (up, down) = (if a == 0 { isize::MAX } else { m[a - 1][b] }, if a == last { isize::MAX } else { m[a + 1][b] });
-    let (left, right) = (if b == 0 { isize::MAX } else { m[a][b - 1] }, if b == last { isize::MAX } else { m[a][b + 1] });
+fn min_neighbour(a: usize, b: usize, last: usize, m: &[Vec<i64>]) -> i64 {
+    let (up, down) = (if a == 0 { i64::MAX } else { m[a - 1][b] }, if a == last { i64::MAX } else { m[a + 1][b] });
+    let (left, right) = (if b == 0 { i64::MAX } else { m[a][b - 1] }, if b == last { i64::MAX } else { m[a][b + 1] });
     let (min_h, min_v) = (min(left, right), min(up, down));
     if up < min(down, min_h) {
         m[a - 1][b]
@@ -71,14 +68,4 @@ fn min_neighbour(a: usize, b: usize, last: usize, m: &[Vec<isize>]) -> isize {
     } else {
         m[a][b - 1]
     }
-}
-
-// --- //
-
-fn str_to_matrix(solver: &Solver083) -> Vec<Vec<isize>> {
-    let mut parsed = vec![];
-    for line in solver.input.lines().take(solver.n as _) {
-        parsed.push(line.split(',').take(solver.n as _).filter_map(|s| s.parse().ok()).collect());
-    }
-    parsed
 }
