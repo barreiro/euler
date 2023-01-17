@@ -35,17 +35,17 @@ pub fn continued_expansion_sqrt_cycle_len(n: i64) -> usize {
 pub fn continued_expansion_sqrt(n: i64) -> Vec<i64> {
     let (floor, remainder) = exact_sqrt(n);
     if remainder == 0 {
-        return vec![0];
+        vec![0]
+    } else {
+        let (mut multiplier, mut fractional, mut expansion) = (1, floor, vec![floor]);
+        (0..n).take_while(|_| {
+            let (a, b, c) = transform(n, floor, multiplier, fractional);
+            (fractional, multiplier) = (b, c);
+            expansion.push(a);
+            multiplier != 1
+        }).last();
+        expansion
     }
-    let (mut multiplier, mut fractional, mut expansion) = (1, floor, vec![floor]);
-    (0..n).take_while(|_| {
-        let (a, b, c) = transform(n, floor, multiplier, fractional);
-        expansion.push(a);
-        fractional = b;
-        multiplier = c;
-        multiplier != 1
-    }).last();
-    expansion
 }
 
 /// continued fraction expansion of rational `n/d`, by applying Eucledean algorithm

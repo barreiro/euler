@@ -4,7 +4,8 @@
 use std::collections::HashMap;
 
 use algorithm::cast::Cast;
-use algorithm::digits::{Digits, from_raw_digits, unique_digits};
+use algorithm::digits::{Digits, from_raw_digits};
+use algorithm::filter::is_unique_digits;
 use algorithm::io::load_default_data;
 use algorithm::root::{floor_sqrt_u64, pow_10, square_u64};
 use algorithm::vec::cluster_by;
@@ -30,8 +31,6 @@ impl Default for Solver098 {
     }
 }
 
-#[allow(clippy::no_effect_underscore_binding)]
-#[allow(clippy::used_underscore_binding)]
 impl Solver for Solver098 {
     fn solve(&self) -> i64 {
         let word_norm = |&word: &&str| {
@@ -39,21 +38,10 @@ impl Solver for Solver098 {
             sorted_chars.sort_unstable();
             sorted_chars
         };
-        let _value_norm = |value: u64| Digits::from(value).to_fingerprint();
 
         // closure to generate all the squares of a given len that have only unique digits
         // it's considered that all the words have distinct letters as well, which may not be always true
-        let unique_squares_of_dim = |dim| (floor_sqrt_u64(pow_10((dim - 1) as u64))..floor_sqrt_u64(pow_10(dim as u64))).map(square_u64).filter(|&sq| unique_digits(sq)).collect::<Vec<_>>();
-
-        // closure to generate all the anagram squares of a given len that have only unique digits
-        // it's considered that all the words have distinct letters as well, which may not be always true
-        let _anagram_squares_of_dim = |dim: u64| {
-            let mut permutations: HashMap<_, usize> = HashMap::new();
-            let mut all_squares = (floor_sqrt_u64(pow_10(dim - 1))..floor_sqrt_u64(pow_10(dim))).map(square_u64).filter(|&sq| unique_digits(sq)).collect::<Vec<_>>();
-            all_squares.iter().for_each(|&s| *permutations.entry(_value_norm(s)).or_default() += 1);
-            all_squares.retain(|&s| permutations[&_value_norm(s)] > 1);
-            all_squares
-        };
+        let unique_squares_of_dim = |dim| (floor_sqrt_u64(pow_10((dim - 1) as u64))..floor_sqrt_u64(pow_10(dim as u64))).map(square_u64).filter(is_unique_digits).collect::<Vec<_>>();
 
         let (words, mut squares_cache) = (self.input.split(',').map(|s| s.trim_matches('\"')).take(self.n).collect::<Vec<_>>(), HashMap::new());
 

@@ -2,8 +2,9 @@
 // Rust solvers for Project Euler problems
 
 use std::iter::from_fn;
+use std::ops::{Add, Sub};
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::factor::sum_of_factors;
 use algorithm::filter::less_or_equal_than;
 use algorithm::long::{are_coprime, pentagonal};
@@ -74,13 +75,9 @@ fn partition_modulo_memoize(value: u64, modulo: u64, cache: &mut Vec<u64>) -> u6
         return cache[index];
     }
     // uses Euler's recursive formula p(n) = p(n-1) + p(n-2) - p(n-5) - p(n-7) + p(n-12) + ... where i & 2 == 0 generates the signal sequence + + - - + + - - ...
-    let partition_modulo = (0..).map(|n| if n & 1 == 0 { (n >> 1) + 1 } else { -(n >> 1) - 1 }).map(pentagonal).take_while(less_or_equal_than(value.as_i64())).enumerate().fold(0, |pm, (i, k)|
-        if i & 2 == 0 {
-            pm + partition_modulo_memoize(value - k.as_u64(), modulo, cache).as_i64()
-        } else {
-            pm - partition_modulo_memoize(value - k.as_u64(), modulo, cache).as_i64()
-        },
-    );
+    let partition_modulo = (0..).map(|n| if n & 1 == 0 { (n >> 1) + 1 } else { -(n >> 1) - 1 }).map(pentagonal).take_while(less_or_equal_than(value.as_i64())).enumerate().fold(0, |pm, (i, k)| {
+        (if i & 2 == 0 { Add::add } else { Sub::sub })(pm, partition_modulo_memoize(value - k.as_u64(), modulo, cache).as_i64())
+    });
     cache.push(partition_modulo.rem_euclid(modulo.as_i64()).as_u64());
     cache[index]
 }
@@ -111,43 +108,27 @@ impl<T, F, R> Iterator for Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]
     type Item = R;
 
     fn next(&mut self) -> Option<Self::Item> {
-        loop {
-            if self.elements.is_empty() {
-                return None;
-            }
+        while !self.elements.is_empty() {
             let result = (self.predicate)(&self.elements);
-            if !self.permutate() {
-                self.elements.clear();
-            }
+            (!self.permutate()).then(|| self.elements.clear());
             if result.is_some() {
                 return result;
             }
         }
+        None
     }
 }
 
 impl<T, F, R> Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]) -> Option<R> {
     pub fn permutate(&mut self) -> bool {
         // find non-increasing suffix
-        let mut i = self.elements.len() - 1;
-        while i > 0 && self.elements[i - 1] >= self.elements[i] {
-            i -= 1;
-        }
-
-        if i == 0 {
-            return false;
-        }
-
-        // find successor to pivot
-        let mut j = self.elements.len() - 1;
-        while self.elements[j] <= self.elements[i - 1] {
-            j -= 1;
-        }
-
-        // swap and reverse suffix
-        self.elements.swap(i - 1, j);
-        self.elements[i..].reverse();
-        true
+        (1..self.elements.len()).rev().find(|&i| self.elements[i - 1] < self.elements[i]).map_or(false, |index| {
+            // swap with a successor and reverse suffix
+            let pivot = (0..self.elements.len()).rev().find(|&j| self.elements[j] > self.elements[index - 1]).unwrap();
+            self.elements.swap(index - 1, pivot);
+            self.elements[index..].reverse();
+            true
+        })
     }
 }
 
@@ -173,6 +154,11 @@ pub fn permutations_with_repetition_of_set<T>(elements: Vec<T>, size: usize) -> 
 
 // --- //
 
+/// provides an iterator of combinations of the given elements
+pub fn combinations<T>(elements: Vec<T>, size: usize) -> impl Iterator<Item=Vec<T>> where T: PartialOrd + Copy {
+    combinations_with(elements, size, |p| Some(p.to_vec()))
+}
+
 /// provides an iterator of combinations of elements that satisfy a given mapping predicate
 pub fn combinations_with<T, F, R>(elements: Vec<T>, size: usize, predicate: F) -> impl Iterator<Item=R> where T: Copy, F: Fn(&[T]) -> Option<R> {
     // this implementation uses a vec of positions. it can be improved for elements.len() < isize::BITS using a trick known as Gospher's Hack
@@ -192,7 +178,7 @@ pub fn combinations_with<T, F, R>(elements: Vec<T>, size: usize, predicate: F) -
 
     from_fn(move || {
         while !pattern.is_empty() {
-            let result = (predicate)(pattern.iter().map(|&i| elements[i]).collect::<Vec<_>>().as_slice());
+            let result = (predicate)(&pattern.iter().rev().map(|&i| elements[i]).collect::<Vec<_>>());
             increase(&mut pattern);
             if result.is_some() {
                 return result;

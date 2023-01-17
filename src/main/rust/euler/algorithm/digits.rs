@@ -47,7 +47,7 @@ impl Digits {
 
     /// checks if a value has repeated digits
     #[must_use]
-    pub fn unique(&self) -> bool {
+    pub fn is_unique(&self) -> bool {
         let mut digits = self.digits.clone();
         digits.sort_unstable();
         (1..digits.len()).all(|i| digits[i] != digits[i - 1])
@@ -154,6 +154,22 @@ const fn from_raw_digits_radix(digits: &[u8], radix: u8) -> u64 {
     let (mut result, mut i, base_10) = (0, 0, radix == DEFAULT_RADIX);
     while i < digits.len() {
         result += digits[i] as u64 * if base_10 { pow_10(i as u64) } else { pow(radix as i64, i as i64) as u64 };
+        i += 1;
+    }
+    result
+}
+
+/// the value of a collection of digits
+#[must_use]
+pub const fn from_rev_raw_digits(digits: &[u8]) -> u64 {
+    from_rev_raw_digits_radix(digits, DEFAULT_RADIX)
+}
+
+#[allow(clippy::cast_sign_loss)]
+const fn from_rev_raw_digits_radix(digits: &[u8], radix: u8) -> u64 {
+    let (mut result, mut i, base_10) = (0, 0, radix == DEFAULT_RADIX);
+    while i < digits.len() {
+        result += digits[digits.len() - i - 1] as u64 * if base_10 { pow_10(i as u64) } else { pow(radix as i64, i as i64) as u64 };
         i += 1;
     }
     result
@@ -284,14 +300,6 @@ pub const fn concatenation(one: u64, two: u64) -> u64 {
     one * pow_10(int_log_10(two)) + two
 }
 
-/// checks if a value has repeated digits
-#[must_use]
-pub fn unique_digits(value: u64) -> bool {
-    let mut d = Digits::from(value);
-    d.digits.sort_unstable();
-    (1..d.digits.len()).all(|i| d.digits[i] != d.digits[i - 1])
-}
-
 /// checks if two values are permutations of one another, i.e. have the same digits but it different order
 #[must_use]
 pub fn is_permutation(a: u64, b: u64) -> bool {
@@ -308,13 +316,13 @@ pub fn is_permutation(a: u64, b: u64) -> bool {
 
 /// calculates the sum of the digits of a given value
 #[must_use]
-pub const fn digits_sum(value: u64) -> u64 {
+pub const fn digits_sum(value: u64) -> i64 {
     let (mut sum, mut v, radix) = (0, value, DEFAULT_RADIX as u64);
     while v >= radix {
         sum += v % radix;
         v /= radix;
     }
-    sum + v
+    (sum + v) as i64
 }
 
 /// calculates the sum of the squares digits of a given value

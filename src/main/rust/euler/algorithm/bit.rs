@@ -110,13 +110,13 @@ impl<'a> Iterator for BitSetIterator<'a> {
     type Item = u64;
 
     fn next(&mut self) -> Option<Self::Item> {
-        (self.seen < self.set.len()).then(|| {
-            while !self.set.contains(self.index) {
+        (self.seen < self.set.len()).then(||{
+            while {
                 self.index += 1;
-            }
+                !self.set.contains(self.index)
+            } {}
             self.seen += 1;
-            self.index += 1;
-            self.index - 1
+            self.index
         })
     }
 }

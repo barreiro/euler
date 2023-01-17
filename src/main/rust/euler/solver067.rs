@@ -1,8 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-
-use algorithm::cast::UCast;
+use algorithm::cast::Cast;
 use algorithm::io::load_default_data;
 use algorithm::long::arithmetic_sum_u64;
 use Solver;
@@ -34,7 +33,7 @@ impl Default for Solver067 {
 
 impl Solver for Solver067 {
     fn solve(&self) -> i64 {
-        let heap = str_to_heap(self.n, &self.input);
+        let heap = self.input.lines().take(self.n).flat_map(|line| line.split_whitespace().filter_map(|s| s.parse::<i64>().ok())).collect::<Vec<_>>();
         best_sum(0, 0, &heap, &mut vec![0; heap.len()])
     }
 }
@@ -45,16 +44,4 @@ fn best_sum(level: u64, index: u64, heap: &[i64], cache: &mut [i64]) -> i64 {
         cache[heap_index] = heap[heap_index] + best_sum(level + 1, index, heap, cache).max(best_sum(level + 1, index + 1, heap, cache));
     }
     *cache.get(heap_index).unwrap_or(&0)
-}
-
-// --- //
-
-fn str_to_heap(level: usize, data: &str) -> Vec<i64> {
-    let mut parsed = vec![];
-    for (l, line) in data.lines().enumerate() {
-        if l < level {
-            line.split_whitespace().filter_map(|s| s.parse().ok()).for_each(|value| parsed.push(value));
-        }
-    }
-    parsed
 }

@@ -32,9 +32,9 @@ impl Default for Solver025 {
 
 impl Solver for Solver025 {
     fn solve(&self) -> i64 {
-        let (log_root_5, log_phi) = (5_f64.sqrt().log10(), ((1.0 + 5_f64.sqrt()) / 2.0).log10());
-
+        // from https://r-knott.surrey.ac.uk/Fibonacci/fibFormula.html#section2.3
         // using the logarithm (base 10) of Binet's Formula (approximation)
+        let (log_root_5, log_phi) = (5_f64.log10() / 2.0, ((1.0 + 5_f64.sqrt()) / 2.0).log10());
         ((f64::from(self.n) - 1.0 + log_root_5) / log_phi).ceil().as_i64()
     }
 }

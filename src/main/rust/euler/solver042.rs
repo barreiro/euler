@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::map_char_as_i64;
+use algorithm::cast::{Cast, char_as_i64};
 use algorithm::io::load_default_data;
 use algorithm::long::is_triangle;
 use Solver;
@@ -27,7 +27,7 @@ impl Default for Solver042 {
 
 impl Solver for Solver042 {
     fn solve(&self) -> i64 {
-        let char_sum = |name: &str| name.chars().map(map_char_as_i64).sum();
-        self.input.split(',').map(|s| s.trim_matches('\"')).take(self.n).map(char_sum).filter(is_triangle).count() as i64
+        let char_sum = |name: &str| name.chars().map(char_as_i64).sum();
+        self.input.split(',').map(|s| s.trim_matches('\"')).take(self.n).map(char_sum).filter(is_triangle).count().as_i64()
     }
 }

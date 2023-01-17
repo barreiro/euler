@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::map_char_as_i64;
+use algorithm::cast::char_as_i64;
 use algorithm::io::load_default_data;
 
 use euler::Solver;
@@ -25,6 +25,6 @@ impl Solver for Solver022 {
     fn solve(&self) -> i64 {
         let mut names = self.input.split(',').map(|s| s.trim_matches('\"')).collect::<Vec<_>>();
         names.sort_unstable();
-        names.iter().take(self.n).enumerate().map(|(i, name)| (i as i64 + 1) * name.chars().map(map_char_as_i64).sum::<i64>()).sum()
+        names.iter().take(self.n).zip(1..).map(|(name, n)| n * name.chars().map(char_as_i64).sum::<i64>()).sum()
     }
 }

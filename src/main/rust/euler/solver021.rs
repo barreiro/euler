@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::factor::sum_of_factors;
 use Solver;
 
@@ -22,11 +22,11 @@ impl Default for Solver021 {
 
 impl Solver for Solver021 {
     fn solve(&self) -> i64 {
-        let mut factor_sum = Vec::with_capacity(self.n.as_u64().as_usize());
+        let mut factor_sum = Vec::with_capacity(self.n.as_usize());
         (0..self.n).filter_map(|i| {
             let sum = sum_of_factors(i);
             factor_sum.push(sum);
-            Some(sum + i).filter(|_| sum < i && factor_sum[sum.as_u64().as_usize()] == i)
+            Some(sum + i).filter(|_| sum < i && factor_sum[sum.as_usize()] == i)
         }).sum()
     }
 }

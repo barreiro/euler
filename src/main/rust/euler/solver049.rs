@@ -3,8 +3,9 @@
 
 use std::collections::HashMap;
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::digits::Digits;
+use algorithm::filter::less_than_u64;
 use algorithm::prime::primes_up_to;
 use algorithm::root::pow_10;
 use algorithm::vec::array_concatenation;
@@ -31,7 +32,7 @@ impl Solver for Solver049 {
     fn solve(&self) -> i64 {
         // group together primes based on their permutation --- using their sorted digits as the key on a map
         let mut grouped_primes = HashMap::with_capacity(pow_10(self.n).as_usize());
-        primes_up_to(pow_10(self.n)).skip_while(|&p| p < pow_10(self.n - 1)).for_each(|prime| {
+        primes_up_to(pow_10(self.n)).skip_while(less_than_u64(pow_10(self.n - 1))).for_each(|prime| {
             let digits = Digits::from(prime);
             if !digits.contains(&0) {
                 grouped_primes.entry(digits.to_fingerprint()).or_insert_with(Vec::new).push(prime);

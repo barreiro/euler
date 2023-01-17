@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::root::floor_sqrt_u64;
 use Solver;
 
@@ -51,7 +51,7 @@ impl Solver for Solver095 {
                 fast = cache[fast.as_usize()];
                 lambda += 1;
             }
-            if slow == fast { Some(lambda) } else { None }
+            Some(lambda).filter(|_| slow == fast)
         };
 
         // even numbers usually provide the longest chains. it's safe do do it in the context of this problem

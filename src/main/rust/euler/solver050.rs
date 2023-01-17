@@ -5,6 +5,7 @@ use algorithm::cast::Cast;
 use algorithm::filter::is_prime;
 use algorithm::prime::generator_trial_division;
 use algorithm::root::pow_10;
+use algorithm::vec::array_sum_u64;
 use Solver;
 
 /// The prime `41`, can be written as the sum of six consecutive primes: `41 = 2 + 3 + 5 + 7 + 11 + 13`
@@ -30,6 +31,6 @@ impl Solver for Solver050 {
             Some(p).filter(|_| *acc < pow_10(self.n))
         }).collect::<Vec<_>>();
 
-        (1..=primes.len()).rev().find_map(|len| primes.windows(len).rev().map(|arr| arr.iter().sum()).find(is_prime)).as_i64()
+        (1..=primes.len()).rev().find_map(|len| primes.windows(len).rev().map(array_sum_u64).find(is_prime)).as_i64()
     }
 }

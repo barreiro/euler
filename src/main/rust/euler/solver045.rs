@@ -1,6 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+use algorithm::cast::Cast;
 use algorithm::long::{hexagonal, is_pentagonal};
 use Solver;
 
@@ -26,6 +27,6 @@ impl Default for Solver045 {
 impl Solver for Solver045 {
     fn solve(&self) -> i64 {
         // all hexagonal numbers are also triangle numbers
-        (self.n..).map(hexagonal).find(is_pentagonal).unwrap()
+        (self.n..).map(hexagonal).find(is_pentagonal).as_i64()
     }
 }

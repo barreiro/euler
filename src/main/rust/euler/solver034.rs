@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::digits::{Digits, incrementing_digits};
 use algorithm::long::factorial;
 use Solver;
@@ -23,7 +23,7 @@ impl Default for Solver034 {
 
 impl Solver for Solver034 {
     fn solve(&self) -> i64 {
-        let equals_factorial_sum = |(n, digits): &(usize, Digits)| *n == digits.iter().map(|&d| FACTORIAL_CACHE[usize::from(d)]).sum::<usize>();
+        let equals_factorial_sum = |(n, digits): &(_, Digits)| *n == digits.iter().map(|&d| FACTORIAL_CACHE[usize::from(d)]).sum();
         incrementing_digits().enumerate().skip(3).take(self.n).filter(equals_factorial_sum).map(|(n, _)| n.as_i64()).sum()
     }
 }

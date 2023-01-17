@@ -4,7 +4,7 @@
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::iter::from_fn;
-use algorithm::cast::UCast;
+use algorithm::cast::Cast;
 
 use algorithm::filter::{less_or_equal_than_u64, less_than_u64};
 use algorithm::long::pow_mod;
@@ -101,7 +101,7 @@ pub fn primes_wheel_up_to(value: u64) -> impl Iterator<Item=u64> {
 
 fn generator_custom_wheel(primes: &[u64]) -> impl Iterator<Item=u64> {
     let size = primes.iter().product();
-    let buckets = (size..=1 + size * 2).filter(|n| primes.iter().all(|p| n % p != 0)).map(|n| n - size).collect::<Vec<_>>();
+    let buckets = (size..=1 + size * 2).filter_map(|n| primes.iter().all(|p| n % p != 0).then_some::<u64>(n - size)).collect::<Vec<_>>();
     let mut increments = vec![0; buckets.last().unwrap().as_usize()];
     (0..buckets.len() - 1).for_each(|i| increments[buckets[i].as_usize()] = buckets[i + 1] - buckets[i]);
 

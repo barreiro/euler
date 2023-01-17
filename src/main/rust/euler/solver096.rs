@@ -2,9 +2,8 @@
 // Rust solvers for Project Euler problems
 
 use std::convert::TryFrom;
+use algorithm::cast::{char_as_i64, to_i64};
 
-use algorithm::cast::Cast;
-use algorithm::cast::map_char_as_i64;
 use algorithm::digits::Digits;
 use algorithm::io::load_default_data;
 use Solver;
@@ -54,60 +53,9 @@ impl Solver for Solver096 {
             sudoku.solve();
 
             sudoku.values().iter().take(SUDOKU_SQUARE_SIZE).rev().copied().collect::<Digits>().value()
-        }).sum::<u64>().as_i64()
+        }).map(to_i64).sum()
     }
 }
-
-// --- //
-
-// For SUDOKU_SIZE < 64 pack the allowed array in a usize
-//
-// #[derive(Clone)]
-// struct SudokuExplicitDigit {
-//     value: Option<u8>,
-//     candidates: Vec<u8>,
-// }
-//
-// impl From<u8> for SudokuExplicitDigit {
-//     fn from(value: u8) -> Self {
-//         if value == 0 { SudokuExplicitDigit { value: None, candidates: (1..=SUDOKU_SIZE as u8).collect() } } else { SudokuExplicitDigit { value: Some(value), candidates: vec![] } }
-//     }
-// }
-//
-// impl SudokuExplicitDigit {
-//     fn value(&self) -> Option<u8> {
-//         self.value
-//     }
-//
-//     fn is_assigned(&self) -> bool {
-//         self.value.is_some()
-//     }
-//
-//     fn assign(&mut self, value: u8) {
-//         self.value = Some(value);
-//         self.candidates.clear();
-//     }
-//
-//     fn single_candidate(&mut self) -> Option<u8> {
-//         self.candidates.first().copied().filter(|_| self.candidates.len() == 1)
-//     }
-//
-//     fn candidates(&self) -> Vec<u8> {
-//         self.candidates.to_vec()
-//     }
-//
-//     fn candidates_len(&self) -> usize {
-//         self.candidates.len()
-//     }
-//
-//     fn restrict(&mut self, value: u8) {
-//         self.candidates.retain(|&a| a != value)
-//     }
-//
-//     fn allows(&self, value: u8) -> bool {
-//         self.value.map_or(false, |v| v == value) || self.candidates.contains(&value)
-//     }
-// }
 
 // --- //
 
@@ -167,19 +115,16 @@ struct Sudoku {
 
 impl From<&str> for Sudoku {
     fn from(value: &str) -> Self {
-        let mut sudoku = Self { sudoku: value.chars().map(map_char_as_i64).map(|d| u8::try_from(d).unwrap()).map(SudokuDigit::from).collect() };
+        let mut sudoku = Self { sudoku: value.chars().map(char_as_i64).filter_map(|d| u8::try_from(d).ok()).map(SudokuDigit::from).collect() };
         sudoku.init();
         sudoku
     }
 }
 
 impl Sudoku {
-    const fn _coordinates(index: usize) -> (usize, usize, usize) {
-        (index / SUDOKU_SIZE, index % SUDOKU_SIZE, index % SUDOKU_SIZE / SUDOKU_SQUARE_SIZE + SUDOKU_SQUARE_SIZE * (index / SUDOKU_SIZE / SUDOKU_SQUARE_SIZE))
-    }
 
     fn values(&self) -> Vec<u8> {
-        self.sudoku.iter().map(|digit| digit.value().unwrap()).collect()
+        self.sudoku.iter().filter_map(|digit| digit.value()).collect()
     }
 
     fn row(row: usize) -> impl Iterator<Item=usize> {
@@ -214,9 +159,9 @@ impl Sudoku {
     }
 
     fn init(&mut self) {
-        for i in 0..self.sudoku.len() {
+        (0..self.sudoku.len()).for_each(|i| {
             (self.sudoku[i].is_assigned()).then(|| self.assign(i, self.sudoku[i].value().unwrap()));
-        }
+        });
     }
 
     fn is_solved(&self) -> bool {
@@ -266,29 +211,5 @@ impl Sudoku {
                 })
             });
         }
-    }
-
-    fn _print(&self) {
-        println!("+-------+-------+-------+");
-        (0..self.sudoku.len()).for_each(|i| {
-            if i % SUDOKU_SIZE == 0 {
-                print!("| ");
-            }
-            if self.sudoku[i].is_assigned() {
-                print!("{:?} ", self.sudoku[i].value());
-            } else {
-                print!(". ");
-            }
-            if i % SUDOKU_SQUARE_SIZE == SUDOKU_SQUARE_SIZE - 1 {
-                print!("| ");
-            }
-            if i % SUDOKU_SIZE == SUDOKU_SIZE - 1 {
-                println!();
-                if i / SUDOKU_SIZE % SUDOKU_SQUARE_SIZE == SUDOKU_SQUARE_SIZE - 1 {
-                    println!("+-------+-------+-------+");
-                }
-            }
-        });
-        println!();
     }
 }

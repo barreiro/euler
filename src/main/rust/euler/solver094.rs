@@ -3,8 +3,8 @@
 
 use std::iter::from_fn;
 
-use algorithm::cast::Cast;
-use algorithm::filter::{is_even_u64, less_than_u64};
+use algorithm::cast::to_i64;
+use algorithm::filter::{is_odd_u64, less_than_u64};
 use algorithm::root::square_u64;
 use Solver;
 
@@ -25,12 +25,9 @@ impl Default for Solver094 {
 
 impl Solver for Solver094 {
     fn solve(&self) -> i64 {
-        // find Pythagorean triplets a,b,c where abs(c-a*2)==1 give a triangle with perimeter (c+a)*2 and integer area (a*b)
-        // pythagorean_triplets().take_while(|&(a, _, _)| a * 6 < self.n).filter(|&(a, _, c)| (c - (a << 1)).abs() == 1).map(|(a, _, c)| (a + c) << 1).sum()
-
         // every perimeter is the square of a number or double that, with every second member being a "double". The numbers which are squared are 4,5,14,19,52,71,...
         // Fibonacci-like: the values at even indices are the sum of the previous two, the ones at odd indices are twice the previous plus the one before that
-        fibonacci_like().map(|base| square_u64(base) << if is_even_u64(&base) { 0 } else { 1 }).take_while(less_than_u64(self.n)).sum::<u64>().as_i64()
+        fibonacci_like().map(|base| square_u64(base) << i64::from(is_odd_u64(&base))).take_while(less_than_u64(self.n)).map(to_i64).sum()
     }
 }
 

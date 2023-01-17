@@ -10,13 +10,13 @@ const DEFAULT_TEST_DATA_BASE_PATH: &str = "src/test/resources/net/projecteuler/b
 /// loads the default data for a given problem
 #[must_use]
 pub fn load_default_data(problem: u64) -> String {
-    read_to_string(Path::new(&format!("{}{}{:03?}{}", DEFAULT_DATA_BASE_PATH, "problem", problem, "-data.txt"))).expect("Unable to read file")
+    read_to_string(Path::new(&format!("{DEFAULT_DATA_BASE_PATH}problem{problem:03?}-data.txt"))).expect("Unable to read file")
 }
 
 /// loads the default test data for a given problem
 #[must_use]
 pub fn load_default_test_data(problem: u64) -> String {
-    read_to_string(Path::new(&format!("{}{}{:03?}{}", DEFAULT_TEST_DATA_BASE_PATH, "problem", problem, "-test-data.txt"))).expect("Unable to read file")
+    read_to_string(Path::new(&format!("{DEFAULT_TEST_DATA_BASE_PATH}problem{problem:03?}-test-data.txt"))).expect("Unable to read file")
 }
 
 // --- //

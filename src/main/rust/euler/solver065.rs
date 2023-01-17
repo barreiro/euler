@@ -54,6 +54,6 @@ impl Solver for Solver065 {
         };
 
         let e_expansion = |n: usize| if n == 0 { 2 } else if n % 3 == 2 { (n.as_u64() + 2) * 2 / 3 } else { 1 };
-        convergent_numerator(e_expansion, self.n).into_iter().map(digits_sum).sum::<u64>().as_i64()
+        convergent_numerator(e_expansion, self.n).into_iter().map(digits_sum).sum()
     }
 }

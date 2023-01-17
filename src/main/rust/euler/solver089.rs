@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::digits::digits_iter;
 use algorithm::io::load_default_data;
 use Solver;

@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::{Cast, to_i64};
 use algorithm::digits::digits_square_sum;
 use algorithm::root::{square, square_u64};
 use Solver;
@@ -37,10 +37,10 @@ impl Solver for Solver092 {
                 _ => n = digits_square_sum(n)
             }
         });
-        let mut f_cache = (0..=ceil).map(|_| (0..=self.n).map(|_| None).collect()).collect();
+        let mut f_cache = (0..=ceil).map(|_| vec![None; 1 + self.n.as_usize()]).collect();
 
         // find the sums that can lead to UNHAPPY. loop and them use the f(n,k) function to calculate the number of digit combinations that yield that sum
-        (2..=ceil).filter(|&n| !is_happy(n)).map(|n| f(n.as_usize(), self.n.as_usize(), &mut f_cache)).sum::<u64>().as_i64()
+        (2..=ceil).filter(|&n| !is_happy(n)).map(|n| f(n.as_usize(), self.n.as_usize(), &mut f_cache)).map(to_i64).sum()
     }
 }
 

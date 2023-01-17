@@ -3,7 +3,7 @@
 
 use std::collections::HashSet;
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::digits::{Digits, digits_iter, from_raw_digits};
 use Solver;
 
@@ -41,12 +41,12 @@ impl Default for Solver074 {
 
 impl Solver for Solver074 {
     fn solve(&self) -> i64 {
-        let factorial_cycle_len = |mut l, cache: &[_]| {
-            let mut set : HashSet<usize> = HashSet::new();
+        let factorial_cycle_len = |mut l: usize, cache: &[_]| {
+            let mut set = HashSet::new(); // HashSet is much faster than BitSet here
             loop {
-                if *cache.get(l).unwrap_or(&0) != 0 {
-                    break cache[l] + set.len();
-                } else if !set.insert(l) {
+                if let Some(Some(c)) = cache.get(l) {
+                    break c + set.len();
+                } else if !set.insert(l.as_u64()) {
                     break set.len();
                 }
                 l = digits_iter(l.as_u64()).map(|d| FACTORIAL_CACHE[d.as_usize()]).sum();
@@ -54,14 +54,14 @@ impl Solver for Solver074 {
         };
 
         // permutations starting with 0 are discarded as 0! is 1
-        let (predicate, mut cache) = (|d: &[_]| d.last().map_or(false, |&l| l != 0).then(|| from_raw_digits(d)), vec![0; self.n]);
+        let (predicate, mut cache) = (|d: &[_]| d.last().map_or(false, |&l| l != 0).then(|| from_raw_digits(d)), vec![None; self.n]);
 
         (1..self.n).filter(|&i| {
-            if cache[i] == 0 {
-                cache[i] = factorial_cycle_len(i, &cache);
+            if cache[i].is_none() {
+                cache[i] = Some(factorial_cycle_len(i, &cache));
                 Digits::from(i.as_u64()).permutations_with(predicate).for_each(|permutation| cache[permutation.as_usize()] = cache[i]);
             }
-            cache[i] == TARGET
+            cache[i] == Some(TARGET)
         }).count().as_i64()
     }
 }

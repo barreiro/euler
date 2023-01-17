@@ -23,7 +23,7 @@ impl Default for Solver041 {
 impl Solver for Solver041 {
     fn solve(&self) -> i64 {
         // assume the largest prime also start with the biggest digit
-        let predicate = |d: &[u8]| if *d.last().unwrap() as usize != d.len() || d.first().unwrap() % 2 == 0 { None } else { Some(from_raw_digits(d)).filter(is_prime) };
+        let predicate = |d: &[u8]| (*d.last().unwrap() as usize != d.len() || d.first().unwrap() % 2 != 0).then(|| from_raw_digits(d)).filter(is_prime);
 
         // if the sum of the digits of the permutation is multiple of three, all permutations are multiple of three as well
         (1..=self.n).rev().filter(|&n| n % 3 != 0).find_map(|n| permutations_of_digits_with(1, n, predicate).max()).as_i64()

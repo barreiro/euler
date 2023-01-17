@@ -21,7 +21,7 @@ impl Default for Solver035 {
 
 impl Solver for Solver035 {
     fn solve(&self) -> i64 {
-        let is_circular_prime = |prime| {
+        let is_circular_prime = |&prime: &_| {
             let mut digits = Digits::from(prime);
 
             // circular primes are only made of the digits 1, 3, 7 and 9
@@ -35,6 +35,6 @@ impl Solver for Solver035 {
             }).all(miller_rabin)
         };
 
-        primes_wheel_up_to(self.n).filter(|&p| is_circular_prime(p)).count().as_i64()
+        primes_wheel_up_to(self.n).filter(is_circular_prime).count().as_i64()
     }
 }

@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::factor::number_of_factors;
 use algorithm::filter::greater_or_equal_than;
 use algorithm::long::arithmetic_sum;
@@ -39,6 +39,6 @@ impl Solver for Solver012 {
         // use a more aggressive lower bound for bigger values. Not 100% accurate, but works well
         let lower_bound = if self.n > 480 && self.n <= 503 || self.n > 650 { cube(self.n) * 3 / 5 } else { square(self.n - 1) / 2 };
 
-        (1..).map(arithmetic_sum).filter(greater_or_equal_than(lower_bound)).find(|&t| number_of_factors(t) >= self.n.as_u64().as_usize()).as_i64()
+        (1..).map(arithmetic_sum).filter(greater_or_equal_than(lower_bound)).find(|&t| number_of_factors(t) >= self.n.as_usize()).as_i64()
     }
 }

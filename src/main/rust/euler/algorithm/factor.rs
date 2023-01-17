@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-
 use std::convert::TryFrom;
 use std::iter::from_fn;
+
 use algorithm::root::{exact_sqrt, floor_sqrt, is_square};
 
 /// test if a given value has a factor pair where both factors are below a given bound
@@ -62,8 +62,8 @@ pub fn sum_of_factors(value: i64) -> i64 {
 /// provides an iterator of the proper factors of value, the factors up until the square root
 #[allow(clippy::cast_possible_truncation)]
 pub fn proper_factors_of(value: i64) -> impl Iterator<Item=i64> {
-    let (mut f, small) =  (floor_sqrt(value) + 1, i32::try_from(value).is_ok());
-    from_fn(move|| {
+    let (mut f, small) = (floor_sqrt(value) + 1, i32::try_from(value).is_ok());
+    from_fn(move || {
         while f > 1 {
             f -= 1;
             if if small { value as i32 % f as i32 == 0 } else { value % f == 0 } {

@@ -3,6 +3,7 @@
 
 use algorithm::cast::to_i64;
 use algorithm::digits::{Digits, palindromes};
+use algorithm::filter::less_than_u64;
 use Solver;
 
 /// The decimal number, `585 = 1001001001 (binary)`, is palindromic in both bases.
@@ -20,6 +21,6 @@ impl Default for Solver036 {
 
 impl Solver for Solver036 {
     fn solve(&self) -> i64 {
-        palindromes().take_while(|&p| p < self.n).filter(|&p| Digits::from((p, 2)).is_palindrome()).map(to_i64).sum()
+        palindromes().take_while(less_than_u64(self.n)).filter(|&p| Digits::from((p, 2)).is_palindrome()).map(to_i64).sum()
     }
 }

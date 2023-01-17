@@ -4,8 +4,9 @@
 use algorithm::combinatorics::partition;
 use algorithm::combinatorics::partition_with_constrains;
 use algorithm::combinatorics::permutations_of_digits_with;
+use algorithm::digits::Digits;
 use algorithm::factor::sum_of_factors;
-use algorithm::filter::is_palindrome;
+use algorithm::filter::{is_palindrome, is_pandigital};
 use algorithm::long::factorial;
 use algorithm::long::gcd;
 use algorithm::long::pow_mod;
@@ -43,6 +44,14 @@ fn modular_exponentiation_test() {
 fn palindrome_test() {
     assert!(is_palindrome(&88) && is_palindrome(&84048) && is_palindrome(&38411483) && is_palindrome(&384101483));
     assert!(!is_palindrome(&15) && !is_palindrome(&15846) && !is_palindrome(&9840486) && !is_palindrome(&38413483));
+    assert!((1..10000).all(|n| is_palindrome(&n) == Digits::from(n).is_palindrome()));
+}
+
+#[test]
+fn pandigital_test() {
+    assert!(is_pandigital(&123456789) && is_pandigital(&12345) && is_pandigital(&54321) && is_pandigital(&192837465));
+    assert!(!is_pandigital(&151) && !is_pandigital(&10) && !is_pandigital(&123451) && !is_pandigital(&76543210));
+    assert!((1..10000).all(|n| is_pandigital(&n) == Digits::from(n).is_pandigital()));
 }
 
 // --- root.rs

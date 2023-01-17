@@ -20,6 +20,6 @@ impl Default for Solver013 {
 
 impl Solver for Solver013 {
     fn solve(&self) -> i64 {
-        first_digits(self.input.iter().map(|s| s[..=self.n as usize].parse::<u64>().unwrap()).sum(), self.n).as_i64()
+        first_digits(self.input.iter().filter_map(|s| s[..=self.n].parse::<u64>().ok()).sum(), self.n).as_i64()
     }
 }

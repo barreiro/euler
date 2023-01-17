@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
+use algorithm::cast::to_i64;
 use algorithm::combinatorics::choose;
 use Solver;
 
@@ -28,6 +28,6 @@ impl Default for Solver053 {
 impl Solver for Solver053 {
     fn solve(&self) -> i64 {
         // for each n, find the first combination greater than LIMIT and calculate how many there are
-        (1..=self.n).map(|n| (1..=n / 2).find(|&r| choose(n, r) > LIMIT).map_or(0, |r| n + 1 - r * 2)).sum::<u64>().as_i64()
+        (1..=self.n).map(|n| (1..=n / 2).find(|&r| choose(n, r) > LIMIT).map_or(0, |r| n + 1 - r * 2)).map(to_i64).sum()
     }
 }

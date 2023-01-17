@@ -3,11 +3,12 @@
 
 use std::collections::HashMap;
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::digits::concatenation;
 use algorithm::filter::is_prime;
 use algorithm::prime::{prime_sieve, primes_wheel_up_to};
 use algorithm::root::{pow_10, square_u64};
+use algorithm::vec::array_sum_u64;
 use Solver;
 
 /// The primes `3, 7, 109, and 673`, are quite remarkable. By taking any two primes and concatenating them in any order the result will always be prime.
@@ -28,7 +29,7 @@ impl Solver for Solver060 {
     fn solve(&self) -> i64 {
         let (mut set, primes) = (vec![], primes_wheel_up_to(pow_10(self.n - 1)).collect::<Vec<_>>());
         add_prime_to_set(&mut set, self.n.as_usize(), &primes, &mut HashMap::new());
-        set.iter().sum::<u64>().as_i64()
+        array_sum_u64(&set).as_i64()
     }
 }
 

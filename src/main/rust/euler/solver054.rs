@@ -65,7 +65,7 @@ impl Default for Solver054 {
 impl Solver for Solver054 {
     fn solve(&self) -> i64 {
         self.input.lines().take(self.n).map(|s| {
-            let cards = s.split_whitespace().map(|c| c.parse().unwrap()).collect::<Vec<_>>();
+            let cards = s.split_whitespace().filter_map(|c| c.parse().ok()).collect::<Vec<_>>();
             (Hand::from(&cards[0..cards.len() / 2]), Hand::from(&cards[cards.len() / 2..cards.len()]))
         }).filter(|(h1, h2)| h1 > h2).count().as_i64()
     }

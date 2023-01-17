@@ -2,10 +2,11 @@
 // Rust solvers for Project Euler problems
 
 use std::ops::{Add, Div, Mul, Sub};
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 
-use algorithm::combinatorics::combinations_with;
-use algorithm::digits::from_raw_digits;
+use algorithm::combinatorics::{combinations, combinations_with};
+use algorithm::digits::from_rev_raw_digits;
+use algorithm::filter::greater_than;
 use Solver;
 
 /// By using each of the digits from the set, `{1, 2, 3, 4}`, exactly once, and making use of the four arithmetic operations `(+, −, *, /)` and brackets/parentheses, it is possible to form different positive integer targets.
@@ -31,8 +32,8 @@ impl Default for Solver093 {
 
 impl Solver for Solver093 {
     fn solve(&self) -> i64 {
-        let consecutive_expansion = |set: &[u8]| expansion(set).iter().enumerate().take_while(|(n, &e)| n + 1 == e.as_u64().as_usize()).count();
-        combinations_with((1..=9).collect::<Vec<_>>(), self.n, |c| Some(c.to_vec())).max_by_key(|d| consecutive_expansion(d)).map(|d| from_raw_digits(&d)).as_i64()
+        let consecutive_expansion = |set: &Vec<_>| expansion(set).iter().zip(1..).take_while(|&(&e, n)| e == n).count();
+        combinations((1..=9).collect(), self.n).max_by_key(consecutive_expansion).map(|d| from_rev_raw_digits(&d)).as_i64()
     }
 }
 
@@ -40,27 +41,26 @@ impl Solver for Solver093 {
 
 // converts from a set of integers into all the possible target results
 fn expansion(set: &[u8]) -> Vec<i64> {
-    let rationals = set.iter().map(Rational::from).collect::<Vec<_>>();
-    let mut result = rational_expansion(&rationals).iter().filter_map(Rational::as_i64).filter(|&x| x > 0).collect::<Vec<_>>();
+    let mut result = rational_expansion(set.iter().map(Rational::from).collect()).iter().filter_map(Rational::as_i64).filter(greater_than(0)).collect::<Vec<_>>();
     result.sort_unstable();
     result.dedup();
     result
 }
 
-fn rational_expansion(set: &[Rational]) -> Vec<Rational> {
+fn rational_expansion(set: Vec<Rational>) -> Vec<Rational> {
     if set.len() == 1 {
-        set.to_vec()
+        set
     } else if set.len() == 2 {
         rational_product(&[set[0]], &[set[1]])
     } else {
         // split into all possible partitions (by increasing the size len) and recurse
         let mut result = vec![];
         for len in 1..=set.len() / 2 {
-            combinations_with(set.to_vec(), len, |comb| {
-                let mut working_set = set.to_vec();
+            combinations_with(set.clone(), len, |comb| {
+                let mut working_set = set.clone();
                 working_set.retain(|w| !comb.contains(w));
                 Some((comb.to_vec(), working_set))
-            }).for_each(|(p1, p2)| result.append(&mut rational_product(&rational_expansion(&p1), &rational_expansion(&p2))));
+            }).for_each(|(p1, p2)| result.append(&mut rational_product(&rational_expansion(p1), &rational_expansion(p2))));
             // memoization in the expansion showed no significant advantage
         }
         result

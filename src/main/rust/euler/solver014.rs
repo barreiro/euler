@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::filter::is_even_u64;
 use Solver;
 
@@ -15,7 +15,7 @@ use Solver;
 ///
 /// NOTE: Once the chain starts the terms are allowed to go above one million.
 pub struct Solver014 {
-    pub n: u64
+    pub n: u64,
 }
 
 impl Default for Solver014 {
@@ -35,27 +35,24 @@ impl Solver for Solver014 {
 // --- //
 
 struct CollatzMemoize {
-    cache: Vec<isize>
+    cache: Vec<Option<usize>>,
 }
 
 fn collatz_memoize(size: u64) -> CollatzMemoize {
-    let mut cache = vec![0; size.as_usize()];
-    cache[1] = 1;
+    let mut cache = vec![None; size.as_usize()];
+    cache[1] = Some(1);
     CollatzMemoize { cache }
 }
 
 impl CollatzMemoize {
-    fn length(&mut self, value: u64) -> isize {
-        let (v, size) = (value.as_usize(), self.cache.len());
-        if v < size && self.cache[v] != 0 {
-            return self.cache[v];
-        }
-
-        let collatz = if is_even_u64(&value) { 1 + self.length(value >> 1) } else { 2 + self.length((value * 3 + 1) >> 1) };
+    fn length(&mut self, value: u64) -> usize {
+        let (v, size, (terms, next)) = (value.as_usize(), self.cache.len(), if is_even_u64(&value) { (1, value >> 1) } else { (2, (value * 3 + 1) >> 1) });
 
         if v < size {
-            self.cache[v] = collatz;
+            let mut c = self.cache[v];
+            *c.get_or_insert_with(|| terms + self.length(next))
+        } else {
+            terms + self.length(next)
         }
-        collatz
     }
 }

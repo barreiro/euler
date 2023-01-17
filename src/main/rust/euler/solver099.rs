@@ -26,6 +26,6 @@ impl Default for Solver099 {
 impl Solver for Solver099 {
     fn solve(&self) -> i64 {
         let as_tuple = |line: &str| line.split_once(',').map(|(base, exp)| (base.parse::<f64>().unwrap(), exp.parse::<f64>().unwrap()));
-        self.input.lines().take(self.n).filter_map(as_tuple).zip(1..).max_by_key(|&((base, exp), _)| (base.log2() * exp).as_i64() ).unwrap().1
+        self.input.lines().take(self.n).filter_map(as_tuple).zip(1..).max_by_key(|&((base, exp), _)| (base.log2() * exp).as_i64()).unwrap().1
     }
 }

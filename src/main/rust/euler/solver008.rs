@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::map_char_as_i64;
+use algorithm::cast::char_as_i64;
 use algorithm::io::load_default_data;
 use algorithm::vec::array_product;
 use Solver;
@@ -21,7 +21,7 @@ impl Default for Solver008 {
 
 impl Solver for Solver008 {
     fn solve(&self) -> i64 {
-        let digits: Vec<i64> = self.input.chars().map(map_char_as_i64).collect();
+        let digits = self.input.chars().map(char_as_i64).collect::<Vec<_>>();
         digits.windows(self.n).map(array_product).max().unwrap()
     }
 }

@@ -1,6 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+use algorithm::cast::Cast;
 use algorithm::long::{is_pentagonal, pentagonal};
 use Solver;
 
@@ -20,6 +21,6 @@ impl Solver for Solver044 {
             Some(p_j - p_k).filter(|p_diff| is_pentagonal(p_diff) && is_pentagonal(&(p_j + p_k)))
         };
 
-        (2..).filter_map(|j| (1..j).find_map(|k| predicate(j, k))).nth(self.n).unwrap()
+        (2..).filter_map(|j| (1..j).find_map(|k| predicate(j, k))).nth(self.n).as_i64()
     }
 }

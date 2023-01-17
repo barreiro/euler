@@ -40,6 +40,6 @@ impl Solver for Solver051 {
             })
         };
 
-        generator_wheel().skip_while(less_than_u64(pow_10_u(self.n - 5))).find(|p| predicate(p)).as_i64()
+        generator_wheel().skip_while(less_than_u64(pow_10_u(self.n - 5))).find(predicate).as_i64()
     }
 }

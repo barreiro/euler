@@ -3,7 +3,7 @@
 
 use std::convert::identity;
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::digits::is_permutation;
 use algorithm::prime::primes_up_to;
 use algorithm::root::{floor_sqrt_u64, pow_10};

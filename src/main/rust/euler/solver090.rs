@@ -4,8 +4,8 @@
 use std::collections::HashSet;
 use std::iter::from_fn;
 
-use algorithm::cast::{Cast, UCast};
-use algorithm::combinatorics::{combinations_with, permutations_of_set};
+use algorithm::cast::Cast;
+use algorithm::combinatorics::{combinations, permutations_of_set};
 use algorithm::digits::digits_iter;
 use algorithm::filter::less_than_u64;
 use algorithm::root::{pow_10, square_u64};
@@ -54,7 +54,7 @@ impl Solver for Solver090 {
         }).map(|s| permutations_of_set(s).collect::<Vec<_>>()).collect::<HashSet<_>>();
 
         // create all combinations from digits to form the dice, replacing 9 with 6.
-        let dice = combinations_with((0..=9).map(|x| if x == 9 { 6 } else { x }).collect(), DICE_SIZE, |c| Some(c.to_vec())).collect::<Vec<_>>();
+        let dice = combinations((0..=9).map(|x| if x == 9 { 6 } else { x }).collect(), DICE_SIZE).collect::<Vec<_>>();
 
         // cartesian picks all combinations of n dice and for each combination verify if all the squares are present.
         cartesian_with(dice.len(), self.n.as_usize(), |dice_index| squares.iter().all(|sq| sq.iter().any(|p| (0..p.len()).all(|i| dice[dice_index[i]].contains(&p[i]))))).count().as_i64()

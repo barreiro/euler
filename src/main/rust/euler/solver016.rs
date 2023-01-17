@@ -1,7 +1,6 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::to_i64;
 use algorithm::digits::digits_sum;
 use algorithm::root::pow_10;
 use Solver;
@@ -36,6 +35,6 @@ impl Solver for Solver016 {
             }
         }));
 
-        values.into_iter().map(digits_sum).map(to_i64).sum()
+        values.into_iter().map(digits_sum).sum()
     }
 }

@@ -2,6 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use std::convert::TryFrom;
+
 use algorithm::cast::Cast;
 use algorithm::root::floor_sqrt_u64;
 use Solver;
@@ -30,7 +31,7 @@ impl Solver for Solver047 {
         let mut primes = vec![2];
         (3..).scan(0, |count, l| {
             *count = if is_num_prime_factors(l, &mut primes, self.n) { *count + 1 } else { 0 };
-            if *count == self.n { Some(l - self.n + 1) } else { Some(0) }
+            Some( if *count == self.n { l - self.n + 1 } else { 0 } )
         }).find(|&a| a != 0).as_i64()
     }
 }

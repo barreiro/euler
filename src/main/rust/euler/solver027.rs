@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, to_u64};
+use algorithm::cast::{Cast, to_i64, to_u64};
 use algorithm::filter::{is_odd, is_prime};
 use algorithm::prime::descending_primes;
 use algorithm::root::square;
@@ -32,9 +32,9 @@ impl Solver for Solver027 {
     fn solve(&self) -> i64 {
         // conjecture: a is odd negative and b is one of the 10% highest primes
         // the discriminant must be an Heegner number, in particular -163
-        let primes = descending_primes(self.n).take_while(|&p| p > self.n - self.n / 10).collect::<Vec<_>>();
-        let prime_count = |(a, b): (i64, u64)| (0..).map(|n| square(n) + a * n + b.as_i64()).map(to_u64).take_while(is_prime).count();
+        let primes = descending_primes(self.n).take_while(|&p| p > self.n - self.n / 10).map(to_i64).collect::<Vec<_>>();
+        let prime_count = |(a, b): &(i64, i64)| (0..).map(|n| square(n) + a * n + b).map(to_u64).take_while(is_prime).count();
 
-        (-self.n.as_i64()..0).filter(is_odd).map(|a| (a, (square(a) - HEEGNER).as_u64() / 4)).filter(|(_, b)| primes.contains(b)).max_by_key(|&p| prime_count(p)).map(|(a, b)| a * b.as_i64()).as_i64()
+        (-self.n.as_i64()..0).filter(is_odd).map(|a| (a, (square(a) - HEEGNER) / 4)).filter(|(_, b)| primes.contains(b)).max_by_key(prime_count).map(|(a, b)| a * b).as_i64()
     }
 }

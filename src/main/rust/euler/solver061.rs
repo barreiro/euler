@@ -6,6 +6,7 @@ use std::collections::btree_map::BTreeMap;
 use std::convert::identity;
 use std::ops::Range;
 use algorithm::cast::Cast;
+use algorithm::filter::less_than;
 use algorithm::long::{heptagonal, hexagonal, octagonal, pentagonal, triangle};
 use algorithm::root::{pow_10, square};
 use Solver;
@@ -41,7 +42,7 @@ impl Default for Solver061 {
 impl Solver for Solver061 {
     fn solve(&self) -> i64 {
         let (mut set, floor, ceil, scale) = (Vec::with_capacity(self.input.len()), pow_10(self.n - 1).as_i64(), pow_10(self.n).as_i64(), pow_10(self.n / 2).as_i64());
-        let map = self.input.iter().map(|f| (f, (1..).map(f).skip_while(|&y| y < floor).take_while(|&y| y < ceil).collect())).collect();
+        let map = self.input.iter().map(|f| (f, (1..).map(f).skip_while(less_than(floor)).take_while(less_than(ceil)).collect())).collect();
         find(&map, floor..ceil, floor, scale, &mut set);
         set.iter().sum()
     }

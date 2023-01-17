@@ -2,6 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use algorithm::cast::Cast;
+use algorithm::filter::equals_u64;
 use algorithm::root::{int_log_10, pow_10};
 use Solver;
 
@@ -41,6 +42,6 @@ impl Solver for Solver063 {
             (pow.len().as_u64() - 1) * THRESHOLD + int_log_10(*pow.last().unwrap())
         };
 
-        (1..=self.n).map(|exp| (1..10).map(|base| pow_digits(base, exp)).filter(|&d| d == exp).count().as_i64()).sum()
+        (1..=self.n).map(|exp| (1..10).map(|base| pow_digits(base, exp)).filter(equals_u64(exp)).count().as_i64()).sum()
     }
 }

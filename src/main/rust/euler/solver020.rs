@@ -1,7 +1,6 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::to_i64;
 use algorithm::digits::digits_sum;
 use algorithm::root::pow_10;
 use Solver;
@@ -30,11 +29,10 @@ impl Solver for Solver020 {
                 let value = *cell * n + carry.unwrap_or_default();
 
                 // adjust the buckets that grow beyond the ceiling value, carrying to next bucket
-                carry = if value > CELL_THRESHOLD { Some(value / CELL_THRESHOLD) } else { None };
-                *cell = if value > CELL_THRESHOLD { value % CELL_THRESHOLD } else { value };
+                (carry, *cell) = if value > CELL_THRESHOLD { (Some(value / CELL_THRESHOLD), value % CELL_THRESHOLD) } else { (None, value) }
             }
             carry.iter().for_each(|&c| factorial.push(c));
         });
-        factorial.into_iter().map(digits_sum).map(to_i64).sum()
+        factorial.into_iter().map(digits_sum).sum()
     }
 }

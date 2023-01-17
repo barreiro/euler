@@ -4,7 +4,7 @@
 use std::collections::{HashMap, HashSet};
 use std::convert::TryFrom;
 
-use algorithm::cast::map_char_as_i64;
+use algorithm::cast::char_as_i64;
 use algorithm::digits::from_raw_digits;
 use algorithm::io::load_default_data;
 use euler::algorithm::cast::Cast;
@@ -29,7 +29,7 @@ impl Default for Solver079 {
 
 impl Solver for Solver079 {
     fn solve(&self) -> i64 {
-        let (mut before, to_chars) = (HashMap::new(), |s: &str| s.chars().map(map_char_as_i64).map(|i| u8::try_from(i).unwrap()).collect::<Vec<_>>());
+        let (mut before, to_chars) = (HashMap::new(), |s: &str| s.chars().map(char_as_i64).filter_map(|i| u8::try_from(i).ok()).collect::<Vec<_>>());
         self.input.lines().take(self.n).map(to_chars).for_each(|v| {
             (0..v.len()).for_each(|i| {
                 let entry = before.entry(v[i]).or_insert_with(HashSet::new);

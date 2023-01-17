@@ -2,6 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use std::iter::from_fn;
+
 use algorithm::cast::Cast;
 use algorithm::root::{pow_10, square_u64};
 use Solver;

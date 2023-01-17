@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::digits::{concatenation, Digits};
 use algorithm::root::{floor_sqrt_u64, int_log_10, pow_10};
 use Solver;

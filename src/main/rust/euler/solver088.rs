@@ -1,9 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-
 use algorithm::bit::BitSet;
-use algorithm::cast::{Cast, UCast};
+use algorithm::cast::Cast;
 use algorithm::long::div_ceil;
 use algorithm::root::ceil_sqrt;
 use Solver;
@@ -50,7 +49,7 @@ fn recursive_product_sum(p: i64, s: i64, len: usize, floor: i64, product_sum: &m
     product_sum[index] = product_sum[index].min(p);
 
     // recursively apply with `i >= floor` while maintaining `(p * i) - (s + i) + (len + 1) < product_sum.len()`
-    if (product_sum.len() + len + 1) as i64 + s >= p * floor {
-        (floor..div_ceil((product_sum.len() - len - 1) as i64 + s, p - 1)).for_each(|i| recursive_product_sum(p * i, s + i, len + 1, i, product_sum));
+    if (product_sum.len() + len + 1).as_i64() + s >= p * floor {
+        (floor..div_ceil((product_sum.len() - len - 1).as_i64() + s, p - 1)).for_each(|i| recursive_product_sum(p * i, s + i, len + 1, i, product_sum));
     }
 }

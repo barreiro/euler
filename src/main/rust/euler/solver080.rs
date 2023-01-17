@@ -31,7 +31,7 @@ impl Solver for Solver080 {
     fn solve(&self) -> i64 {
         // "Square roots by subtraction" by Frazer Jarvis ( http://www.afjarvis.staff.shef.ac.uk/maths/jarvisspec02.pdf )
         (2..=self.n).filter(|&n| !is_square(n)).map(|n| {
-            let (mut a, mut b, mut i) = (vec![5 * n as i64], vec![5], DIM - int_log_10(floor_sqrt(n).as_u64()));
+            let (mut a, mut b, mut i) = (vec![5 * n], vec![5], DIM - int_log_10(floor_sqrt(n).as_u64()));
             loop {
                 if less(&a, &b) { // first branch fixes a digit of the root in b
                     if i == 0 { break; }
@@ -43,7 +43,7 @@ impl Solver for Solver080 {
                     add_scalar(&mut b, 10);
                 }
             }
-            b.into_iter().map(to_u64).map(digits_sum).sum::<u64>().as_i64() - 5 // b ends with an extra '5'
+            b.into_iter().map(to_u64).map(digits_sum).sum::<i64>() - 5 // b ends with an extra '5'
         }).sum()
     }
 }

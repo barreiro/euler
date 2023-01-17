@@ -1,6 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+use algorithm::cast::Cast;
 use algorithm::io::load_default_data;
 use Solver;
 
@@ -37,7 +38,7 @@ impl Solver for Solver059 {
         let encoded = self.input.split(',').filter_map(|s| s.parse().ok()).collect::<Vec<i64>>();
 
         // the key maximizes the number of space characters
-        let max_spaces = |pos| ('a' as _..='z' as _).max_by_key(|k| encoded.iter().skip(pos).step_by(KEY_SIZE).filter(|&c| c ^ k == ' ' as _).count()).unwrap();
+        let max_spaces = |pos| ('a' as _..='z' as _).max_by_key(|k| encoded.iter().skip(pos).step_by(KEY_SIZE).filter(|&c| c ^ k == ' ' as _).count()).as_i64();
         let key = (0..KEY_SIZE).map(max_spaces).collect::<Vec<_>>();
 
         encoded.iter().take(self.n).enumerate().map(|(i, c)| c ^ key[i % key.len()]).sum()
