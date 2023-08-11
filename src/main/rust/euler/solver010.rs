@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use algorithm::cast::to_i64;
-use algorithm::prime::primes_wheel_up_to;
+use algorithm::prime::primes_up_to;
 use Solver;
 
 /// The sum of the primes below 10 is `2 + 3 + 5 + 7 = 17`.
@@ -19,6 +19,6 @@ impl Default for Solver010 {
 
 impl Solver for Solver010 {
     fn solve(&self) -> i64 {
-        primes_wheel_up_to(self.n).map(to_i64).sum()
+        primes_up_to(self.n).map(to_i64).sum()
     }
 }

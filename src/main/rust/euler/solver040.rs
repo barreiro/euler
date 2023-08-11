@@ -3,6 +3,7 @@
 
 use algorithm::cast::Cast;
 use algorithm::digits::{DEFAULT_RADIX, nth_digit};
+use algorithm::long::GetAndIncrement;
 use algorithm::root::{pow_10, pow_u64};
 use Solver;
 
@@ -32,8 +33,7 @@ impl Solver for Solver040 {
             let (mut length, mut ledge) = (1, 0);
             loop {
                 let previous = ledge;
-                ledge += (RADIX - 1) * length * pow_u64(RADIX, length - 1);
-                length += 1;
+                ledge += (RADIX - 1) * length * pow_u64(RADIX, length.get_and_increment() - 1);
                 if position <= ledge {
                     return (length - 1, position - 1 - previous);
                 }

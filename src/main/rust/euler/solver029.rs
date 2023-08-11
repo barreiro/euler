@@ -4,6 +4,7 @@
 use std::collections::HashSet;
 
 use algorithm::cast::Cast;
+use algorithm::long::GetAndIncrement;
 use algorithm::prime::prime_factors;
 use algorithm::root::{int_sqrt, pow, square};
 use Solver;
@@ -50,8 +51,7 @@ impl Solver for Solver029 {
                         break;
                     }
                     base *= factored_base;
-                    exp = factored_exp / k;
-                    k += 1;
+                    exp = factored_exp / k.get_and_increment();
                 }
             }
             duplicates

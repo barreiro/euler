@@ -41,7 +41,7 @@ impl Default for Solver089 {
 
 impl Solver for Solver089 {
     fn solve(&self) -> i64 {
-        self.input.lines().take(self.n).map(|s| (s.len() - s.parse::<Roman>().unwrap().minimal_len()).as_i64()).sum()
+        self.input.lines().take(self.n).map(|s| (s.len() - s.parse::<Roman>().expect("Input string should contain roman numeral").minimal_len()).as_i64()).sum()
     }
 }
 

@@ -3,6 +3,7 @@
 
 use algorithm::cast::{Cast, to_u64};
 use algorithm::digits::digits_sum;
+use algorithm::long::GetAndIncrement;
 use algorithm::root::{floor_sqrt, int_log_10, is_square, pow_10};
 use Solver;
 
@@ -92,7 +93,7 @@ fn sub(a: &mut Vec<i64>, b: &[i64]) {
         }
     }
     // need to normalize in order to be able to compare based on length
-    while !a.is_empty() && *a.last().unwrap() == 0 {
+    while a.last() == Some(&0) {
         a.pop();
     }
 }
@@ -103,7 +104,6 @@ fn add_scalar(a: &mut Vec<i64>, c: i64) {
     let mut i = 0;
     while a[i] >= THRESHOLD {
         if i == a.len() - 1 { a.push(a[i] / THRESHOLD) } else { a[i + 1] += a[i] / THRESHOLD }
-        a[i] %= THRESHOLD;
-        i += 1;
+        a[i.get_and_increment()] %= THRESHOLD;
     }
 }

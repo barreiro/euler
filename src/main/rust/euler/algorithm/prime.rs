@@ -4,11 +4,12 @@
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::iter::from_fn;
-use algorithm::cast::Cast;
 
-use algorithm::filter::{less_or_equal_than_u64, less_than_u64};
-use algorithm::long::pow_mod;
-use algorithm::root::floor_sqrt_u64;
+use algorithm::cast::Cast;
+use algorithm::filter::less_than_u64;
+use algorithm::long::{IncrementAndGet, pow_mod};
+use algorithm::root::{floor_sqrt_u64, pow_u64};
+use algorithm::vec::array_product_u64;
 
 // Bases for the Miller-Rabin test
 const MR_THRESHOLD: u64 = 4_759_123_141;
@@ -19,8 +20,8 @@ const MR_BASE: &[u64] = &[2, 325, 9_375, 28_178, 450_775, 9_780_504, 1_795_265_0
 #[must_use]
 #[allow(clippy::cast_possible_truncation)]
 pub fn prime_factors(n: u64) -> HashMap<u64, u64> {
-    let (mut factor_map, mut value, small, stop) = (HashMap::new(), n, u32::try_from(n).is_ok(), floor_sqrt_u64(n));
-    for factor in generator_trial_division() {
+    let (mut factor_map, mut value, small) = (HashMap::new(), n, u32::try_from(n).is_ok());
+    for factor in primes_up_to(1 + floor_sqrt_u64(n)) { // to include `sqrt(n)` if `n` is a perfect square
         while if small { value as u32 % factor as u32 == 0 } else { value % factor == 0 } {
             value = if small { u64::from(value as u32 / factor as u32) } else { value / factor };
             factor_map.entry(factor).and_modify(|e| *e += 1).or_insert(1);
@@ -28,13 +29,16 @@ pub fn prime_factors(n: u64) -> HashMap<u64, u64> {
         if value == 1 {
             break;
         }
-        if factor >= stop {
-            // the number is prime or if there is still a remainder, add it as a factor
-            factor_map.insert(value, 1);
-            break;
-        }
+    }
+    if value > 1 {
+        factor_map.insert(value, 1);
     }
     factor_map
+}
+
+/// assemble from some prime factors
+pub fn from_prime_factors(factors: impl Iterator<Item=(u64, u64)>) -> u64 {
+    factors.filter(|&(_, exp)| exp != 0).map(|(base, exp)| pow_u64(base, exp)).sum()
 }
 
 // --- //
@@ -57,9 +61,14 @@ pub fn generator_trial_division() -> impl Iterator<Item=u64> {
     })
 }
 
-/// iterator of the primes up to n (excluding n) using trial division algorithm
+/// iterator of the primes up to n (excluding n) using a sieve algorithm
 pub fn primes_up_to(value: u64) -> impl Iterator<Item=u64> {
-    generator_trial_division().take_while(less_or_equal_than_u64(value))
+    // generator_trial_division().take_while(less_or_equal_than_u64(value))
+    let mut sieve = vec![true; 1 + value.as_usize()];
+    (2..=value.as_usize() / 2).for_each(|n| if sieve[n] {
+        (2..=value.as_usize() / n).map(|k| k * n).for_each(|multiple| sieve[multiple] = false);
+    });
+    (2..value.as_usize()).filter(move |&n| sieve[n]).map(|n| n.as_u64())
 }
 
 /// finds if none of the values in the sieve is a factor of value
@@ -81,8 +90,7 @@ pub const fn prime_sieve(value: u64, sieve: &[u64]) -> bool {
 #[allow(clippy::cast_possible_truncation)]
 fn prime_sieve_bound(value: u64, sieve: &[u64], ceil: &mut u64, ceil_target: &mut u64) -> bool {
     if value > *ceil_target {
-        *ceil += 1;
-        *ceil_target = *ceil * *ceil;
+        *ceil_target = ceil.increment_and_get() * *ceil;
     }
     sieve.iter().take_while(|&factor| factor <= ceil).all(|&f| if u32::try_from(value).is_ok() { value as u32 % f as u32 != 0 } else { value % f != 0 })
 }
@@ -100,9 +108,9 @@ pub fn primes_wheel_up_to(value: u64) -> impl Iterator<Item=u64> {
 }
 
 fn generator_custom_wheel(primes: &[u64]) -> impl Iterator<Item=u64> {
-    let size = primes.iter().product();
+    let size = array_product_u64(primes);
     let buckets = (size..=1 + size * 2).filter_map(|n| primes.iter().all(|p| n % p != 0).then_some::<u64>(n - size)).collect::<Vec<_>>();
-    let mut increments = vec![0; buckets.last().unwrap().as_usize()];
+    let mut increments = vec![0; buckets.last().expect("Custom wheel should not be empty").as_usize()];
     (0..buckets.len() - 1).for_each(|i| increments[buckets[i].as_usize()] = buckets[i + 1] - buckets[i]);
 
     let (mut sieve, mut bound, mut bound_target) = (vec![], 1, 1);
@@ -115,7 +123,7 @@ fn generator_custom_wheel(primes: &[u64]) -> impl Iterator<Item=u64> {
             }
             Some(&last) => {
                 if last < size {
-                    (last + 2..).step_by(2).find(|&candidate| prime_sieve_bound(candidate, &sieve, &mut bound, &mut bound_target)).unwrap()
+                    (last + 2..).step_by(2).find(|&candidate| prime_sieve_bound(candidate, &sieve, &mut bound, &mut bound_target)).expect("There should be a next prime")
                 } else {
                     let (mut candidate, mut index) = (last, last % size);
                     loop {

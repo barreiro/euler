@@ -72,6 +72,12 @@ pub fn less_than_u64(other: u64) -> Box<dyn FnMut(&u64) -> bool> {
     Box::new(move |&value| value < other)
 }
 
+/// creates a closure to filter values lesser than
+#[must_use]
+pub fn less_than_usize(other: usize) -> Box<dyn FnMut(&usize) -> bool> {
+    Box::new(move |&value| value < other)
+}
+
 /// creates a closure to filter values lesser or equal than
 #[must_use]
 pub fn less_or_equal_than(other: i64) -> Box<dyn FnMut(&i64) -> bool> {

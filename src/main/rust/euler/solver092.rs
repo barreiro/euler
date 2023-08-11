@@ -3,7 +3,8 @@
 
 use algorithm::cast::{Cast, to_i64};
 use algorithm::digits::digits_square_sum;
-use algorithm::root::{square, square_u64};
+use algorithm::filter::less_or_equal_than_u64;
+use algorithm::root::square_u64;
 use Solver;
 
 // numbers that converge to 1 are known as "happy numbers"
@@ -53,9 +54,9 @@ fn f(n: usize, k: usize, cache: &mut Vec<Vec<Option<u64>>>) -> u64 {
             if k == 0 {
                 u64::from(n == 0)
             } else {
-                (0..=9).map(|d| n.as_i64() - square(d)).filter(|&nd| nd >= 0).map(|nd| f(nd.as_u64().as_usize(), k - 1, cache)).sum()
+                (0..=9).map(square_u64).take_while(less_or_equal_than_u64(n.as_u64())).map(|square| f(n - square.as_usize(), k - 1, cache)).sum()
             }
         );
     }
-    cache[n][k].unwrap()
+    cache[n][k].expect("Cache should have been populated")
 }

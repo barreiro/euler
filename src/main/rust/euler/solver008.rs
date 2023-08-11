@@ -22,6 +22,6 @@ impl Default for Solver008 {
 impl Solver for Solver008 {
     fn solve(&self) -> i64 {
         let digits = self.input.chars().map(char_as_i64).collect::<Vec<_>>();
-        digits.windows(self.n).map(array_product).max().unwrap()
+        digits.windows(self.n).map(array_product).max().expect("Input should not be empty")
     }
 }

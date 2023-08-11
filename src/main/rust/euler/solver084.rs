@@ -23,24 +23,24 @@ const CC_OUTCOME: &[fn(usize) -> usize] = &[|_| 0, |_| 10];
 // Chance
 const CH: &[usize] = &[7, 22, 36];
 const CH_CARDS: usize = 16;
-const CH_OUTCOME: &[fn(usize) -> usize] = &[|_| 0, |_| 10, |_| 11, |_| 24, |_| 39, |_| 5, |ch| CH_NEXT_R[CH.binary_search(&ch).unwrap()], |ch| CH_NEXT_R[CH.binary_search(&ch).unwrap()], |ch| CH_NEXT_U[CH.binary_search(&ch).unwrap()], |ch| ch - 3];
+const CH_OUTCOME: &[fn(usize) -> usize] = &[|_| 0, |_| 10, |_| 11, |_| 24, |_| 39, |_| 5, |ch| CH_NEXT_R[CH.binary_search(&ch).expect("Should contain chance square")], |ch| CH_NEXT_R[CH.binary_search(&ch).expect("Should contain chance square")], |ch| CH_NEXT_U[CH.binary_search(&ch).expect("Should contain chance square")], |ch| ch - 3];
 const CH_NEXT_R: &[usize] = &[15, 25, 5];
 const CH_NEXT_U: &[usize] = &[12, 28, 12];
 
 /// In the game, Monopoly, the standard board is set up in the following way:
-///
-/// `GO  A1  CC1 A2  T1  R1  B1  CH1 B2  B3  JAIL`
-/// `H2                                        C1`
-/// `T2                                        U1`
-/// `H1                                        C2`
-/// `CH3                                       C3`
-/// `R4                                        R2`
-/// `G3                                        D1`
-/// `CC3                                      CC2`
-/// `G2                                        D2`
-/// `G1                                        D3`
-/// `G2J F3  U2  F2  F1  R3  E3  E2  CH2  E1   FP`
-///
+/// ```
+/// GO  A1  CC1 A2  T1  R1  B1  CH1 B2  B3  JAIL
+/// H2                                        C1
+/// T2                                        U1
+/// H1                                        C2
+/// CH3                                       C3
+/// R4                                        R2
+/// G3                                        D1
+/// CC3                                      CC2
+/// G2                                        D2
+/// G1                                        D3
+/// G2J F3  U2  F2  F1  R3  E3  E2  CH2  E1   FP
+/// ```
 /// A player starts on the `GO` square and adds the scores on two 6-sided dice to determine the number of squares they advance in a clockwise direction.
 /// Without any further rules we would expect to visit each square with equal probability: `2.5%`.
 /// However, landing on `G2J` (Go To Jail), `CC` (community chest), and `CH` (chance) changes this distribution.
@@ -132,7 +132,7 @@ impl Solver for Solver084 {
         // FORWARD ELIMINATION: reduce every element under diagonal to 0.0
         (0..=MARKOV_SIZE).for_each(|c| {
             // PIVOTING: find the max value in column and swap rows. this stabilizes the algorithm
-            let pivot = (c..=MARKOV_SIZE).max_by(|&r1, &r2| steady[r1][c].abs().partial_cmp(&steady[r2][c].abs()).unwrap()).unwrap();
+            let pivot = (c..=MARKOV_SIZE).max_by(|&r1, &r2| steady[r1][c].abs().partial_cmp(&steady[r2][c].abs()).expect("Entries in the Markov matrix should be finite")).expect("There should be a pivot row");
             steady.swap(c, pivot);
 
             (c + 1..=MARKOV_SIZE).for_each(|r| {
@@ -150,7 +150,7 @@ impl Solver for Solver084 {
 
         // take the last column of the steady state, group consecutive rolls, sort and output
         let mut ordered = (0..BOARD_DIM).map(|target| (0..CONSECUTIVE_DOUBLES).map(|d| steady[target + d * BOARD_DIM][MARKOV_SIZE]).sum::<f64>()).enumerate().collect::<Vec<_>>();
-        ordered.sort_unstable_by(|&(_, i), &(_, j)| j.partial_cmp(&i).unwrap());
+        ordered.sort_unstable_by(|&(_, i), &(_, j)| j.partial_cmp(&i).expect("Entries in the Markov matrix should be finite"));
         ordered.iter().take(OUTPUT_SQUARES).fold(0, |acc, &(x, _)| if x == 0 { acc * 100 } else if x < 10 { concatenation(acc * 10, x.as_u64()) } else { concatenation(acc, x.as_u64()) }).as_i64()
     }
 }

@@ -20,7 +20,7 @@ use Solver;
 /// `15: 1,3,5,15`
 /// `21: 1,3,7,21`
 /// `28: 1,2,4,7,14,28`
-/// 
+///
 /// We can see that `28` is the first triangle number to have over five divisors.
 /// What is the value of the first triangle number to have over five hundred divisors?
 pub struct Solver012 {
@@ -39,6 +39,6 @@ impl Solver for Solver012 {
         // use a more aggressive lower bound for bigger values. Not 100% accurate, but works well
         let lower_bound = if self.n > 480 && self.n <= 503 || self.n > 650 { cube(self.n) * 3 / 5 } else { square(self.n - 1) / 2 };
 
-        (1..).map(arithmetic_sum).filter(greater_or_equal_than(lower_bound)).find(|&t| number_of_factors(t) >= self.n.as_usize()).as_i64()
+        (1..).map(arithmetic_sum).filter(greater_or_equal_than(lower_bound)).find(|&t| number_of_factors(t) >= self.n.as_u64()).as_i64()
     }
 }

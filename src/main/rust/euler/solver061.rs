@@ -51,7 +51,7 @@ impl Solver for Solver061 {
 // require BTreeMap for consistency when testing ¯\_(ツ)_/¯
 fn find(predicates: &BTreeMap<&fn(i64) -> i64, Vec<i64>>, range: Range<i64>, floor: i64, scale: i64, set: &mut Vec<i64>) -> bool {
     if predicates.is_empty() {
-        return set.last().unwrap() % scale == set.first().unwrap() / scale;
+        return set.last().expect("Set should not be empty") % scale == set.first().expect("Set should not be empty") / scale;
     }
     for (p, v) in predicates {
         let (start, end) = (v.binary_search(&range.start).unwrap_or_else(identity), v.binary_search(&range.end).unwrap_or_else(identity));

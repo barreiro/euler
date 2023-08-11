@@ -154,7 +154,7 @@ impl FromStr for Card {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (rank, suite) = s.split_at(1);
-        Ok(Self { rank: rank.parse().unwrap(), suite: suite.parse().unwrap() })
+        Ok(Self { rank: rank.parse().expect("Rank should be valid"), suite: suite.parse().expect("Suite should be valid") })
     }
 }
 
@@ -278,11 +278,11 @@ impl Ord for Hand {
         } else if self.is_straight() {
             if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() { Less } else if other.is_straight() { highest() } else { Greater }
         } else if trio.is_some() {
-            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() { Less } else { other.is_three_of_a_kind().map_or(Greater, |t| trio.unwrap().cmp(&t)).then(highest()) }
+            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() { Less } else { other.is_three_of_a_kind().map_or(Greater, |t| trio.expect("There should be a trio").cmp(&t)).then(highest()) }
         } else if self.is_two_pairs() {
-            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() { Less } else if other.is_two_pairs() { other.is_pair().map_or(Greater, |t| pair.unwrap().cmp(&t)).then(highest()) } else { Greater }
+            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() { Less } else if other.is_two_pairs() { other.is_pair().map_or(Greater, |t| pair.expect("There should be a pair").cmp(&t)).then(highest()) } else { Greater }
         } else if pair.is_some() {
-            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() || other.is_two_pairs() { Less } else { other.is_pair().map_or(Greater, |t| pair.unwrap().cmp(&t)).then(highest()) }
+            if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() || other.is_two_pairs() { Less } else { other.is_pair().map_or(Greater, |t| pair.expect("There should be a pair").cmp(&t)).then(highest()) }
         } else if other.is_four_of_a_kind() || other.is_full_house() || other.is_flush() || other.is_straight() || other.is_three_of_a_kind().is_some() || other.is_two_pairs() || other.is_pair().is_some() { Less } else { highest() }
     }
 }

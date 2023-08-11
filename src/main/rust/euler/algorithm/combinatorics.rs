@@ -7,15 +7,15 @@ use std::ops::{Add, Sub};
 use algorithm::cast::Cast;
 use algorithm::factor::sum_of_factors;
 use algorithm::filter::less_or_equal_than;
-use algorithm::long::{are_coprime, pentagonal};
-use algorithm::root::floor_sqrt_u64;
+use algorithm::long::{are_coprime, IncrementAndGet, pentagonal};
+use algorithm::root::ceil_sqrt_u64;
 
 /// method for calculation the combinations of a certain number of elements in a total number of places.
 /// uses iteration instead of the formula with factorials.
 #[must_use]
 pub fn choose(total: u64, elements: u64) -> u64 {
     if elements == 0 || elements >= total {
-        return 0;
+        return 1;
     }
     let (mut n, mut result) = (total, 1);
     for d in 1..=elements.min(total - elements) {
@@ -31,21 +31,21 @@ pub fn choose(total: u64, elements: u64) -> u64 {
 /// calculates the number of integer partitions of a value, given a set of (ordered) constrains.
 #[must_use]
 pub fn partition_with_constrains(value: u64, constrains: &[u64]) -> u64 {
-    partition_with_constrains_memoize(value, value, constrains, &mut vec![vec![0; value.as_usize() + 1]; value.as_usize() + 1])
+    partition_with_constrains_memoize(value, value, constrains, &mut vec![vec![None; value.as_usize() + 1]; value.as_usize() + 1])
 }
 
-fn partition_with_constrains_memoize(total: u64, remaining: u64, constrains: &[u64], cache: &mut Vec<Vec<u64>>) -> u64 {
+fn partition_with_constrains_memoize(total: u64, remaining: u64, constrains: &[u64], cache: &mut Vec<Vec<Option<u64>>>) -> u64 {
     if remaining == 0 || remaining == constrains[0] {
         1
     } else if remaining < constrains[0] {
         0
     } else {
         let (i, j) = (total.as_usize(), remaining.as_usize());
-        if cache[i][j] == 0 {
+        if cache[i][j].is_none() {
             let ceil = remaining.min(total);
-            cache[i][j] = constrains.iter().map(|&c| c as _).take_while(|&c| c <= ceil).map(|c| partition_with_constrains_memoize(c, remaining - c, constrains, cache)).sum();
+            cache[i][j] = Some(constrains.iter().take_while(|&&c| c <= ceil).map(|&c| partition_with_constrains_memoize(c, remaining - c, constrains, cache)).sum());
         }
-        cache[i][j]
+        cache[i][j].expect("Cache should be populated")
     }
 }
 
@@ -62,7 +62,7 @@ pub fn partition(value: u64) -> u64 {
 #[must_use]
 #[allow(clippy::maybe_infinite_iter)]
 pub fn partition_modulo_find(modulo: u64, predicate: u64) -> u64 {
-    let mut cache = Vec::with_capacity(1 + floor_sqrt_u64(modulo).as_usize());
+    let mut cache = Vec::with_capacity(ceil_sqrt_u64(modulo).as_usize());
     cache.extend_from_slice(&[1, 1]);
     (2..).find(|&value| partition_modulo_memoize(value, modulo, &mut cache) == predicate).as_u64()
 }
@@ -70,16 +70,16 @@ pub fn partition_modulo_find(modulo: u64, predicate: u64) -> u64 {
 // the cache is assume to be initialized with [1,1] and is to be populated by calls with incrementing value
 #[allow(clippy::maybe_infinite_iter)]
 fn partition_modulo_memoize(value: u64, modulo: u64, cache: &mut Vec<u64>) -> u64 {
-    let index = value.as_usize();
-    if index < cache.len() {
-        return cache[index];
+    if let Some(&partition_modulo) = cache.get(value.as_usize()) {
+        partition_modulo
+    } else {
+        // uses Euler's recursive formula p(n) = p(n-1) + p(n-2) - p(n-5) - p(n-7) + p(n-12) + ... where i & 2 == 0 generates the signal sequence + + - - + + - - ...
+        let partition_modulo = (0..).map(|n| if n & 1 == 0 { (n >> 1) + 1 } else { -(n >> 1) - 1 }).map(pentagonal).take_while(less_or_equal_than(value.as_i64())).enumerate().fold(0, |pm, (i, k)| {
+            (if i & 2 == 0 { Add::add } else { Sub::sub })(pm, partition_modulo_memoize(value - k.as_u64(), modulo, cache).as_i64())
+        }).rem_euclid(modulo.as_i64()).as_u64();
+        cache.push(partition_modulo);
+        partition_modulo
     }
-    // uses Euler's recursive formula p(n) = p(n-1) + p(n-2) - p(n-5) - p(n-7) + p(n-12) + ... where i & 2 == 0 generates the signal sequence + + - - + + - - ...
-    let partition_modulo = (0..).map(|n| if n & 1 == 0 { (n >> 1) + 1 } else { -(n >> 1) - 1 }).map(pentagonal).take_while(less_or_equal_than(value.as_i64())).enumerate().fold(0, |pm, (i, k)| {
-        (if i & 2 == 0 { Add::add } else { Sub::sub })(pm, partition_modulo_memoize(value - k.as_u64(), modulo, cache).as_i64())
-    });
-    cache.push(partition_modulo.rem_euclid(modulo.as_i64()).as_u64());
-    cache[index]
 }
 
 // --- //
@@ -90,21 +90,21 @@ pub fn permutations_of_set<T>(elements: Vec<T>) -> impl Iterator<Item=Vec<T>> wh
 }
 
 /// provides an iterator of the permutations of the given elements that satisfy a given mapping predicate. requires the elements to be sorted in order to provide all possible permutations
-pub fn permutations_of_set_with<T, F, R>(elements: Vec<T>, predicate: F) -> impl Iterator<Item=R> where T: PartialOrd, F: Fn(&[T]) -> Option<R> {
+pub fn permutations_of_set_with<T, F, R>(elements: Vec<T>, predicate: F) -> impl Iterator<Item=R> where T: PartialOrd, F: FnMut(&[T]) -> Option<R> {
     Permutations { elements, predicate }
 }
 
 /// provides an iterator of permutations of the digits `start` and `size` (inclusive) that satisfy a given mapping predicate.
-pub fn permutations_of_digits_with<F, R>(start: u8, size: u8, predicate: F) -> impl Iterator<Item=R> where F: Fn(&[u8]) -> Option<R> {
+pub fn permutations_of_digits_with<F, R>(start: u8, size: u8, predicate: F) -> impl Iterator<Item=R> where F: FnMut(&[u8]) -> Option<R> {
     permutations_of_set_with((start..=size).collect::<Vec<_>>(), predicate)
 }
 
-struct Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]) -> Option<R> {
+struct Permutations<T, F, R> where T: PartialOrd, F: FnMut(&[T]) -> Option<R> {
     elements: Vec<T>,
     predicate: F,
 }
 
-impl<T, F, R> Iterator for Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]) -> Option<R> {
+impl<T, F, R> Iterator for Permutations<T, F, R> where T: PartialOrd, F: FnMut(&[T]) -> Option<R> {
     type Item = R;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -119,12 +119,12 @@ impl<T, F, R> Iterator for Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]
     }
 }
 
-impl<T, F, R> Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]) -> Option<R> {
+impl<T, F, R> Permutations<T, F, R> where T: PartialOrd, F: FnMut(&[T]) -> Option<R> {
     pub fn permutate(&mut self) -> bool {
         // find non-increasing suffix
         (1..self.elements.len()).rev().find(|&i| self.elements[i - 1] < self.elements[i]).map_or(false, |index| {
             // swap with a successor and reverse suffix
-            let pivot = (0..self.elements.len()).rev().find(|&j| self.elements[j] > self.elements[index - 1]).unwrap();
+            let pivot = (0..self.elements.len()).rev().find(|&j| self.elements[j] > self.elements[index - 1]).expect("There should be an element to swap");
             self.elements.swap(index - 1, pivot);
             self.elements[index..].reverse();
             true
@@ -137,7 +137,7 @@ impl<T, F, R> Permutations<T, F, R> where T: PartialOrd, F: Fn(&[T]) -> Option<R
 /// provides an iterator of combinations of the elements (with repetition of elements)
 pub fn permutations_with_repetition_of_set<T>(elements: Vec<T>, size: usize) -> impl Iterator<Item=Vec<T>> where T: Copy {
     let mut indexes = vec![0; size];
-    from_fn(move || (indexes[0] >= elements.len()).then(|| {
+    from_fn(move || (!indexes.is_empty() && indexes[0] < elements.len()).then(|| {
         let mut result = Vec::with_capacity(indexes.len());
         indexes.iter().for_each(|&i| result.push(elements[i]));
         for i in (0..indexes.len()).rev() {
@@ -206,8 +206,7 @@ pub fn pythagorean_triplets() -> impl Iterator<Item=(u64, u64, u64)> {
         while {
             n += 2;
             if n >= m {
-                m += 1;
-                n = if m % 2 == 0 { 1 } else { 2 };
+                n = if m.increment_and_get() % 2 == 0 { 1 } else { 2 };
             }
             !are_coprime(m.as_i64(), n.as_i64())
         } {}

@@ -51,7 +51,7 @@ impl Solver for Solver098 {
         anagrams.sort_unstable_by_key(|pair| pair[0].len());
         anagrams.iter().rev().find_map(|pair| {
             let dim = pair[0].len();
-            let mapping_indexes = pair[1].chars().map(|c| dim - 1 - pair[0].char_indices().find(|(_, d)| *d == c).unwrap().0).collect::<Vec<_>>();
+            let mapping_indexes = pair[1].chars().map(|c| dim - 1 - pair[0].char_indices().find(|&(_, d)| d == c).expect("There should be a matching word").0).collect::<Vec<_>>();
             let remap = |value| {
                 let digits = Digits::from(value);
                 from_raw_digits(&mapping_indexes.iter().filter_map(|&i| digits.get(i).copied()).rev().collect::<Vec<_>>())

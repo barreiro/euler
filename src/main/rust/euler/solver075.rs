@@ -2,6 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use algorithm::cast::Cast;
+use algorithm::long::IncrementAndGet;
 use Solver;
 
 /// It turns out that `12cm` is the smallest length of wire that can be bent to form an integer sided right angle triangle in exactly one way, but there are many more examples.
@@ -42,7 +43,7 @@ impl Solver for Solver075 {
 fn coprimes(m: u64, n: u64, lengths: &mut [usize]) {
     let (sum, ceil) = ((m * (m + n)).as_usize(), lengths.len());
     if sum <= ceil {
-        (sum..ceil).step_by(sum).for_each(|s| lengths[s] += 1);
+        (sum..ceil).step_by(sum).for_each(|s| { lengths[s].increment_and_get(); });
         coprimes((m << 1) + n, m, lengths);
         coprimes((m << 1) - n, m, lengths);
         coprimes(m + (n << 1), n, lengths);

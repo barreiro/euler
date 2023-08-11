@@ -2,9 +2,9 @@
 // Rust solvers for Project Euler problems
 
 use std::convert::TryFrom;
-use std::iter::from_fn;
 
-use algorithm::root::{exact_sqrt, floor_sqrt, is_square};
+use algorithm::cast::Cast;
+use algorithm::root::{floor_sqrt, square};
 
 /// test if a given value has a factor pair where both factors are below a given bound
 #[must_use]
@@ -42,19 +42,25 @@ pub const fn totient(value: u64) -> u64 {
 
 /// the number of different divisors of a given value
 #[must_use]
-pub fn number_of_factors(value: i64) -> usize {
+pub fn number_of_factors(value: i64) -> u64 {
     // need to adjust the number of divisors if the number is a perfect square
-    (proper_factors_of(value).count() * 2) - usize::from(is_square(value))
+    // (proper_factors_of(value).count().as_u64() << 1) - u64::from(is_square(value))
+    let mut first_factor = 0;
+    (proper_factors_of(value).inspect(|&f| if first_factor == 0 { first_factor = f }).count() << 1).as_u64() - u64::from(square(first_factor) == value)
+
+    // alternative implementation with prime factorization
+    // prime_factors(value.as_u64()).values().map(|f| f + 1).product()
 }
 
 /// calculate the sum of the factors of a given value
 // defined according to problem 21: numbers less than n which divide evenly into n
 #[must_use]
 pub fn sum_of_factors(value: i64) -> i64 {
-    let (sum, (sqrt, rem)) = (proper_factors_of(value).map(|f| f + value / f).sum::<i64>(), exact_sqrt(value));
+    let mut first_factor = 0;
+    let sum = proper_factors_of(value).inspect(|&f| if first_factor == 0 { first_factor = f }).map(|f| f + value / f).sum::<i64>();
 
     // need to adjust the sum if the number is a perfect square
-    if rem == 0 { sum - sqrt - value } else { sum - value }
+    if square(first_factor) == value { sum - value - first_factor } else { sum - value }
 }
 
 // --- //
@@ -62,14 +68,6 @@ pub fn sum_of_factors(value: i64) -> i64 {
 /// provides an iterator of the proper factors of value, the factors up until the square root
 #[allow(clippy::cast_possible_truncation)]
 pub fn proper_factors_of(value: i64) -> impl Iterator<Item=i64> {
-    let (mut f, small) = (floor_sqrt(value) + 1, i32::try_from(value).is_ok());
-    from_fn(move || {
-        while f > 1 {
-            f -= 1;
-            if if small { value as i32 % f as i32 == 0 } else { value % f == 0 } {
-                return Some(f);
-            }
-        }
-        None
-    })
+    let small = i32::try_from(value).is_ok();
+    (1..=floor_sqrt(value)).rev().filter(move |&f| if small { value as i32 % f as i32 == 0 } else { value % f == 0 })
 }

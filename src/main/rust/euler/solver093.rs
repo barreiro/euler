@@ -5,7 +5,7 @@ use std::ops::{Add, Div, Mul, Sub};
 use algorithm::cast::Cast;
 
 use algorithm::combinatorics::{combinations, combinations_with};
-use algorithm::digits::from_rev_raw_digits;
+use algorithm::digits::from_raw_digits;
 use algorithm::filter::greater_than;
 use Solver;
 
@@ -33,7 +33,10 @@ impl Default for Solver093 {
 impl Solver for Solver093 {
     fn solve(&self) -> i64 {
         let consecutive_expansion = |set: &Vec<_>| expansion(set).iter().zip(1..).take_while(|&(&e, n)| e == n).count();
-        combinations((1..=9).collect(), self.n).max_by_key(consecutive_expansion).map(|d| from_rev_raw_digits(&d)).as_i64()
+        combinations((1..=9).collect(), self.n).max_by_key(consecutive_expansion).as_mut().map(|d| {
+            d.reverse();
+            from_raw_digits(d)
+        }).as_i64()
     }
 }
 

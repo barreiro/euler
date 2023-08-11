@@ -3,6 +3,71 @@
 
 use algorithm::root::{int_sqrt, is_square};
 
+pub trait IncrementAndGet {
+    #[allow(clippy::return_self_not_must_use)]
+    fn increment_and_get(&mut self) -> Self;
+}
+
+impl IncrementAndGet for i32 {
+    fn increment_and_get(&mut self) -> Self {
+        *self += 1;
+        *self
+    }
+}
+
+impl IncrementAndGet for u64 {
+    fn increment_and_get(&mut self) -> Self {
+        *self += 1;
+        *self
+    }
+}
+
+impl IncrementAndGet for usize {
+    fn increment_and_get(&mut self) -> Self {
+        *self += 1;
+        *self
+    }
+}
+
+pub trait GetAndIncrement {
+    #[allow(clippy::return_self_not_must_use)]
+    fn get_and_increment(&mut self) -> Self;
+}
+
+impl GetAndIncrement for i32 {
+    fn get_and_increment(&mut self) -> Self {
+        let value = *self;
+        *self += 1;
+        value
+    }
+}
+
+impl GetAndIncrement for i64 {
+    fn get_and_increment(&mut self) -> Self {
+        let value = *self;
+        *self += 1;
+        value
+    }
+}
+
+impl GetAndIncrement for u64 {
+    fn get_and_increment(&mut self) -> Self {
+        let value = *self;
+        *self += 1;
+        value
+    }
+}
+
+impl GetAndIncrement for usize {
+    fn get_and_increment(&mut self) -> Self {
+        let value = *self;
+        *self += 1;
+        value
+    }
+}
+
+// --- //
+
 /// calculates the Greatest Common Divisor using Stein's algorithm
 #[allow(clippy::manual_swap)] // because of const
 #[must_use]

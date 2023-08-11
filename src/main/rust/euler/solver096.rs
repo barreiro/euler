@@ -2,8 +2,8 @@
 // Rust solvers for Project Euler problems
 
 use std::convert::TryFrom;
-use algorithm::cast::{char_as_i64, to_i64};
 
+use algorithm::cast::{char_as_i64, to_i64};
 use algorithm::digits::Digits;
 use algorithm::io::load_default_data;
 use Solver;
@@ -86,11 +86,11 @@ impl SudokuDigit {
     }
 
     fn single_candidate(&mut self) -> Option<u8> {
-        (self.candidates_len() == 1).then(|| u8::try_from(u64::BITS - self.candidates.leading_zeros() - 1).unwrap())
+        (self.candidates_len() == 1).then(|| u8::try_from(u64::BITS - self.candidates.leading_zeros() - 1).expect("Unexpected number of bits"))
     }
 
     fn candidates(&self) -> Vec<u8> {
-        (1..=u8::try_from(SUDOKU_SIZE).unwrap()).filter(|&i| self.allows(i)).collect()
+        (1..=u8::try_from(SUDOKU_SIZE).expect("Sudoku size should be reasonable")).filter(|&i| self.allows(i)).collect()
     }
 
     const fn candidates_len(&self) -> usize {
@@ -122,9 +122,8 @@ impl From<&str> for Sudoku {
 }
 
 impl Sudoku {
-
     fn values(&self) -> Vec<u8> {
-        self.sudoku.iter().filter_map(|digit| digit.value()).collect()
+        self.sudoku.iter().filter_map(SudokuDigit::value).collect()
     }
 
     fn row(row: usize) -> impl Iterator<Item=usize> {
@@ -159,9 +158,7 @@ impl Sudoku {
     }
 
     fn init(&mut self) {
-        (0..self.sudoku.len()).for_each(|i| {
-            (self.sudoku[i].is_assigned()).then(|| self.assign(i, self.sudoku[i].value().unwrap()));
-        });
+        (0..self.sudoku.len()).for_each(|i| self.sudoku[i].value().iter().for_each(|&v| self.assign(i, v)));
     }
 
     fn is_solved(&self) -> bool {
@@ -174,7 +171,7 @@ impl Sudoku {
 
     fn find_hidden_restrictions(&mut self, indexes: impl Iterator<Item=usize>) -> Vec<(usize, u8)> {
         let positions = indexes.collect::<Vec<_>>();
-        (1..=u8::try_from(SUDOKU_SIZE).unwrap()).filter(|&value| positions.iter().filter(|&&i| self.sudoku[i].allows(value)).count() == 1).map(|single| positions.iter().find(|&&i| self.sudoku[i].allows(single)).map(|&i| (i, single)).unwrap()).collect()
+        (1..=u8::try_from(SUDOKU_SIZE).expect("Sudoku size should be reasonable")).filter(|&value| positions.iter().filter(|&&i| self.sudoku[i].allows(value)).count() == 1).map(|single| positions.iter().find(|&&i| self.sudoku[i].allows(single)).map(|&i| (i, single)).expect("Hidden restriction should exist")).collect()
     }
 
     fn guess(&mut self) -> Option<(usize, Vec<u8>)> {

@@ -37,7 +37,7 @@ pub const fn pow_10(exp: u64) -> u64 {
 /// convenience method to calculate the power when in base 10.
 #[must_use]
 #[allow(clippy::cast_possible_truncation)]
-pub const fn pow_10_u(exp: usize) -> u64 {
+pub const fn pow_10_usize(exp: usize) -> u64 {
     POW_10[exp]
 }
 
@@ -74,6 +74,14 @@ pub const fn ceil_sqrt(value: i64) -> i64 {
     if remainder == 0 { root } else { root + 1 }
 }
 
+/// calculates an overestimation of the square root
+#[must_use]
+#[allow(clippy::cast_possible_wrap, clippy::cast_sign_loss)]
+pub const fn ceil_sqrt_u64(value: u64) -> u64 {
+    let (root, remainder) = exact_sqrt(value as i64);
+    if remainder == 0 { root as u64 } else { root as u64 + 1 }
+}
+
 /// calculates an approximation of the square root
 #[must_use]
 pub const fn int_sqrt(value: i64) -> i64 {
@@ -92,8 +100,8 @@ pub const fn exact_sqrt(value: i64) -> (i64, i64) {
         return (0, 0);
     }
 
-    // "place" starts at the highest power of four <= than the argument (64 = 0.leading_zeros())
-    let leading = 64 - value.leading_zeros();
+    // "place" starts at the highest power of four <= than the argument
+    let leading = 0i64.leading_zeros() - value.leading_zeros();
     let (mut remainder, mut place, mut root) = (value, 1 << if leading & 1 == 0 { leading - 2 } else { leading - 1 }, 0);
 
     while place != 0 {

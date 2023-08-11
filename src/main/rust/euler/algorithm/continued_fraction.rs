@@ -3,6 +3,7 @@
 
 use std::mem::swap;
 
+use algorithm::long::GetAndIncrement;
 use algorithm::root::{exact_sqrt, floor_sqrt, pow_10, square};
 
 // multiplier / (√n - fractional) => a + (√n - b) / c
@@ -103,8 +104,7 @@ impl<'a> Iterator for Convergent<'a> {
     type Item = (Vec<u64>, Vec<u64>);
 
     fn next(&mut self) -> Option<Self::Item> {
-        (*self.f)(self.i).map(|value| {
-            self.i += 1;
+        (*self.f)(self.i.get_and_increment()).map(|value| {
             add_mul(&mut self.previous.0, &self.last.0, value, self.threshold);
             add_mul(&mut self.previous.1, &self.last.1, value, self.threshold);
             swap(&mut self.last, &mut self.previous);

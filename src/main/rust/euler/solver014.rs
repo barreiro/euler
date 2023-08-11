@@ -46,13 +46,12 @@ fn collatz_memoize(size: u64) -> CollatzMemoize {
 
 impl CollatzMemoize {
     fn length(&mut self, value: u64) -> usize {
-        let (v, size, (terms, next)) = (value.as_usize(), self.cache.len(), if is_even_u64(&value) { (1, value >> 1) } else { (2, (value * 3 + 1) >> 1) });
-
-        if v < size {
-            let mut c = self.cache[v];
-            *c.get_or_insert_with(|| terms + self.length(next))
+        if let Some(Some(collatz)) = self.cache.get(value.as_usize()) {
+            *collatz
         } else {
-            terms + self.length(next)
+            let collatz = if is_even_u64(&value) { 1 + self.length(value >> 1) } else { 2 + self.length((value * 3 + 1) >> 1) };
+            self.cache.get_mut(value.as_usize()).iter_mut().for_each(|cache| **cache = Some(collatz));
+            collatz
         }
     }
 }

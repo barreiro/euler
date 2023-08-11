@@ -22,6 +22,11 @@ pub fn array_product(array: &[i64]) -> i64 {
 }
 
 #[must_use]
+pub fn array_product_u64(array: &[u64]) -> u64 {
+    array.iter().product()
+}
+
+#[must_use]
 pub fn array_concatenation(array: &[u64]) -> u64 {
     array.iter().fold(0, |a, &b| concatenation(b, a))
 }

@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::combinatorics::partition;
+use algorithm::combinatorics::{choose, partition};
 use algorithm::combinatorics::partition_with_constrains;
 use algorithm::combinatorics::permutations_of_digits_with;
 use algorithm::digits::Digits;
@@ -128,6 +128,11 @@ fn miller_rabin_long_test() {
 }
 
 // combinatorics.rs
+
+#[test]
+fn choose_test() {
+    (1..20).for_each(|n| (0..=n).for_each(|k| assert_eq!(choose(n, k), factorial(n) / (factorial(k) * factorial(n - k)))));
+}
 
 #[test]
 fn partition_test() {

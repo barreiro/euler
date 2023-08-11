@@ -1,12 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::convert::TryFrom;
-
 use algorithm::cast::Cast;
 use algorithm::combinatorics::permutations_of_digits_with;
 use algorithm::digits::concatenation;
-use algorithm::long::arithmetic_sum_u64;
 use Solver;
 
 /// Consider the following "magic" `3-gon` ring, filled with the numbers `1` to `6`, and each line adding to nine.
@@ -47,7 +44,7 @@ use Solver;
 /// Using the numbers `1` to `10`, and depending on arrangements, it is possible to form `16-` and `17-digit` strings.
 /// What is the maximum `16-digit` string for a "magic" `5-gon` ring?
 pub struct Solver068 {
-    pub n: u64,
+    pub n: u8,
 }
 
 impl Default for Solver068 {
@@ -59,16 +56,17 @@ impl Default for Solver068 {
 impl Solver for Solver068 {
     fn solve(&self) -> i64 {
         // assumes there is an arrangement for the x-gon where all the smallest values are on the inside (true for odd x)
-        let target_sum = (arithmetic_sum_u64(self.n * 2) + arithmetic_sum_u64(self.n)) / self.n;
+        let arithmetic_sum = |value| (value * (value + 1)) / 2;
+        let target_sum = (arithmetic_sum(self.n * 2) + arithmetic_sum(self.n)) / self.n;
 
-        permutations_of_digits_with(1, u8::try_from(self.n).unwrap(), |inners| {
-            (target_sum - u64::from(inners[0]) - u64::from(inners[1]) == self.n + 1).then(|| { // the first outer must be self.n + 1 for the solution to be 'canonical'
-                let mut outers = inners.windows(2).map(|i| target_sum - u64::from(i[0]) - u64::from(i[1])).collect::<Vec<_>>();
-                outers.push(target_sum - u64::from(inners[0]) - u64::from(inners[inners.len() - 1]));
+        permutations_of_digits_with(1, self.n, |inners| {
+            (target_sum - inners[0] - inners[1] == self.n + 1).then(|| { // the first outer must be self.n + 1 for the solution to be 'canonical'
+                let mut outers = inners.windows(2).map(|i| target_sum - i[0] - i[1]).collect::<Vec<_>>();
+                outers.push(target_sum - inners[0] - inners[inners.len() - 1]);
                 ((2..=self.n).all(|n| outers.contains(&(self.n + n)))).then(||
-                    outers.iter().enumerate().flat_map(|(i, &o)| [o, u64::from(inners[i]), u64::from(inners[(i + 1) % inners.len()])]).collect::<Vec<_>>()
+                    outers.iter().enumerate().flat_map(|(i, &o)| [u64::from(o), u64::from(inners[i]), u64::from(inners[(i + 1) % inners.len()])]).collect::<Vec<_>>()
                 )
             })
-        }).max().unwrap().unwrap().into_iter().fold(0, concatenation).as_i64()
+        }).max().expect("There should be a max").expect("There should be an arrangement").into_iter().fold(0, concatenation).as_i64()
     }
 }

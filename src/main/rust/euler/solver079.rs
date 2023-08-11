@@ -37,7 +37,7 @@ impl Solver for Solver079 {
             });
         });
         let mut guess = before.keys().copied().collect::<Vec<_>>();
-        guess.sort_unstable_by_key(|g| before.len() - before.get(g).unwrap().len());
+        guess.sort_unstable_by_key(|g| before.len() - before.get(g).expect("Should be an entry for every character").len());
         from_raw_digits(&guess).as_i64()
     }
 }

@@ -3,7 +3,7 @@
 
 use algorithm::cast::Cast;
 use algorithm::digits::{concatenation, Digits};
-use algorithm::root::{floor_sqrt_u64, int_log_10, pow_10};
+use algorithm::root::{ceil_sqrt_u64, int_log_10, pow_10};
 use Solver;
 
 /// Take the number `192` and multiply it by each of `1, 2, and 3`:
@@ -37,7 +37,7 @@ impl Solver for Solver038 {
         };
 
         // generate the natural product concatenation and check if it's a pandigital. find the first according to the most significant digit ordering
-        decrementing_by_most_significant(self.n, floor_sqrt_u64(self.n) + 1).map(|v| natural_product_concatenation(v, self.n)).filter(|d| d.len() == self.n.as_usize()).find(Digits::is_pandigital).as_i64()
+        decrementing_by_most_significant(self.n, ceil_sqrt_u64(self.n)).map(|v| natural_product_concatenation(v, self.n)).filter(|d| d.len() == self.n.as_usize()).find(Digits::is_pandigital).as_i64()
     }
 }
 

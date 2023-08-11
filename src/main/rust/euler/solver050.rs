@@ -28,7 +28,7 @@ impl Solver for Solver050 {
         // the list of primes which sum is below the limit, then starting on the greater window sizes try to find a sum that is prime
         let primes = generator_trial_division().scan(0, |acc, p| {
             *acc += p;
-            Some(p).filter(|_| *acc < pow_10(self.n))
+            (*acc < pow_10(self.n)).then_some(p)
         }).collect::<Vec<_>>();
 
         (1..=primes.len()).rev().find_map(|len| primes.windows(len).rev().map(array_sum_u64).find(is_prime)).as_i64()

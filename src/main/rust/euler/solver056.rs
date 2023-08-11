@@ -26,7 +26,7 @@ impl Solver for Solver056 {
     fn solve(&self) -> i64 {
         // only test a fraction of the space, just the 10% biggest numbers!
         let (floor, ceil) = (9 * self.n / 10, self.n);
-        (floor..ceil).map(|a| vectorized_power(a.as_u64()).skip(floor - 1).take(ceil - floor).map(|power| power.into_iter().map(digits_sum).sum()).max().unwrap()).max().unwrap()
+        (floor..ceil).filter_map(|a| vectorized_power(a.as_u64()).skip(floor - 1).take(ceil - floor).map(|power| power.into_iter().map(digits_sum).sum::<i64>()).max()).max().as_i64()
     }
 }
 

@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use algorithm::cast::Cast;
 use algorithm::digits::concatenation;
 use algorithm::filter::is_prime;
-use algorithm::prime::{prime_sieve, primes_wheel_up_to};
+use algorithm::prime::{prime_sieve, primes_up_to};
 use algorithm::root::{pow_10, square_u64};
 use algorithm::vec::array_sum_u64;
 use Solver;
@@ -27,14 +27,14 @@ impl Default for Solver060 {
 
 impl Solver for Solver060 {
     fn solve(&self) -> i64 {
-        let (mut set, primes) = (vec![], primes_wheel_up_to(pow_10(self.n - 1)).collect::<Vec<_>>());
+        let (mut set, primes) = (vec![], primes_up_to(pow_10(self.n - 1)).collect::<Vec<_>>());
         add_prime_to_set(&mut set, self.n.as_usize(), &primes, &mut HashMap::new());
         array_sum_u64(&set).as_i64()
     }
 }
 
 fn add_prime_to_set<'a>(set: &mut Vec<u64>, size: usize, primes: &'a [u64], cache: &mut HashMap<u64, Vec<&'a u64>>) -> bool {
-    let last_prime = *primes.last().unwrap();
+    let last_prime = *primes.last().expect("Primes should not be empty");
     let is_prime = |c| if c < last_prime {
         primes.binary_search(&c).is_ok()
     } else if c < square_u64(last_prime) {
@@ -49,7 +49,7 @@ fn add_prime_to_set<'a>(set: &mut Vec<u64>, size: usize, primes: &'a [u64], cach
 
     // closure that takes an element of the set and does the intersection with the concatenations of other elements.
     // the outcome is the primes that form concatenations with all elements of the set. From there, try to increase the size of the set by recursion.
-    let candidates = |p| cache.get(p).unwrap().iter().filter(|&c| set.iter().all(|&s| s == *p || cache.get(&s).unwrap().binary_search(c).is_ok())).map(|&&s| s).collect();
+    let candidates = |p| cache.get(p).expect("Cache should be populated").iter().filter(|&c| set.iter().all(|&s| s == *p || cache.get(&s).expect("Cache should be populated").binary_search(c).is_ok())).map(|&&s| s).collect();
 
     set.last().map_or(primes.to_vec(), candidates).iter().any(|&c| {
         set.push(c);

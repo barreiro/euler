@@ -39,7 +39,7 @@ impl Solver for Solver063 {
                     pow.push(carry);
                 }
             }
-            (pow.len().as_u64() - 1) * THRESHOLD + int_log_10(*pow.last().unwrap())
+            (pow.len().as_u64() - 1) * THRESHOLD + int_log_10(*pow.last().expect("There should be a result"))
         };
 
         (1..=self.n).map(|exp| (1..10).map(|base| pow_digits(base, exp)).filter(equals_u64(exp)).count().as_i64()).sum()

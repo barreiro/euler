@@ -26,23 +26,13 @@ impl Digits {
     /// verifies if it has all the digits one and only once (excluding zero)
     #[must_use]
     pub fn is_pandigital(&self) -> bool {
-        self.len() <= self.radix as usize && (1..=u8::try_from(self.len()).unwrap_or_default()).all(|value| self.digits.contains(&value))
+        self.len() <= self.radix as usize && (1..=self.len()).filter_map(|value| u8::try_from(value).ok()).all(|value| self.digits.contains(&value))
     }
 
     /// verifies if reads the same both ways
     #[must_use]
     pub fn is_palindrome(&self) -> bool {
-        // changed to const: (0..=self.digits.len() / 2).all(|i| self.digits[i] == self.digits[digits.len() - i - 1])
-        let mut i = self.digits.len() / 2;
-        loop {
-            if self.digits[i] != self.digits[self.digits.len() - i - 1] {
-                return false;
-            }
-            if i == 0 {
-                return true;
-            }
-            i -= 1;
-        }
+        (0..=self.digits.len() >> 1).all(|i| self.digits[i] == self.digits[self.digits.len() - i - 1])
     }
 
     /// checks if a value has repeated digits
@@ -136,10 +126,10 @@ impl Digits {
 fn to_raw_digits_radix(mut value: u64, radix: u8) -> Vec<u8> {
     let mut digits = Vec::with_capacity(12);
     while value >= u64::from(radix) {
-        digits.push(u8::try_from(value.rem_euclid(u64::from(radix))).unwrap());
+        digits.push(u8::try_from(value.rem_euclid(u64::from(radix))).expect("Remainder should be smaller than radix"));
         value /= u64::from(radix);
     }
-    digits.push(u8::try_from(value).unwrap());
+    digits.push(u8::try_from(value).expect("Final remainder should be smaller than radix"));
     digits
 }
 
@@ -154,22 +144,6 @@ const fn from_raw_digits_radix(digits: &[u8], radix: u8) -> u64 {
     let (mut result, mut i, base_10) = (0, 0, radix == DEFAULT_RADIX);
     while i < digits.len() {
         result += digits[i] as u64 * if base_10 { pow_10(i as u64) } else { pow(radix as i64, i as i64) as u64 };
-        i += 1;
-    }
-    result
-}
-
-/// the value of a collection of digits
-#[must_use]
-pub const fn from_rev_raw_digits(digits: &[u8]) -> u64 {
-    from_rev_raw_digits_radix(digits, DEFAULT_RADIX)
-}
-
-#[allow(clippy::cast_sign_loss)]
-const fn from_rev_raw_digits_radix(digits: &[u8], radix: u8) -> u64 {
-    let (mut result, mut i, base_10) = (0, 0, radix == DEFAULT_RADIX);
-    while i < digits.len() {
-        result += digits[digits.len() - i - 1] as u64 * if base_10 { pow_10(i as u64) } else { pow(radix as i64, i as i64) as u64 };
         i += 1;
     }
     result
@@ -316,6 +290,7 @@ pub fn is_permutation(a: u64, b: u64) -> bool {
 
 /// calculates the sum of the digits of a given value
 #[must_use]
+#[allow(clippy::cast_possible_wrap)]
 pub const fn digits_sum(value: u64) -> i64 {
     let (mut sum, mut v, radix) = (0, value, DEFAULT_RADIX as u64);
     while v >= radix {

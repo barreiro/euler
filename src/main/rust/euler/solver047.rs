@@ -41,7 +41,7 @@ fn is_num_prime_factors(n: u64, primes: &mut Vec<u64>, expected: u64) -> bool {
     let (mut count, mut value, small, stop) = (0, n, i32::try_from(n).is_ok(), floor_sqrt_u64(n));
     for &factor in primes.iter() {
         let mut divides = false;
-        while if small { i32::try_from(value).unwrap() % i32::try_from(factor).unwrap() == 0 } else { value % factor == 0 } {
+        while if small { i32::try_from(value).expect("Value should be small") % i32::try_from(factor).expect("Value should be small") == 0 } else { value % factor == 0 } {
             value /= factor;
             divides = true;
         }

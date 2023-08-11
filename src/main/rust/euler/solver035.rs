@@ -3,7 +3,7 @@
 
 use algorithm::cast::Cast;
 use algorithm::digits::Digits;
-use algorithm::prime::{miller_rabin, primes_wheel_up_to};
+use algorithm::prime::{miller_rabin, primes_up_to};
 use Solver;
 
 /// The number `197` is called a circular prime because all rotations of the digits: `197, 971, and 719` are themselves prime.
@@ -35,6 +35,6 @@ impl Solver for Solver035 {
             }).all(miller_rabin)
         };
 
-        primes_wheel_up_to(self.n).filter(is_circular_prime).count().as_i64()
+        primes_up_to(self.n).filter(is_circular_prime).count().as_i64()
     }
 }

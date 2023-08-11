@@ -6,7 +6,6 @@ use algorithm::root::pow;
 use algorithm::vec::array_sum;
 use Solver;
 
-// const INPUT_101: &[f64] = &[1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0];
 const INPUT_101: &[i64] = &[1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1];
 
 /// If we are presented with the first k terms of a sequence it is impossible to say with certainty the value of the next term, as there are infinitely many polynomial functions that can model the sequence.
@@ -41,22 +40,6 @@ impl Default for Solver101 {
 
 impl Solver for Solver101 {
     fn solve(&self) -> i64 {
-        // let poly_evaluate = |poly: &[f64], n: f64| {
-        //     poly.iter().enumerate().filter(|(_, &c)| c != 0.0).map(|(exp, c)| c * n.powi((poly.len() - exp - 1) as i32)).sum::<f64>()
-        // };
-        //
-        // let sequence = (1..=self.n).map(|i| poly_evaluate(&self.input, i as _)).collect::<Vec<_>>();
-        //
-        // let first_incorrect_term = |n: usize| {
-        //     // Polynomial interpolation from the first n terms of the sequence, using gauss elimination on the Vandermonde matrix
-        //     // see https://en.wikipedia.org/wiki/Polynomial_interpolation#Second_proof
-        //     let mut optimum = gauss_elimination((1..=n).map(|i| (0..n).map(|n| i.pow(n as _) as f64).collect::<Vec<_>>()).collect::<Vec<_>>(), &sequence[0..n]);
-        //     optimum.reverse();
-        //     poly_evaluate(&optimum, (n + 1) as f64)
-        // };
-        //
-        // (1..=self.n).map(|n| first_incorrect_term(n).round().as_i64()).sum()
-
         let poly_evaluate = |poly: &[i64], n| poly.iter().enumerate().filter(|(_, &c)| c != 0).map(|(exp, c)| c * pow(n, (poly.len() - exp - 1).as_i64())).sum::<i64>();
 
         // uses finite differences to calculate the first FIT https://en.wikipedia.org/wiki/Finite_difference#Application
@@ -70,32 +53,3 @@ impl Solver for Solver101 {
         sum
     }
 }
-
-// --- //
-
-fn _gauss_elimination(mut matrix: Vec<Vec<f64>>, solution: &[f64]) -> Vec<f64> {
-    let dim = matrix.len();
-    (0..dim).for_each(|c| matrix[c].push(solution[c]));
-
-    // FORWARD ELIMINATION: reduce every element under diagonal to 0.0
-    (0..dim).for_each(|c| {
-        // PIVOTING: find the max value in column and swap rows. this stabilizes the algorithm
-        let pivot = (c..dim).max_by(|&r1, &r2| matrix[r1][c].abs().partial_cmp(&matrix[r2][c].abs()).unwrap()).unwrap();
-        matrix.swap(c, pivot);
-
-        (c + 1..dim).for_each(|r| {
-            let factor = matrix[r][c] / matrix[c][c];
-            (c..=dim).for_each(|k| matrix[r][k] -= factor * matrix[c][k]);
-        });
-    });
-
-    // REDUCTION: reduce elements over diagonal to 0.0. pivoting ensures last row is all 0.0
-    (1..dim).rev().for_each(|c| {
-        // optimization: only compute last column
-        (0..c).rev().for_each(|r| matrix[r][dim] -= matrix[r][c] / matrix[c][c] * matrix[c][dim]);
-        matrix[c][dim] /= matrix[c][c];
-    });
-
-    (0..dim).map(|c| matrix[c][dim]).collect()
-}
-
