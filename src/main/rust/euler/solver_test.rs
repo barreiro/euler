@@ -1260,3 +1260,56 @@ fn solver_109_test() {
 fn solver_110_test() {
     assert_eq!(Solver110::default().solve(), 9350130049860600);
 }
+
+#[test]
+fn solver_111_test() {
+    assert_eq!(Solver111::default().solve(), 612407567715);
+
+    assert_eq!(Solver111 { n: 3 }.solve(), 31283);
+    assert_eq!(Solver111 { n: 4 }.solve(), 273700);
+    assert_eq!(Solver111 { n: 5 }.solve(), 6045857);
+    assert_eq!(Solver111 { n: 6 }.solve(), 43552775);
+    assert_eq!(Solver111 { n: 7 }.solve(), 1266769793);
+    assert_eq!(Solver111 { n: 8 }.solve(), 4060851254);
+    assert_eq!(Solver111 { n: 9 }.solve(), 45609504098);
+    assert_eq!(Solver111 { n: 17 }.solve(), 9102804193186049011);
+}
+
+#[test]
+fn solver_112_test() {
+    assert_eq!(Solver112::default().solve(), 1587000);
+
+    assert_eq!(Solver112 { n: 50 }.solve(), 538);
+    assert_eq!(Solver112 { n: 90 }.solve(), 21780);
+    assert_eq!(Solver112 { n: 98 }.solve(), 377650);
+}
+
+#[test]
+fn solver_113_test() {
+    assert_eq!(Solver113::default().solve(), 51161058134250);
+
+    assert_eq!(Solver113 { n: 6, ..Default::default() }.solve(), 12951);
+    assert_eq!(Solver113 { n: 10, ..Default::default() }.solve(), 277032);
+    assert_eq!(Solver113 { n: 350, ..Default::default() }.solve(), 9128312112077549750);
+}
+
+#[test]
+fn solver_114_test() {
+    assert_eq!(Solver114::default().solve(), 16475640049);
+
+    assert_eq!(Solver114 { n: 7, ..Default::default() }.solve(), 17);
+    assert_eq!(Solver114 { n: 10, ..Default::default() }.solve(), 72);
+    assert_eq!(Solver114 { n: 20, ..Default::default() }.solve(), 8855);
+    assert_eq!(Solver114 { n: 90, ..Default::default() }.solve(), 3770056902373173215);
+}
+
+#[test]
+fn solver_115_test() {
+    assert_eq!(Solver115::default().solve(), 168);
+
+    assert_eq!(Solver115 { n: 3, ..Default::default() }.solve(), 30);
+    assert_eq!(Solver115 { n: 10, ..Default::default() }.solve(), 57);
+    assert_eq!(Solver115 { n: 20, ..Default::default() }.solve(), 88);
+    assert_eq!(Solver115 { n: 100, ..Default::default() }.solve(), 269);
+    assert_eq!(Solver115 { n: 500, ..Default::default() }.solve(), 1066);
+}

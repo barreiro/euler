@@ -107,7 +107,7 @@ pub fn greater_or_equal_than(other: i64) -> Box<dyn FnMut(&i64) -> bool> {
 /// quick test to find out if an arbitrary value is prime
 #[must_use]
 pub fn is_prime(value: &u64) -> bool {
-    value % 2 != 0 && miller_rabin(*value)
+    value & 1 != 0 && miller_rabin(*value)
 }
 
 /// if the sum of the factors of a given value equals the value itself

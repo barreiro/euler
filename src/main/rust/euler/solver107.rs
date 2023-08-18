@@ -43,52 +43,6 @@ impl Solver for Solver107 {
         let mut edges = (0..matrix.len()).flat_map(|i| (0..i).filter_map(|j| matrix[i][j].map(|w| (w, i, j))).collect::<Vec<_>>()).collect::<Vec<_>>();
         edges.sort_unstable();
 
-        // // verify if is still possible to go from start to end after removing the edge from start to end
-        // let is_connected = |matrix: &Vec<Vec<Option<_>>>, start: usize, end: usize| {
-        //     let (mut visited, mut neighbours) = (vec![false; matrix.len()], vec![start]);
-        //     while !neighbours.is_empty() {
-        //         neighbours.pop().filter(|&n| !visited[n]).iter().for_each(|&n| {
-        //             if matrix[n][end].is_some() {
-        //                 visited[end] = true;
-        //                 neighbours.clear();
-        //             } else {
-        //                 visited[n] = true;
-        //                 (0..matrix.len()).filter(|&other| !visited[other] && matrix[n][other].is_some()).for_each(|other| neighbours.push(other));
-        //             }
-        //         });
-        //     }
-        //     visited[end]
-        // };
-        //
-        // // implement reverse delete algorithm (reverse Kruskal) by removing the biggest edges while maintaining the graph connected
-        // // the sum of the edges removed is the saving
-        // edges.iter().rev().filter_map(|&(w, from, to)| {
-        //     let previous = matrix[from][to];
-        //     (matrix[from][to], matrix[to][from]) = (None, None);
-        //     if is_connected(&matrix, from, to) {
-        //         Some(w).map(to_i64)
-        //     } else {
-        //         (matrix[from][to], matrix[to][from]) = (previous, previous);
-        //         None
-        //     }
-        // }).sum()
-
-        // implemented with Kruskal's algorithm. add the smallest edges that do not introduce cycles. removed edges are savings
-        // let (mut visited, mut group) = (, 0);
-        // edges.iter().filter_map(|&(w, from, to)| {
-        //     if visited[from].and(visited[to]).is_none() {
-        //         let current_group = visited[from].or(visited[to]).or_else(|| Some(group.increment_and_get()));
-        //         (visited[from], visited[to]) = (current_group, current_group);
-        //         None
-        //     } else if visited[from] != visited[to] {
-        //         let (min, max) = (visited[from].min(visited[to]), visited[from].max(visited[to]));
-        //         visited.iter_mut().filter(|v| **v == max).for_each(|v| *v = min);
-        //         None
-        //     } else {
-        //         Some(w)
-        //     }
-        // }).sum()
-
         // implemented with Prim's algorithm. start with one vertex and grow the minimum tree from there, adding one unvisited vertx at a time
         let mut visited = vec![false; matrix.len()];
         visited[matrix.len() - 1] = true;

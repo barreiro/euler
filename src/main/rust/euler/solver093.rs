@@ -5,7 +5,7 @@ use std::ops::{Add, Div, Mul, Sub};
 use algorithm::cast::Cast;
 
 use algorithm::combinatorics::{combinations, combinations_with};
-use algorithm::digits::from_raw_digits;
+use algorithm::digits::{Digit, from_raw_digits};
 use algorithm::filter::greater_than;
 use Solver;
 
@@ -43,7 +43,7 @@ impl Solver for Solver093 {
 // --- //
 
 // converts from a set of integers into all the possible target results
-fn expansion(set: &[u8]) -> Vec<i64> {
+fn expansion(set: &[Digit]) -> Vec<i64> {
     let mut result = rational_expansion(set.iter().map(Rational::from).collect()).iter().filter_map(Rational::as_i64).filter(greater_than(0)).collect::<Vec<_>>();
     result.sort_unstable();
     result.dedup();
@@ -89,8 +89,8 @@ struct Rational {
     d: i64,
 }
 
-impl From<&u8> for Rational {
-    fn from(&n: &u8) -> Self {
+impl From<&Digit> for Rational {
+    fn from(&n: &Digit) -> Self {
         Self { n: i64::from(n), d: 1 }
     }
 }

@@ -3,7 +3,7 @@
 
 use algorithm::cast::{Cast, to_i64};
 use algorithm::combinatorics::permutations_of_digits_with;
-use algorithm::digits::from_raw_digits;
+use algorithm::digits::{Digit, from_raw_digits};
 use algorithm::prime::generator_trial_division;
 use Solver;
 
@@ -20,7 +20,7 @@ const DIM: usize = 3;
 /// `d(8) d(9) d(10) = 289` is divisible by `17`
 /// Find the sum of all `0` to `9` pandigital numbers with this property.
 pub struct Solver043 {
-    pub n: u8,
+    pub n: Digit,
 }
 
 impl Default for Solver043 {
@@ -32,7 +32,7 @@ impl Default for Solver043 {
 impl Solver for Solver043 {
     fn solve(&self) -> i64 {
         let primes = generator_trial_division().take(self.n as usize - DIM + 1).collect::<Vec<_>>();
-        let predicate = |d: &[u8]| (0..primes.len()).find(|&n| from_raw_digits(&d[n..n + DIM]) % primes[primes.len() - n - 1] != 0).map(|n| n.as_u64()).xor(Some(from_raw_digits(d)));
+        let predicate = |d: &[Digit]| (0..primes.len()).find(|&n| from_raw_digits(&d[n..n + DIM]) % primes[primes.len() - n - 1] != 0).map(|n| n.as_u64()).xor(Some(from_raw_digits(d)));
         permutations_of_digits_with(0, self.n, predicate).map(to_i64).sum()
     }
 }

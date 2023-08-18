@@ -27,7 +27,7 @@ use Solver;
 ///
 /// Given that `A` is an optimum special sum set for `n = 7`, find its set string.
 ///
-/// NOTE: This problem is related to Problem 105 and Problem 106.
+/// NOTE: This problem is related to *Problem 105* and *Problem 106*.
 pub struct Solver103 {
     pub n: usize,
 }

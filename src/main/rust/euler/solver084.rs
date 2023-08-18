@@ -118,18 +118,18 @@ impl Solver for Solver084 {
             });
         });
 
-        // the stationary distribution is given by the eigenvector of the transition matrix for the eigenvalue 1. solve ( A - I ) * x = 0
+        // the stationary distribution is given by the eigenvector of the transition matrix for the eigenvalue `1`. solve `( A - I ) * x = 0`
         let mut steady = (0..MARKOV_SIZE).map(|r| {
             let mut extended = (0..MARKOV_SIZE).map(|c| transition[c][r]).collect::<Vec<_>>();
             extended.push(0.0);
+            extended[r] -= 1.0;
             extended
         }).collect::<Vec<_>>();
-        (0..MARKOV_SIZE).for_each(|d| steady[d][d] -= 1.0);
 
-        // after transpose and append a 0.0 column, also add a line of 1.0 to ensure the sum of all probabilities equals 1.0
+        // after transpose and append a `0.0` column, also add a line of 1.0 to ensure the sum of all probabilities equals `1.0`
         steady.push(vec![1.0; MARKOV_SIZE + 1]);
 
-        // FORWARD ELIMINATION: reduce every element under diagonal to 0.0
+        // FORWARD ELIMINATION: reduce every element under diagonal to `0.0`
         (0..=MARKOV_SIZE).for_each(|c| {
             // PIVOTING: find the max value in column and swap rows. this stabilizes the algorithm
             let pivot = (c..=MARKOV_SIZE).max_by(|&r1, &r2| steady[r1][c].abs().partial_cmp(&steady[r2][c].abs()).expect("Entries in the Markov matrix should be finite")).expect("There should be a pivot row");
@@ -141,7 +141,7 @@ impl Solver for Solver084 {
             });
         });
 
-        // REDUCTION: reduce elements over diagonal to 0.0. pivoting ensures last row is all 0.0
+        // REDUCTION: reduce elements over diagonal to `0.0`. pivoting ensures last row is all `0.0`
         (1..MARKOV_SIZE).rev().for_each(|c| {
             // optimization: only compute last column
             (0..c).rev().for_each(|r| steady[r][MARKOV_SIZE] -= steady[r][c] / steady[c][c] * steady[c][MARKOV_SIZE]);

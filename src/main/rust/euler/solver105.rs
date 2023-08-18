@@ -16,7 +16,7 @@ use solver103::is_special_sum;
 ///
 /// Using sets.txt (right click and "Save Link/Target As..."), a 4K text file with one-hundred sets containing seven to twelve elements (the two examples given above are the first two sets in the file), identify all the special sum sets, `A1, A2, ..., Ak`, and find the value of `S(A1) + S(A2) + ... + S(Ak)`.
 ///
-/// NOTE: This problem is related to Problem 103 and Problem 106.
+/// NOTE: This problem is related to *Problem 103* and *Problem 106*.
 pub struct Solver105 {
     pub n: usize,
     pub input: String,

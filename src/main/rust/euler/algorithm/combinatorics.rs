@@ -5,6 +5,7 @@ use std::iter::from_fn;
 use std::ops::{Add, Sub};
 
 use algorithm::cast::Cast;
+use algorithm::digits::Digit;
 use algorithm::factor::sum_of_factors;
 use algorithm::filter::less_or_equal_than;
 use algorithm::long::{are_coprime, IncrementAndGet, pentagonal};
@@ -19,11 +20,20 @@ pub fn choose(total: u64, elements: u64) -> u64 {
     }
     let (mut n, mut result) = (total, 1);
     for d in 1..=elements.min(total - elements) {
-        result *= n;
-        result /= d;
+        // result *= n;
+        // result /= d;
+
+        // split result * n / d into (result / d * d + result % d) * n / d
+        result = result / d * n + result % d * n / d;
         n -= 1;
     }
     result
+}
+
+/// calculate the number of ways to create subsets with repeating elements
+#[must_use]
+pub fn multi_choose(total: u64, elements: u64) -> u64 {
+    choose(total + elements - 1, elements)
 }
 
 // --- //
@@ -95,7 +105,7 @@ pub fn permutations_of_set_with<T, F, R>(elements: Vec<T>, predicate: F) -> impl
 }
 
 /// provides an iterator of permutations of the digits `start` and `size` (inclusive) that satisfy a given mapping predicate.
-pub fn permutations_of_digits_with<F, R>(start: u8, size: u8, predicate: F) -> impl Iterator<Item=R> where F: FnMut(&[u8]) -> Option<R> {
+pub fn permutations_of_digits_with<F, R>(start: Digit, size: Digit, predicate: F) -> impl Iterator<Item=R> where F: FnMut(&[Digit]) -> Option<R> {
     permutations_of_set_with((start..=size).collect::<Vec<_>>(), predicate)
 }
 

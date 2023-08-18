@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use algorithm::cast::Cast;
-use algorithm::digits::{Digits, from_raw_digits, skip_digits};
+use algorithm::digits::{Digit, Digits, from_raw_digits, skip_digits};
 use algorithm::filter::{is_prime, less_than_u64};
 use algorithm::prime::generator_wheel;
 use algorithm::root::pow_10_usize;
@@ -13,7 +13,7 @@ use Solver;
 /// Consequently `56003`, being the first member of this family, is the smallest prime with this property.
 /// Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family.
 pub struct Solver051 {
-    pub n: u8,
+    pub n: Digit,
 }
 
 impl Default for Solver051 {

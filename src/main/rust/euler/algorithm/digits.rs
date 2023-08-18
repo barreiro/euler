@@ -11,22 +11,22 @@ use algorithm::combinatorics::permutations_of_set_with;
 use algorithm::root::{int_log_10, pow, pow_10};
 
 /// constant that defines the default base for conversions to and from digits
-pub const DEFAULT_RADIX: u8 = 10;
+pub const DEFAULT_RADIX: Digit = 10;
 
 pub type Digit = u8;
 
 /// Digit representation of a number (from most to least significant)
 #[derive(Clone)]
 pub struct Digits {
-    digits: Vec<u8>,
-    radix: u8,
+    digits: Vec<Digit>,
+    radix: Digit,
 }
 
 impl Digits {
     /// verifies if it has all the digits one and only once (excluding zero)
     #[must_use]
     pub fn is_pandigital(&self) -> bool {
-        self.len() <= self.radix as usize && (1..=self.len()).filter_map(|value| u8::try_from(value).ok()).all(|value| self.digits.contains(&value))
+        self.len() <= self.radix as usize && (1..=self.len()).filter_map(|value| Digit::try_from(value).ok()).all(|value| self.digits.contains(&value))
     }
 
     /// verifies if reads the same both ways
@@ -45,19 +45,19 @@ impl Digits {
 
     /// gets the n-th digit (from least to most significant)
     #[must_use]
-    pub fn get(&self, index: usize) -> Option<&u8> {
+    pub fn get(&self, index: usize) -> Option<&Digit> {
         self.digits.get(index)
     }
 
     /// gets the last digit (least significant)
     #[must_use]
-    pub fn last(&self) -> Option<&u8> {
+    pub fn last(&self) -> Option<&Digit> {
         self.digits.last()
     }
 
     /// gets the first digit (most significant)
     #[must_use]
-    pub fn first(&self) -> Option<&u8> {
+    pub fn first(&self) -> Option<&Digit> {
         self.digits.first()
     }
 
@@ -75,8 +75,27 @@ impl Digits {
 
     /// contains a certain digit
     #[must_use]
-    pub fn contains(&self, digit: &u8) -> bool {
+    pub fn contains(&self, digit: &Digit) -> bool {
         self.digits.contains(digit)
+    }
+
+    /// count the number of occurrences of a certain digit
+    #[must_use]
+    #[allow(clippy::naive_bytecount)]
+    pub fn count(&self, digit: &Digit) -> usize {
+        self.digits.iter().filter(|&d| d == digit).count()
+    }
+
+    /// checks if a value has increasing digits
+    #[must_use]
+    pub fn is_increasing(&self) -> bool {
+        (1..self.digits.len()).all(|i| self.digits[i] <= self.digits[i - 1])
+    }
+
+    /// checks if a value has decreasing digits
+    #[must_use]
+    pub fn is_decreasing(&self) -> bool {
+        (1..self.digits.len()).all(|i| self.digits[i] >= self.digits[i - 1])
     }
 
     /// reverse the digits order
@@ -105,12 +124,12 @@ impl Digits {
     /// finds a digit that is repeated `repetitions` times
     #[must_use]
     #[allow(clippy::naive_bytecount)]
-    pub fn find_repeated(&self, repetitions: usize) -> Option<u8> {
+    pub fn find_repeated(&self, repetitions: usize) -> Option<Digit> {
         (0..DEFAULT_RADIX).find(|&i| self.digits.iter().filter(|&&d| d == i).count() >= repetitions)
     }
 
     /// an iterator of permutations that match a given predicate
-    pub fn permutations_with<F, R>(&self, predicate: F) -> impl Iterator<Item=R> where F: Fn(&[u8]) -> Option<R> {
+    pub fn permutations_with<F, R>(&self, predicate: F) -> impl Iterator<Item=R> where F: Fn(&[Digit]) -> Option<R> {
         let mut set = self.digits.clone();
         set.sort_unstable();
         permutations_of_set_with(set, predicate)
@@ -118,29 +137,29 @@ impl Digits {
 
     /// returns an iterator on the digits
     #[must_use]
-    pub fn iter(&self) -> impl DoubleEndedIterator<Item=&u8> {
+    pub fn iter(&self) -> impl DoubleEndedIterator<Item=&Digit> {
         self.digits.iter()
     }
 }
 
-fn to_raw_digits_radix(mut value: u64, radix: u8) -> Vec<u8> {
+fn to_raw_digits_radix(mut value: u64, radix: Digit) -> Vec<Digit> {
     let mut digits = Vec::with_capacity(12);
-    while value >= u64::from(radix) {
-        digits.push(u8::try_from(value.rem_euclid(u64::from(radix))).expect("Remainder should be smaller than radix"));
-        value /= u64::from(radix);
+    while value >= radix.as_u64() {
+        digits.push(Digit::try_from(value.rem_euclid(radix.as_u64())).expect("Remainder should be smaller than radix"));
+        value /= radix.as_u64();
     }
-    digits.push(u8::try_from(value).expect("Final remainder should be smaller than radix"));
+    digits.push(Digit::try_from(value).expect("Final remainder should be smaller than radix"));
     digits
 }
 
 /// the value of a collection of digits
 #[must_use]
-pub const fn from_raw_digits(digits: &[u8]) -> u64 {
+pub const fn from_raw_digits(digits: &[Digit]) -> u64 {
     from_raw_digits_radix(digits, DEFAULT_RADIX)
 }
 
 #[allow(clippy::cast_sign_loss)]
-const fn from_raw_digits_radix(digits: &[u8], radix: u8) -> u64 {
+const fn from_raw_digits_radix(digits: &[Digit], radix: Digit) -> u64 {
     let (mut result, mut i, base_10) = (0, 0, radix == DEFAULT_RADIX);
     while i < digits.len() {
         result += digits[i] as u64 * if base_10 { pow_10(i as u64) } else { pow(radix as i64, i as i64) as u64 };
@@ -152,20 +171,20 @@ const fn from_raw_digits_radix(digits: &[u8], radix: u8) -> u64 {
 // --- //
 
 /// creates a digit from a value anda a given radix
-impl From<(u64, u8)> for Digits {
-    fn from((value, radix): (u64, u8)) -> Self {
+impl From<(u64, Digit)> for Digits {
+    fn from((value, radix): (u64, Digit)) -> Self {
         Self { digits: to_raw_digits_radix(value, radix), radix }
     }
 }
 
-impl From<Vec<u8>> for Digits {
-    fn from(digits: Vec<u8>) -> Self {
+impl From<Vec<Digit>> for Digits {
+    fn from(digits: Vec<Digit>) -> Self {
         Self { digits, radix: DEFAULT_RADIX }
     }
 }
 
-impl From<&[u8]> for Digits {
-    fn from(digits: &[u8]) -> Self {
+impl From<&[Digit]> for Digits {
+    fn from(digits: &[Digit]) -> Self {
         Self { digits: digits.to_vec(), radix: DEFAULT_RADIX }
     }
 }
@@ -206,15 +225,15 @@ impl FromIterator<u64> for Digits {
     }
 }
 
-impl FromIterator<u8> for Digits {
-    fn from_iter<T: IntoIterator<Item=u8>>(iter: T) -> Self {
+impl FromIterator<Digit> for Digits {
+    fn from_iter<T: IntoIterator<Item=Digit>>(iter: T) -> Self {
         Vec::from_iter(iter).into()
     }
 }
 
 impl IntoIterator for Digits {
     type Item = u64;
-    type IntoIter = Map<std::vec::IntoIter<u8>, Box<dyn FnMut(u8) -> u64>>;
+    type IntoIter = Map<std::vec::IntoIter<Digit>, Box<dyn FnMut(Digit) -> u64>>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.digits.into_iter().map(Box::new(u64::from))
@@ -230,7 +249,7 @@ pub fn digits_iter(value: u64) -> impl Iterator<Item=u64> {
 
 struct DigitsIterator {
     value: u64,
-    radix: u8,
+    radix: Digit,
 }
 
 impl Iterator for DigitsIterator {
@@ -347,7 +366,7 @@ pub fn palindromes() -> impl Iterator<Item=u64> {
 }
 
 struct Palindromes {
-    pub digits: Vec<u8>,
+    pub digits: Vec<Digit>,
 }
 
 impl Iterator for Palindromes {
@@ -410,7 +429,7 @@ pub fn incrementing_digits_from(initial: u64) -> impl Iterator<Item=Digits> {
 }
 
 struct IncrementingDigits {
-    array: Vec<u8>,
+    array: Vec<Digit>,
 }
 
 impl Iterator for IncrementingDigits {

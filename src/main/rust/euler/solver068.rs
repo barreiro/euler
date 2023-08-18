@@ -3,7 +3,7 @@
 
 use algorithm::cast::Cast;
 use algorithm::combinatorics::permutations_of_digits_with;
-use algorithm::digits::concatenation;
+use algorithm::digits::{concatenation, Digit};
 use Solver;
 
 /// Consider the following "magic" `3-gon` ring, filled with the numbers `1` to `6`, and each line adding to nine.
@@ -44,7 +44,7 @@ use Solver;
 /// Using the numbers `1` to `10`, and depending on arrangements, it is possible to form `16-` and `17-digit` strings.
 /// What is the maximum `16-digit` string for a "magic" `5-gon` ring?
 pub struct Solver068 {
-    pub n: u8,
+    pub n: Digit,
 }
 
 impl Default for Solver068 {
@@ -64,7 +64,7 @@ impl Solver for Solver068 {
                 let mut outers = inners.windows(2).map(|i| target_sum - i[0] - i[1]).collect::<Vec<_>>();
                 outers.push(target_sum - inners[0] - inners[inners.len() - 1]);
                 ((2..=self.n).all(|n| outers.contains(&(self.n + n)))).then(||
-                    outers.iter().enumerate().flat_map(|(i, &o)| [u64::from(o), u64::from(inners[i]), u64::from(inners[(i + 1) % inners.len()])]).collect::<Vec<_>>()
+                    outers.iter().enumerate().flat_map(|(i, &o)| [o.as_u64(), inners[i].as_u64(), inners[(i + 1) % inners.len()].as_u64()]).collect::<Vec<_>>()
                 )
             })
         }).max().expect("There should be a max").expect("There should be an arrangement").into_iter().fold(0, concatenation).as_i64()

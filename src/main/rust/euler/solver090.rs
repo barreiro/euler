@@ -8,7 +8,7 @@ use algorithm::cast::Cast;
 use algorithm::combinatorics::{combinations, permutations_of_set};
 use algorithm::digits::digits_iter;
 use algorithm::filter::less_than_u64;
-use algorithm::root::{pow_10, square_u64};
+use algorithm::root::{pow_10_usize, square_u64};
 use Solver;
 
 const DICE_SIZE: usize = 6;
@@ -33,7 +33,7 @@ const DICE_SIZE: usize = 6;
 ///
 /// How many distinct arrangements of the two cubes allow for all of the square numbers to be displayed?
 pub struct Solver090 {
-    pub n: u64,
+    pub n: usize,
 }
 
 impl Default for Solver090 {
@@ -45,19 +45,19 @@ impl Default for Solver090 {
 #[allow(clippy::maybe_infinite_iter)]
 impl Solver for Solver090 {
     fn solve(&self) -> i64 {
-        // creates a list of all permutations of the squares, replacing 9 with 6
-        let squares = (1..).map(square_u64).take_while(less_than_u64(pow_10(self.n))).map(|n| {
+        // creates a list of all permutations of the squares, replacing `9` with `6`
+        let squares = (1..).map(square_u64).take_while(less_than_u64(pow_10_usize(self.n))).map(|n| {
             let mut s = digits_iter(n).map(|d| if d == 9 { 6 } else { d }).collect::<Vec<_>>();
-            s.resize(self.n.as_usize(), 0);
-            s.sort_unstable(); // needs to be sorted for permutations_of_set_with()
+            s.resize(self.n, 0);
+            s.sort_unstable(); // needs to be sorted for `permutations_of_set_with()`
             s
         }).map(|s| permutations_of_set(s).collect::<Vec<_>>()).collect::<HashSet<_>>();
 
-        // create all combinations from digits to form the dice, replacing 9 with 6.
+        // create all combinations from digits to form the dice, replacing `9` with `6`
         let dice = combinations((0..=9).map(|x| if x == 9 { 6 } else { x }).collect(), DICE_SIZE).collect::<Vec<_>>();
 
-        // cartesian picks all combinations of n dice and for each combination verify if all the squares are present.
-        cartesian_with(dice.len(), self.n.as_usize(), |dice_index| squares.iter().all(|sq| sq.iter().any(|p| (0..p.len()).all(|i| dice[dice_index[i]].contains(&p[i]))))).count().as_i64()
+        // cartesian picks all combinations of n dice and for each combination verify if all the squares are present
+        cartesian_with(dice.len(), self.n, |dice_index| squares.iter().all(|sq| sq.iter().any(|p| (0..p.len()).all(|i| dice[dice_index[i]].contains(&p[i]))))).count().as_i64()
     }
 }
 

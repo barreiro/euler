@@ -36,11 +36,6 @@ impl Default for Solver108 {
 
 impl Solver for Solver108 {
     fn solve(&self) -> i64 {
-        // let _solutions_a = |n: i64| (0..n).filter(|&y| (n * y) % (n - y) == 0).count();
-        // let _solutions_b = |n: i64| proper_factors_of(square(n)).filter(|&f| f < n).count();
-        // let _solutions_c = |n: i64| (1 + number_of_factors(square(n))) >> 1;
-        // (2..).skip(2).find(|&n| _solutions_c(n) > self.n).as_i64()
-
         // the number of unit fraction sums that equal `1/n` is the number of divisors of `n^2` (divided by two because we want pairs, not divisors)
         // the number of divisors is maximized by the so called 'Highly Composite Numbers' HCN --- we approximate these using products of primorals
         // assuming `n` has prime factorization `p1^a1, p2^a2, ... pn^an` the number of factors of `n^2` is `(2*a1 + 1)(2*a2 + 1) ... (2*an + 1)`
@@ -48,12 +43,14 @@ impl Solver for Solver108 {
     }
 }
 
+// --- //
+
 // creates an iterator of increasing numbers that are multiples of primorals and therefore have 'highly composition'
 // the multiples are themselves highly composite numbers previously found, which increase the 'composability' of the results
 // these do not match the definition of 'highly composite numbers' but are an approximation good enough for this problem
 // together with the numbers there is an efficient generation of the prime factorization
 fn highly_composite(upper_bound : u64) -> impl Iterator<Item=(u64, HashMap<u64, u64>)> {
-    // the factorization is not on te prime, but on the prime index
+    // the factorization is not on te prime, but on the prime index (`0->2``1->3``2->5``3->7` and so on)
     let mut composite_cache = vec![(2u64, HashMap::from([(0, 1)])), (6, HashMap::from([(0, 1),(1, 1)])), (8, HashMap::from([(0, 3)]))];
 
     primorals().take_while(less_than_u64(upper_bound)).enumerate().for_each(|(n, primoral)| {

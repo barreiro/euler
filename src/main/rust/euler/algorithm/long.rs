@@ -1,6 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
+use algorithm::digits::Digit;
 use algorithm::root::{int_sqrt, is_square};
 
 pub trait IncrementAndGet {
@@ -9,6 +10,12 @@ pub trait IncrementAndGet {
 }
 
 impl IncrementAndGet for i32 {
+    fn increment_and_get(&mut self) -> Self {
+        *self += 1;
+        *self
+    }
+}
+impl IncrementAndGet for Digit {
     fn increment_and_get(&mut self) -> Self {
         *self += 1;
         *self

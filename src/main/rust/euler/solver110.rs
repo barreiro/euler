@@ -1,7 +1,8 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use ::{Solver, Solver108};
+use Solver;
+use Solver108;
 
 /// In the following equation `x`, `y`, and `n` are positive integers.
 /// ```
