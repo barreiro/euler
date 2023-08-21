@@ -126,6 +126,11 @@ pub fn main() {
     solve(113, &Solver113::default());
     solve(114, &Solver114::default());
     solve(115, &Solver115::default());
+    solve(116, &Solver116::default());
+    solve(117, &Solver117::default());
+    solve(118, &Solver118::default());
+    solve(119, &Solver119::default());
+    solve(120, &Solver120::default());
 }
 
 mod euler {
@@ -244,6 +249,11 @@ mod euler {
     pub use self::solver113::Solver113;
     pub use self::solver114::Solver114;
     pub use self::solver115::Solver115;
+    pub use self::solver116::Solver116;
+    pub use self::solver117::Solver117;
+    pub use self::solver118::Solver118;
+    pub use self::solver119::Solver119;
+    pub use self::solver120::Solver120;
 
     pub trait Solver {
         fn solve(&self) -> i64;
@@ -386,4 +396,9 @@ mod euler {
     pub mod solver113;
     pub mod solver114;
     pub mod solver115;
+    pub mod solver116;
+    pub mod solver117;
+    pub mod solver118;
+    pub mod solver119;
+    pub mod solver120;
 }

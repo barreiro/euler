@@ -1313,3 +1313,56 @@ fn solver_115_test() {
     assert_eq!(Solver115 { n: 100, ..Default::default() }.solve(), 269);
     assert_eq!(Solver115 { n: 500, ..Default::default() }.solve(), 1066);
 }
+
+#[test]
+fn solver_116_test() {
+    assert_eq!(Solver116::default().solve(), 20492570929);
+
+    assert_eq!(Solver116 { n: 5, ..Default::default() }.solve(), 12);
+    assert_eq!(Solver116 { n: 10, ..Default::default() }.solve(), 128);
+    assert_eq!(Solver116 { n: 20, ..Default::default() }.solve(), 12566);
+    assert_eq!(Solver116 { n: 90, ..Default::default() }.solve(), 4660582127692147865);
+}
+
+#[test]
+fn solver_117_test() {
+    assert_eq!(Solver117::default().solve(), 100808458960497);
+
+    assert_eq!(Solver117 { n: 5, ..Default::default() }.solve(), 15);
+    assert_eq!(Solver117 { n: 10, ..Default::default() }.solve(), 401);
+    assert_eq!(Solver117 { n: 20, ..Default::default() }.solve(), 283953);
+    assert_eq!(Solver117 { n: 66, ..Default::default() }.solve(), 3661260108881759077);
+}
+
+#[test]
+fn solver_118_test() {
+    assert_eq!(Solver118::default().solve(), 44680);
+
+    assert_eq!(Solver118 { n: 3 }.solve(), 2);
+    assert_eq!(Solver118 { n: 4 }.solve(), 9);
+    assert_eq!(Solver118 { n: 5 }.solve(), 24);
+    assert_eq!(Solver118 { n: 6 }.solve(), 77);
+    assert_eq!(Solver118 { n: 7 }.solve(), 1205);
+    assert_eq!(Solver118 { n: 8 }.solve(), 4076);
+}
+
+#[test]
+fn solver_119_test() {
+    assert_eq!(Solver119::default().solve(), 248155780267521);
+
+    assert_eq!(Solver119 { n: 1 }.solve(), 81);
+    assert_eq!(Solver119 { n: 2 }.solve(), 512);
+    assert_eq!(Solver119 { n: 5 }.solve(), 5832);
+    assert_eq!(Solver119 { n: 10 }.solve(), 614656);
+    assert_eq!(Solver119 { n: 20 }.solve(), 24794911296);
+}
+
+#[test]
+fn solver_120_test() {
+    assert_eq!(Solver120::default().solve(), 333082500);
+
+    assert_eq!(Solver120 { n: 7 }.solve(), 100);
+    assert_eq!(Solver120 { n: 100 }.solve(), 330750);
+    assert_eq!(Solver120 { n: 10000 }.solve(), 333308325000);
+    assert_eq!(Solver120 { n: 1000000 }.solve(), 333333083332500000);
+}

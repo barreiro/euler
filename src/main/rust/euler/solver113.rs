@@ -32,10 +32,5 @@ impl Solver for Solver113 {
         // treat the decreasing case like there was an extra digit (bigger than all others), to account for the cases where the first one is zero
         // finally, remove zeros and numbers that have all the same digits that are counted twice (both increasing ans decreasing)
         (multi_choose(self.radix, self.n) + multi_choose(self.radix + 1, self.n) - (self.n * self.radix) - 2).as_i64()
-
-        // the number of increasing is given by `multi_choose(radix, n)`
-        // the number of decreasing is the same plus a sum of cases that start with zero that are not accounted for
-        // finally, remove zero and numbers with all the same digits that are counted twice
-        // (2 * multi_choose(self.radix, self.n) + (1..self.n).map(|i| multi_choose(self.radix, i)).sum::<u64>() - (self.radix * self.n) - 1).as_i64()
     }
 }

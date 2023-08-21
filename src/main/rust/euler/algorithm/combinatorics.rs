@@ -164,6 +164,25 @@ pub fn permutations_with_repetition_of_set<T>(elements: Vec<T>, size: usize) -> 
 
 // --- //
 
+/// provides an iterator of partitions of the elements
+pub fn partitions_of_set<T>(elements: &[T]) -> impl Iterator<Item=Vec<Vec<T>>> + '_ where T: Copy {
+    // following the paper "Efficient Generation of Set Partitions" by Michael Orlov
+    let (mut k, mut m) = (vec![0; elements.len()], vec![0; elements.len()]);
+    vec![vec![elements.to_vec()]].into_iter().chain(from_fn(move || {
+        (1..elements.len()).rev().find_map(|i| (k[i] <= m[i - 1]).then(|| {
+            m[i] = m[i].max(k[i].increment_and_get());
+            (i + 1..elements.len()).for_each(|j| (k[j], m[j]) = (k[0], m[i]));
+
+            // `k[e]` are the partition indexes for `elements[e]`
+            let mut result = vec![vec![]; *k.iter().max().expect("A partition should exist") + 1];
+            (0..elements.len()).for_each(|e| result[k[e]].push(elements[e]));
+            result
+        }))
+    }))
+}
+
+// --- //
+
 /// provides an iterator of combinations of the given elements
 pub fn combinations<T>(elements: Vec<T>, size: usize) -> impl Iterator<Item=Vec<T>> where T: PartialOrd + Copy {
     combinations_with(elements, size, |p| Some(p.to_vec()))

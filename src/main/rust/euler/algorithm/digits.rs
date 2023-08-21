@@ -8,7 +8,7 @@ use std::ops::AddAssign;
 
 use algorithm::cast::Cast;
 use algorithm::combinatorics::permutations_of_set_with;
-use algorithm::root::{int_log_10, pow, pow_10};
+use algorithm::root::{int_log_10, pow_10, pow_u64};
 
 /// constant that defines the default base for conversions to and from digits
 pub const DEFAULT_RADIX: Digit = 10;
@@ -162,7 +162,7 @@ pub const fn from_raw_digits(digits: &[Digit]) -> u64 {
 const fn from_raw_digits_radix(digits: &[Digit], radix: Digit) -> u64 {
     let (mut result, mut i, base_10) = (0, 0, radix == DEFAULT_RADIX);
     while i < digits.len() {
-        result += digits[i] as u64 * if base_10 { pow_10(i as u64) } else { pow(radix as i64, i as i64) as u64 };
+        result += digits[i] as u64 * if base_10 { pow_10(i as u64) } else { pow_u64(radix as u64, i as u64) };
         i += 1;
     }
     result
