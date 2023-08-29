@@ -39,6 +39,8 @@ impl Default for Solver117 {
 }
 
 impl Solver for Solver117 {
+    fn problem_name(&self) -> &str { "Red, green and blue Tiles" }
+
     fn solve(&self) -> i64 {
         multipart(self.n, &self.input).as_i64()
     }

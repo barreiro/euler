@@ -54,6 +54,8 @@ impl Default for Solver109 {
 }
 
 impl Solver for Solver109 {
+    fn problem_name(&self) -> &str { "Darts" }
+
     fn solve(&self) -> i64 {
         let (doubles, trebles) = (VALUES.iter().chain(BULLS).map(|v| v * 2).collect::<Vec<_>>(), VALUES.iter().map(|v| v * 3).collect::<Vec<_>>());
         let all = VALUES.iter().chain(BULLS).chain(doubles.iter()).chain(trebles.iter()).copied().collect::<Vec<_>>();

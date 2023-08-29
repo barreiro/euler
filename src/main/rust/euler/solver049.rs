@@ -29,6 +29,8 @@ impl Default for Solver049 {
 }
 
 impl Solver for Solver049 {
+    fn problem_name(&self) -> &str { "Prime permutations" }
+
     fn solve(&self) -> i64 {
         // group together primes based on their permutation --- using their sorted digits as the key on a map
         let mut grouped_primes = HashMap::with_capacity(pow_10(self.n).as_usize());

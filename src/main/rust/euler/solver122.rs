@@ -39,6 +39,8 @@ impl Default for Solver122 {
 }
 
 impl Solver for Solver122 {
+    fn problem_name(&self) -> &str { "Efficient exponentiation" }
+
     fn solve(&self) -> i64 {
         // let mut cache = &mut vec![None; 1 + self.n.as_usize()];
         // (2..=self.n).map(|n| _multiplications(n, &mut cache)[0].len().as_i64()).sum()

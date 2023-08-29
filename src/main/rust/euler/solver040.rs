@@ -13,9 +13,11 @@ const RADIX: u64 = DEFAULT_RADIX as u64;
 /// `0.123456789101112131415161718192021...`
 ///
 /// It can be seen that the `12th digit` of the fractional part is `1`.
-/// If `dn` represents the `nth digit` of the fractional part, find the value of the following expression.
 ///
-/// `d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000`
+/// If `dn` represents the `nth digit` of the fractional part, find the value of the following expression.
+/// ```
+/// d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+/// ```
 pub struct Solver040 {
     pub n: u64,
 }
@@ -27,6 +29,8 @@ impl Default for Solver040 {
 }
 
 impl Solver for Solver040 {
+    fn problem_name(&self) -> &str { "Champernowne's constant" }
+
     fn solve(&self) -> i64 {
         let ledge = |position| {
             // ledges are the places where concatenation starts to have bigger integers. to each there is a corresponding integer length.

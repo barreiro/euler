@@ -8,6 +8,7 @@ use Solver;
 const INPUT_001: &[i64] = &[3, 5];
 
 /// If we list all the natural numbers below 10 that are multiples of `3` or `5`, we get `3, 5, 6` and `9`. The sum of these multiples is `23`.
+///
 /// Find the sum of all the multiples of `3` or `5` below `1000`.
 pub struct Solver001 {
     pub n: i64,
@@ -21,6 +22,8 @@ impl Default for Solver001 {
 }
 
 impl Solver for Solver001 {
+    fn problem_name(&self) -> &str { "Multiples of 3 or 5" }
+
     fn solve(&self) -> i64 {
         // the contribution is the factor multiplied by the sum of the number of occurrences
         let contribution = |factor| factor * arithmetic_sum((self.n - 1) / factor);

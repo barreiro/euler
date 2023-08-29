@@ -171,18 +171,18 @@ fn solver_015_test() {
 fn solver_016_test() {
     assert_eq!(Solver016::default().solve(), 1366);
 
-    assert_eq!(Solver016 { n: 0 }.solve(), 1);
-    assert_eq!(Solver016 { n: 1 }.solve(), 2);
-    assert_eq!(Solver016 { n: 4 }.solve(), 7);
-    assert_eq!(Solver016 { n: 8 }.solve(), 13);
-    assert_eq!(Solver016 { n: 10 }.solve(), 7);
-    assert_eq!(Solver016 { n: 15 }.solve(), 26);
-    assert_eq!(Solver016 { n: 33 }.solve(), 62);
-    assert_eq!(Solver016 { n: 65 }.solve(), 86);
-    assert_eq!(Solver016 { n: 100 }.solve(), 115);
-    assert_eq!(Solver016 { n: 200 }.solve(), 256);
-    assert_eq!(Solver016 { n: 500 }.solve(), 679);
-    assert_eq!(Solver016 { n: 10000 }.solve(), 13561);
+    assert_eq!(Solver016 { n: 0, ..Default::default() }.solve(), 1);
+    assert_eq!(Solver016 { n: 1, ..Default::default() }.solve(), 2);
+    assert_eq!(Solver016 { n: 4, ..Default::default() }.solve(), 7);
+    assert_eq!(Solver016 { n: 8, ..Default::default() }.solve(), 13);
+    assert_eq!(Solver016 { n: 10, ..Default::default() }.solve(), 7);
+    assert_eq!(Solver016 { n: 15, ..Default::default() }.solve(), 26);
+    assert_eq!(Solver016 { n: 33, ..Default::default() }.solve(), 62);
+    assert_eq!(Solver016 { n: 65, ..Default::default() }.solve(), 86);
+    assert_eq!(Solver016 { n: 100, ..Default::default() }.solve(), 115);
+    assert_eq!(Solver016 { n: 200, ..Default::default() }.solve(), 256);
+    assert_eq!(Solver016 { n: 500, ..Default::default() }.solve(), 679);
+    assert_eq!(Solver016 { n: 10000, ..Default::default() }.solve(), 13561);
 }
 
 #[test]

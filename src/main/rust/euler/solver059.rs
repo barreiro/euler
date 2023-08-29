@@ -34,6 +34,8 @@ impl Default for Solver059 {
 }
 
 impl Solver for Solver059 {
+    fn problem_name(&self) -> &str { "XOR decryption" }
+
     fn solve(&self) -> i64 {
         let encoded = self.input.split(',').filter_map(|s| s.parse().ok()).collect::<Vec<i64>>();
 

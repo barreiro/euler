@@ -4,7 +4,7 @@
 use algorithm::cast::Cast;
 use algorithm::combinatorics::permutations_of_set_with;
 use algorithm::digits::concatenation;
-use algorithm::vec::array_sum_u64;
+use algorithm::vec::{all_unique_by, array_sum_u64};
 use Solver;
 
 /// Let `S(A)` represent the sum of elements in set `A` of size `n`. We shall call it a special sum set if for any two non-empty disjoint subsets, `B` and `C`, the following properties are true:
@@ -13,13 +13,13 @@ use Solver;
 /// If `B` contains more elements than `C` then `S(B) > S(C)`.
 ///
 /// If `S(A)` is minimised for a given `n`, we shall call it an optimum special sum set. The first five optimum special sum sets are given below.
-///
-/// `n = 1`: `{1}`
-/// `n = 2`: `{1, 2}`
-/// `n = 3`: `{2, 3, 4}`
-/// `n = 4`: `{3, 5, 6, 7}`
-/// `n = 5`: `{6, 9, 11, 12, 13}`
-///
+/// ```
+/// n = 1: {1}
+/// n = 2: {1, 2}
+/// n = 3: {2, 3, 4}
+/// n = 4: {3, 5, 6, 7}
+/// n = 5: {6, 9, 11, 12, 13}
+/// ```
 /// It seems that for a given optimum set, `A = {a1, a2, ... , an}`, the next optimum set is of the form `B = {b, a1+b, a2+b, ... ,an+b}`, where b is the "middle" element on the previous row.
 /// By applying this "rule" we would expect the optimum set for `n = 6` to be `A = {11, 17, 20, 22, 23, 24}`, with `S(A) = 117`.
 /// However, this is not the optimum set, as we have merely applied an algorithm to provide a near optimum set.
@@ -39,6 +39,8 @@ impl Default for Solver103 {
 }
 
 impl Solver for Solver103 {
+    fn problem_name(&self) -> &str { "Special subset sums: optimum" }
+
     fn solve(&self) -> i64 {
         set_from_enhanced_formula(self.n).iter().fold(0, |a, &b| concatenation(a, b)).as_i64()
     }
@@ -87,15 +89,13 @@ pub fn is_special_sum(set: &Vec<u64>) -> bool {
 
     // checks that a sum does not exists in subsets
     let by_subset = || {
-        let mut sums = set.iter().fold(Vec::with_capacity(1 << set.len()), |mut sums, &s| {
+        let sums = set.iter().fold(Vec::with_capacity(1 << set.len()), |mut sums, &s| {
             let current_capacity = sums.len();
             (0..current_capacity).for_each(|i| sums.push(sums[i] + s));
             sums.push(s);
             sums
         });
-
-        sums.sort_unstable();
-        (1..sums.len()).all(|i| sums[i] != sums[i - 1])
+        all_unique_by(&sums, |&s| s)
     };
 
     by_size() && by_subset()

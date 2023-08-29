@@ -29,6 +29,8 @@ impl Default for Solver080 {
 }
 
 impl Solver for Solver080 {
+    fn problem_name(&self) -> &str { "Square root digital expansion" }
+
     fn solve(&self) -> i64 {
         // "Square roots by subtraction" by Frazer Jarvis ( http://www.afjarvis.staff.shef.ac.uk/maths/jarvisspec02.pdf )
         (2..=self.n).filter(|&n| !is_square(n)).map(|n| {

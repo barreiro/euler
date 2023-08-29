@@ -49,6 +49,8 @@ impl Default for Solver111 {
 }
 
 impl Solver for Solver111 {
+    fn problem_name(&self) -> &str { "Primes with runs" }
+
     fn solve(&self) -> i64 {
         // hybrid approach of using a sieve for smaller search spaces and miller-rabin for larger
         let sieve = primes_up_to(if self.n > SIEVE_THRESHOLD { 0 } else { ceil_sqrt_u64(pow_10_usize(self.n)) }).collect::<Vec<_>>();

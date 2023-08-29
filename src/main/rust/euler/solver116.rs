@@ -47,8 +47,10 @@ impl Default for Solver116 {
     }
 }
 
-#[allow(clippy::maybe_infinite_iter)]
 impl Solver for Solver116 {
+    fn problem_name(&self) -> &str { "Red, green or blue Tiles" }
+
+    #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
         self.input.iter().map(|&size| multipart(self.n, size)).map(to_i64).sum()
     }

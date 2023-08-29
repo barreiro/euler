@@ -30,8 +30,10 @@ impl Default for Solver115 {
     }
 }
 
-#[allow(clippy::maybe_infinite_iter)]
 impl Solver for Solver115 {
+    fn problem_name(&self) -> &str { "Counting block combinations II" }
+
+    #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
         (self.n..).find(|&set_size| multipart(set_size, self.n) > self.threshold).as_i64()
     }

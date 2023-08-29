@@ -24,6 +24,8 @@ impl Default for Solver048 {
 }
 
 impl Solver for Solver048 {
+    fn problem_name(&self) -> &str { "Self powers" }
+
     fn solve(&self) -> i64 {
         last_digits((1..=self.n).map(|n| pow_mod(n, n, pow_10_usize(self.digits))).sum(), self.digits).as_i64()
     }

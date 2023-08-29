@@ -29,6 +29,8 @@ impl Default for Solver118 {
 }
 
 impl Solver for Solver118 {
+    fn problem_name(&self) -> &str { "Pandigital prime sets" }
+
     fn solve(&self) -> i64 {
         // cache some primes to speed up primality test
         let primes = primes_up_to(SEARCH_THRESHOLD).collect::<Vec<_>>();

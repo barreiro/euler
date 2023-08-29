@@ -23,6 +23,8 @@ impl Default for Solver110 {
 }
 
 impl Solver for Solver110 {
+    fn problem_name(&self) -> &str { "Diophantine reciprocals II" }
+
     fn solve(&self) -> i64 {
         Solver108 { n: self.n }.solve() // delegate to problem 108
     }

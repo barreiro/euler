@@ -10,12 +10,12 @@ use Solver;
 
 /// The smallest number expressible as the sum of a prime square, prime cube, and prime fourth power is `28`.
 /// In fact, there are exactly four numbers below fifty that can be expressed in such a way:
-///
-/// `28 = 2^2 + 2^3 + 2^4`
-/// `33 = 3^2 + 2^3 + 2^4`
-/// `49 = 5^2 + 2^3 + 2^4`
-/// `47 = 2^2 + 3^3 + 2^4`
-///
+/// ```
+/// 28 = 2^2 + 2^3 + 2^4
+/// 33 = 3^2 + 2^3 + 2^4
+/// 49 = 5^2 + 2^3 + 2^4
+/// 47 = 2^2 + 3^3 + 2^4
+/// ```
 /// How many numbers below fifty million can be expressed as the sum of a prime square, prime cube, and prime fourth power?
 pub struct Solver087 {
     pub n: u64,
@@ -28,6 +28,8 @@ impl Default for Solver087 {
 }
 
 impl Solver for Solver087 {
+    fn problem_name(&self) -> &str { "Prime power triples" }
+
     fn solve(&self) -> i64 {
         // the exact bound is p <= floor_sqrt(n - 24), but as n >>> 24 can be approached by p < floor_sqrt(n)
         let (primes, mut solutions) = (primes_up_to(floor_sqrt_u64(self.n)).collect::<Vec<_>>(), BitSet::new());

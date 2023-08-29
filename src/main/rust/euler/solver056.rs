@@ -23,6 +23,8 @@ impl Default for Solver056 {
 }
 
 impl Solver for Solver056 {
+    fn problem_name(&self) -> &str { "Powerful digit sum" }
+
     fn solve(&self) -> i64 {
         // only test a fraction of the space, just the 10% biggest numbers!
         let (floor, ceil) = (9 * self.n / 10, self.n);

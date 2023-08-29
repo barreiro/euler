@@ -21,6 +21,8 @@ impl Default for Solver120 {
 }
 
 impl Solver for Solver120 {
+    fn problem_name(&self) -> &str { "Square remainders" }
+
     fn solve(&self) -> i64 {
         // when `n` is odd the expression simplifies to `2an * a^2 ≡ 2an mod a^2`, otherwise the remainder is always `2`
         // that is maximized by the greatest `n < a^2`, that is `n = (a - 1) / 2`, after which the modulo repeats

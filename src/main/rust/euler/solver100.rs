@@ -23,6 +23,8 @@ impl Default for Solver100 {
 }
 
 impl Solver for Solver100 {
+    fn problem_name(&self) -> &str { "Arranged probability" }
+
     fn solve(&self) -> i64 {
         // see https://en.wikipedia.org/wiki/Pell_number#Square_triangular_numbers
         // look at the table. the number of red discs is `s` and the total number of discs is `b`

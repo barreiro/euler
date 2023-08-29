@@ -8,9 +8,7 @@ use algorithm::filter::is_pandigital;
 use algorithm::root::pow_10_usize;
 use Solver;
 
-/// The Fibonacci sequence is defined by the recurrence relation:
-///
-/// `Fn = Fn−1 + Fn−2`, where `F1 = 1` and `F2 = 1`.
+/// The Fibonacci sequence is defined by the recurrence relation: `Fn = Fn−1 + Fn−2`, where `F1 = 1` and `F2 = 1`.
 ///
 /// It turns out that `F541`, which contains `113` digits, is the first Fibonacci number for which the last nine digits are 1-9 pandigital (contain all the digits 1 to 9, but not necessarily in order). And `F2749`, which contains `575` digits, is the first Fibonacci number for which the first nine digits are 1-9 pandigital.
 ///
@@ -26,6 +24,8 @@ impl Default for Solver104 {
 }
 
 impl Solver for Solver104 {
+    fn problem_name(&self) -> &str { "Pandigital fibonacci ends" }
+
     fn solve(&self) -> i64 {
         let both_pandigital = |n, tail| is_pandigital(&tail) && is_pandigital(&head_binet(n, self.n));
         (2..).zip(fibonacci_tail(self.n)).find_map(|(n, tail)| both_pandigital(n, tail).then_some(n)).as_i64()

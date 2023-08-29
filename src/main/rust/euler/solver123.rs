@@ -24,6 +24,8 @@ impl Default for Solver123 {
 }
 
 impl Solver for Solver123 {
+    fn problem_name(&self) -> &str { "Prime square remainders" }
+
     fn solve(&self) -> i64 {
         // the expression simplifies to `2 * n * p_n` when `n` is odd (otherwise result is `2`)
         generator_wheel().zip(1..).find(|&(p, n)| n & 1 != 0 && 2 * n * p > pow_10(self.n)).map(|(_, n)| n).as_i64()

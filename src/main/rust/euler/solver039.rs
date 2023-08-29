@@ -9,7 +9,9 @@ use algorithm::root::cube_u64;
 use Solver;
 
 /// If p is the perimeter of a right angle triangle with integral length sides, `{a,b,c}`, there are exactly three solutions for `p = 120`.
-/// `{20,48,52}, {24,45,51}, {30,40,50}`
+/// ```
+/// {20,48,52}, {24,45,51}, {30,40,50}
+/// ```
 /// For which value of `p ≤ 1000`, is the number of solutions maximised?
 pub struct Solver039 {
     pub n: u64,
@@ -21,8 +23,10 @@ impl Default for Solver039 {
     }
 }
 
-#[allow(clippy::maybe_infinite_iter)]
 impl Solver for Solver039 {
+    fn problem_name(&self) -> &str { "Integer right triangles" }
+
+    #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
         // create a list of perimeters for some primitive triplets. use that to factorize the candidates
         // the upper bound `cube(a)` is aggressive, and not exhaustive as `n` increases

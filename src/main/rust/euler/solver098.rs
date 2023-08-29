@@ -32,6 +32,8 @@ impl Default for Solver098 {
 }
 
 impl Solver for Solver098 {
+    fn problem_name(&self) -> &str { "Anagramic squares" }
+
     fn solve(&self) -> i64 {
         let word_norm = |&word: &&str| {
             let mut sorted_chars = word.chars().collect::<Vec<_>>();

@@ -24,8 +24,10 @@ impl Default for Solver125 {
     }
 }
 
-#[allow(clippy::maybe_infinite_iter)]
 impl Solver for Solver125 {
+    fn problem_name(&self) -> &str { "Palindromic sums" }
+
+    #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
         // let squares = (1..).map(square_u64).take_while(less_than_u64(pow_10(self.n) / 2)).collect::<Vec<_>>();
         // palindromes().take_while(less_than_u64(pow_10(self.n))).filter(|&p| {

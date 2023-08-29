@@ -12,6 +12,7 @@ use Solver;
 /// However, the almost equilateral triangle `5-5-6` has an area of `12` square units.
 ///
 /// We shall define an almost equilateral triangle to be a triangle for which two sides are equal and the third differs by no more than one unit.
+///
 /// Find the sum of the perimeters of all almost equilateral triangles with integral side lengths and area and whose perimeters do not exceed one billion (`1,000,000,000`).
 pub struct Solver094 {
     pub n: u64,
@@ -24,6 +25,8 @@ impl Default for Solver094 {
 }
 
 impl Solver for Solver094 {
+    fn problem_name(&self) -> &str { "Almost equilateral triangles" }
+
     fn solve(&self) -> i64 {
         // every perimeter is the square of a number or double that, with every second member being a "double". The numbers which are squared are 4,5,14,19,52,71,...
         // Fibonacci-like: the values at even indices are the sum of the previous two, the ones at odd indices are twice the previous plus the one before that

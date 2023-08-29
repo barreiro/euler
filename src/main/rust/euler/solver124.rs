@@ -40,6 +40,8 @@ impl Default for Solver124 {
 }
 
 impl Solver for Solver124 {
+    fn problem_name(&self) -> &str { "Ordered radicals" }
+
     fn solve(&self) -> i64 {
         // let primes = primes_up_to(ceil_sqrt_u64(self.ceil)).collect::<Vec<_>>();
         // let mut radicals = (1..=self.ceil).map(|n| (prime_factors_with_cache(n, &primes).keys().product::<u64>(), n)).collect::<Vec<_>>();

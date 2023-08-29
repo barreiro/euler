@@ -24,8 +24,10 @@ impl Default for Solver099 {
 }
 
 impl Solver for Solver099 {
+    fn problem_name(&self) -> &str { "Largest exponential" }
+
     fn solve(&self) -> i64 {
-        let as_tuple = |line: &str| line.split_once(',').map(|(base, exp)| (base.parse::<f64>().expect("Base should be a well formatted number"), exp.parse::<f64>().expect("Exp should be a well formmated number")));
-        self.input.lines().take(self.n).filter_map(as_tuple).zip(1..).max_by_key(|&((base, exp), _)| (base.log2() * exp).as_i64()).expect("Input should not be empty").1
+        let as_tuple = |line: &str| line.split_once(',').map(|(base, exp)| (base.parse::<f64>().expect("Base should be a well formatted number"), exp.parse::<f64>().expect("Exp should be a well formatted number")));
+        (1..).zip(self.input.lines().take(self.n).filter_map(as_tuple)).max_by_key(|&(_, (base, exp))| (base.log2() * exp).as_i64()).expect("Input should not be empty").0
     }
 }

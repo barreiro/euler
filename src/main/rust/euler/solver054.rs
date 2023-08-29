@@ -63,6 +63,8 @@ impl Default for Solver054 {
 }
 
 impl Solver for Solver054 {
+    fn problem_name(&self) -> &str { "Poker hands" }
+
     fn solve(&self) -> i64 {
         self.input.lines().take(self.n).map(|s| {
             let cards = s.split_whitespace().filter_map(|c| c.parse().ok()).collect::<Vec<_>>();

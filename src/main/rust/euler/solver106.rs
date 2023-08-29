@@ -28,6 +28,8 @@ impl Default for Solver106 {
 }
 
 impl Solver for Solver106 {
+    fn problem_name(&self) -> &str { "Special subset sums: meta-testing" }
+
     fn solve(&self) -> i64 {
         // given a size `2 < i <= n/2`, there are `choose(n, 2*i)` ways to form two subsets of size `i`
         // given a subset of size `2*i (4, 6, 8, 10, ...)`, the number of subsets that need to be tested is given by the sequence `(1, 5, 21, 84, ...)`

@@ -28,6 +28,8 @@ impl Default for Solver079 {
 }
 
 impl Solver for Solver079 {
+    fn problem_name(&self) -> &str { "Passcode derivation" }
+
     fn solve(&self) -> i64 {
         let (mut before, to_chars) = (HashMap::new(), |s: &str| s.chars().map(char_as_i64).filter_map(|i| Digit::try_from(i).ok()).collect::<Vec<_>>());
         self.input.lines().take(self.n).map(to_chars).for_each(|v| {

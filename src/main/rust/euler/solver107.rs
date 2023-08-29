@@ -38,6 +38,8 @@ impl Default for Solver107 {
 }
 
 impl Solver for Solver107 {
+    fn problem_name(&self) -> &str { "Minimal network" }
+
     fn solve(&self) -> i64 {
         let matrix = self.input.lines().take(self.n).map(|l| l.split(',').take(self.n).map(|d| d.parse::<u64>().ok()).collect::<Vec<_>>()).collect::<Vec<_>>();
         let mut edges = (0..matrix.len()).flat_map(|i| (0..i).filter_map(|j| matrix[i][j].map(|w| (w, i, j))).collect::<Vec<_>>()).collect::<Vec<_>>();

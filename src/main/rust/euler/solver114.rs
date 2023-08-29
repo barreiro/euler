@@ -44,6 +44,8 @@ impl Default for Solver114 {
 }
 
 impl Solver for Solver114 {
+    fn problem_name(&self) -> &str { "Counting block combinations I" }
+
     fn solve(&self) -> i64 {
         multipart(self.n, self.min_block_size).as_i64()
     }

@@ -26,6 +26,8 @@ impl Default for Solver060 {
 }
 
 impl Solver for Solver060 {
+    fn problem_name(&self) -> &str { "Prime pair sets" }
+
     fn solve(&self) -> i64 {
         let (mut set, primes) = (vec![], primes_up_to(pow_10(self.n - 1)).collect::<Vec<_>>());
         add_prime_to_set(&mut set, self.n.as_usize(), &primes, &mut HashMap::new());

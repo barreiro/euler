@@ -16,13 +16,13 @@ use Solver;
 /// It can be assumed that there are no solutions in positive integers when `D` is square.
 ///
 /// By finding minimal solutions in `x` for `D = {2, 3, 5, 6, 7}`, we obtain the following:
-///
-/// `3 ^ 2 – 2 * 2 ^ 2 = 1`
-/// `2 ^ 2 – 3 * 1 ^ 2 = 1`
-/// `9 ^ 2 – 5 * 4 ^ 2 = 1`
-/// `5 ^ 2 – 6 * 2 ^ 2 = 1`
-/// `8 ^ 2 – 7 * 3 ^ 2 = 1`
-///
+/// ```
+/// 3 ^ 2 – 2 * 2 ^ 2 = 1
+/// 2 ^ 2 – 3 * 1 ^ 2 = 1
+/// 9 ^ 2 – 5 * 4 ^ 2 = 1
+/// 5 ^ 2 – 6 * 2 ^ 2 = 1
+/// 8 ^ 2 – 7 * 3 ^ 2 = 1
+/// ```
 /// Hence, by considering minimal solutions in `x` for `D ≤ 7`, the largest `x` is obtained when `D = 5`.
 ///
 /// Find the value of `D ≤ 1000` in minimal solutions of `x` for which the largest value of `x` is obtained.
@@ -37,6 +37,8 @@ impl Default for Solver066 {
 }
 
 impl Solver for Solver066 {
+    fn problem_name(&self) -> &str { "Diophantine equation" }
+
     fn solve(&self) -> i64 {
         let custom_comparator = |n: Vec<_>| (n.len(), n[n.len() - 1]);
         let (cache_sqrt, threshold) = ((0..self.n).map(floor_sqrt_u64).collect::<Vec<_>>(), pow_10(15));

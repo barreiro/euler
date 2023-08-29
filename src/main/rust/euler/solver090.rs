@@ -42,8 +42,10 @@ impl Default for Solver090 {
     }
 }
 
-#[allow(clippy::maybe_infinite_iter)]
 impl Solver for Solver090 {
+    fn problem_name(&self) -> &str { "Cube digit pairs" }
+
+    #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
         // creates a list of all permutations of the squares, replacing `9` with `6`
         let squares = (1..).map(square_u64).take_while(less_than_u64(pow_10_usize(self.n))).map(|n| {

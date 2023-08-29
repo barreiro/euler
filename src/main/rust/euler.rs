@@ -8,7 +8,7 @@ pub use euler::*;
 pub fn main() {
     let solve = |n, solver: &dyn Solver| {
         let now = std::time::Instant::now();
-        println!("Solution for problem {:03} is {:16} ( took {:9.03} ms )", n, solver.solve(), now.elapsed().as_secs_f64() * 1000.0);
+        println!("Solution for problem {:03} is {:16} ( took {:9.03} ms ) {}", n, solver.solve(), now.elapsed().as_secs_f64() * 1000.0, solver.problem_name());
     };
 
     solve(1, &Solver001::default());
@@ -266,6 +266,7 @@ mod euler {
     pub use self::solver125::Solver125;
 
     pub trait Solver {
+        fn problem_name(&self) -> &str;
         fn solve(&self) -> i64;
     }
 

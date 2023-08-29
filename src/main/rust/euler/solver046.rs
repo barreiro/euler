@@ -7,15 +7,16 @@ use algorithm::root::is_square;
 use Solver;
 
 /// It was proposed by Christian Goldbach that every odd composite number can be written as the sum of a prime and twice a square.
-///
-/// ` 9 =  7 + 2*1^2`
-/// `15 =  7 + 2*2^2`
-/// `21 =  3 + 2*3^2`
-/// `25 =  7 + 2*3^2`
-/// `27 = 19 + 2*2^2`
-/// `33 = 31 + 2*1^2`
-///
+/// ```
+///  9 =  7 + 2*1^2
+/// 15 =  7 + 2*2^2
+/// 21 =  3 + 2*3^2
+/// 25 =  7 + 2*3^2
+/// 27 = 19 + 2*2^2
+/// 33 = 31 + 2*1^2
+/// ```
 /// It turns out that the conjecture was false.
+///
 /// What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
 pub struct Solver046 {
     pub n: usize
@@ -28,6 +29,8 @@ impl Default for Solver046 {
 }
 
 impl Solver for Solver046 {
+    fn problem_name(&self) -> &str { "Goldbach's other conjecture" }
+
     fn solve(&self) -> i64 {
         let mut primes = vec![2];
         (3..).step_by(2).filter(|&i| {

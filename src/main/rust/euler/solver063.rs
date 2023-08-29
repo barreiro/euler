@@ -22,6 +22,8 @@ impl Default for Solver063 {
 }
 
 impl Solver for Solver063 {
+    fn problem_name(&self) -> &str { "Powerful digit counts" }
+
     fn solve(&self) -> i64 {
         let pow_digits = |base, exp| {
             let (mut pow, ceiling) = (vec![base], pow_10(THRESHOLD));

@@ -24,6 +24,8 @@ impl Default for Solver050 {
 }
 
 impl Solver for Solver050 {
+    fn problem_name(&self) -> &str { "Consecutive prime sum" }
+
     fn solve(&self) -> i64 {
         // the list of primes which sum is below the limit, then starting on the greater window sizes try to find a sum that is prime
         let primes = generator_trial_division().scan(0, |acc, p| {

@@ -30,6 +30,8 @@ impl Default for Solver019 {
 }
 
 impl Solver for Solver019 {
+    fn problem_name(&self) -> &str { "Counting sundays" }
+
     fn solve(&self) -> i64 {
         (REFERENCE..REFERENCE + self.n).map(|y| if is_leap(y) { sundays_leap(start_day(y)) } else { sundays_common(start_day(y)) }).sum()
     }

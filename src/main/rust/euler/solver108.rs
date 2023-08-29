@@ -35,6 +35,8 @@ impl Default for Solver108 {
 }
 
 impl Solver for Solver108 {
+    fn problem_name(&self) -> &str { "Diophantine reciprocals I" }
+
     fn solve(&self) -> i64 {
         // the number of unit fraction sums that equal `1/n` is the number of divisors of `n^2` (divided by two because we want pairs, not divisors)
         // the number of divisors is maximized by the so called 'Highly Composite Numbers' HCN --- we approximate these using products of primorals

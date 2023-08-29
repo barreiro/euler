@@ -30,6 +30,8 @@ impl Default for Solver018 {
 }
 
 impl Solver for Solver018 {
+    fn problem_name(&self) -> &str { "Maximum path sum I" }
+
     fn solve(&self) -> i64 {
         let heap = str_to_heap(self.n, &self.input);
         best_sum(0, 0, &heap, &mut vec![0; heap.len()])

@@ -25,6 +25,8 @@ impl Default for Solver014 {
 }
 
 impl Solver for Solver014 {
+    fn problem_name(&self) -> &str { "Longest collatz sequence" }
+
     fn solve(&self) -> i64 {
         // floor i is an odd number 2/3 of self.n
         let (mut collatz, floor) = (collatz_memoize(self.n), self.n * 2 / 3 - (self.n * 2 / 3) % 2 - 1);

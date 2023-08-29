@@ -21,6 +21,8 @@ impl Default for Solver091 {
 }
 
 impl Solver for Solver091 {
+    fn problem_name(&self) -> &str { "Right triangles with integer coordinates" }
+
     fn solve(&self) -> i64 {
         // there are 3 trivial cases with n^2 triangles: right angle at the origin and right angle along both axis
         // there are also n^2/2 triangles with right angle in the main diagonal when n is even (and also odd, considering integer division)

@@ -27,10 +27,12 @@ impl Default for Solver113 {
 }
 
 impl Solver for Solver113 {
+    fn problem_name(&self) -> &str { "Non-bouncy numbers" }
+
     fn solve(&self) -> i64 {
         // the number of increasing is given by `multi_choose(radix, n)`
         // treat the decreasing case like there was an extra digit (bigger than all others), to account for the cases where the first one is zero
-        // finally, remove zeros and numbers that have all the same digits that are counted twice (both increasing ans decreasing)
+        // finally, remove numbers that have all the same digits that are counted twice (both increasing ans decreasing) and zeros
         (multi_choose(self.radix, self.n) + multi_choose(self.radix + 1, self.n) - (self.n * self.radix) - 2).as_i64()
     }
 }

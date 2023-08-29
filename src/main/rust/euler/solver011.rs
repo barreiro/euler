@@ -5,7 +5,9 @@ use algorithm::io::load_default_data;
 use Solver;
 
 /// In the 20×20 grid below, four numbers along a diagonal line have been marked in red.
+///
 /// The product of these numbers is `26 × 63 × 78 × 14 = 1788696`.
+///
 /// What is the greatest product of four adjacent numbers in the same direction (up, down, left, right, or diagonally) in the 20×20 grid?
 pub struct Solver011 {
     pub n: usize,
@@ -19,6 +21,8 @@ impl Default for Solver011 {
 }
 
 impl Solver for Solver011 {
+    fn problem_name(&self) -> &str { "Largest product in a grid" }
+
     fn solve(&self) -> i64 {
         let (mut greatest, grid) = (0, grid_str(&self.input));
         for n in self.n - 1..grid.len() {

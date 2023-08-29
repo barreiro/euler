@@ -25,6 +25,8 @@ impl Default for Solver121 {
 }
 
 impl Solver for Solver121 {
+    fn problem_name(&self) -> &str { "Disc game prize fund" }
+
     fn solve(&self) -> i64 {
         // for four turns, the probability of taking at least 3 red disks and win is probability of `RRRR + RRRB + RRBR + RBRR + BRRR`
         // let blues = |size| combinations((1..=self.n).collect(), size).map(|c| c.iter().product::<u64>()).sum::<u64>();

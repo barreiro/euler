@@ -25,8 +25,10 @@ impl Default for Solver086 {
     }
 }
 
-#[allow(clippy::maybe_infinite_iter)]
 impl Solver for Solver086 {
+    fn problem_name(&self) -> &str { "Cuboid Route" }
+
+    #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
         // for a cuboid a, b, c with a >= b >= c >= 1, the point of shortest path a_min (along the a side) is given by (b * a) / (c + b)
         // the length of the path d is sqrt(a_min^2 + b^2) + sqrt((a - a_min)^2 + c^2), substituting it simplifies to sqrt(a^2 + (b+c)^2)

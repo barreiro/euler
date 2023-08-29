@@ -15,7 +15,9 @@ const THOUSAND_AND_LEN: i64 = 8 + AND_LEN;
 const HUNDRED_AND_LEN: i64 = 7 + AND_LEN;
 
 /// If the numbers `1` to `5` are written out in words: one, two, three, four, five, then there are `3 + 3 + 5 + 4 + 4 = 19` letters used in total.
+///
 /// If all the numbers from `1` to `1000` (one thousand) inclusive were written out in words, how many letters would be used?
+///
 /// NOTE: Do not count spaces or hyphens.
 pub struct Solver017 {
     pub n: usize,
@@ -28,6 +30,8 @@ impl Default for Solver017 {
 }
 
 impl Solver for Solver017 {
+    fn problem_name(&self) -> &str { "Number letter counts" }
+
     fn solve(&self) -> i64 {
         let letter_count = |i| {
             // the number of letters of the thousands, then the hundreds, and finally lookupOnes tens and ones

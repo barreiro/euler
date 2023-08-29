@@ -29,6 +29,8 @@ impl Default for Solver105 {
 }
 
 impl Solver for Solver105 {
+    fn problem_name(&self) -> &str { "Special subset sums: testing" }
+
     fn solve(&self) -> i64 {
         let as_sorted = |line: &str| {
             let mut set = line.split(',').filter_map(|v| v.parse::<u64>().ok()).collect::<Vec<_>>();

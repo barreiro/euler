@@ -7,6 +7,7 @@ use algorithm::root::int_sqrt;
 use Solver;
 
 /// By counting carefully it can be seen that a rectangular grid measuring `3` by `2` contains eighteen rectangles.
+///
 /// Although there exists no rectangular grid that contains exactly two million rectangles, find the area of the grid with the nearest solution.
 pub struct Solver085 {
     pub n: i64,
@@ -19,6 +20,8 @@ impl Default for Solver085 {
 }
 
 impl Solver for Solver085 {
+    fn problem_name(&self) -> &str { "Counting rectangles" }
+
     fn solve(&self) -> i64 {
         // number of rectangles in a n * m grid = arithmetic_sum(n) * arithmetic_sum(m)
         (1..=int_sqrt(int_sqrt(self.n * 4))).map(|n| {

@@ -19,6 +19,8 @@ impl Default for Solver013 {
 }
 
 impl Solver for Solver013 {
+    fn problem_name(&self) -> &str { "Large sum" }
+
     fn solve(&self) -> i64 {
         first_digits(self.input.iter().filter_map(|s| s[..=self.n].parse::<u64>().ok()).sum(), self.n).as_i64()
     }

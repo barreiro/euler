@@ -7,13 +7,13 @@ use algorithm::io::{load_default_data, str_to_matrix};
 use Solver;
 
 /// In the `5` by `5` matrix below, the minimal path sum from the top left to the bottom right, by only moving to the right and down, is indicated in bold red and is equal to `2427`.
-///
-/// `131 673 234 103  18`
-/// `201  96 342 965 150`
-/// `630 803 746 422 111`
-/// `537 699 497 121 956`
-/// `805 732 524  37 331`
-///
+/// ```
+/// 131 673 234 103  18
+/// 201  96 342 965 150
+/// 630 803 746 422 111
+/// 537 699 497 121 956
+/// 805 732 524  37 331
+/// ```
 /// Find the minimal path sum from the top left to the bottom right by only moving right and down in `matrix.txt` (right click and "Save Link/Target As..."), a 31K text file containing an `80` by `80` matrix.
 pub struct Solver081 {
     pub n: usize,
@@ -27,6 +27,8 @@ impl Default for Solver081 {
 }
 
 impl Solver for Solver081 {
+    fn problem_name(&self) -> &str { "Path sum: two ways" }
+
     fn solve(&self) -> i64 {
         let (mut matrix, last) = (str_to_matrix(&self.input, self.n), self.n - 1);
 

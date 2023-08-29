@@ -23,6 +23,8 @@ impl Default for Solver062 {
 }
 
 impl Solver for Solver062 {
+    fn problem_name(&self) -> &str { "Cubic permutations" }
+
     fn solve(&self) -> i64 {
         let (floor, mut map) = (pow_10(self.n as u64), HashMap::new());
 

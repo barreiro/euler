@@ -86,8 +86,10 @@ impl Default for Solver084 {
     }
 }
 
-#[allow(clippy::cast_precision_loss)]
 impl Solver for Solver084 {
+    fn problem_name(&self) -> &str { "Monopoly odds" }
+
+    #[allow(clippy::cast_precision_loss)]
     fn solve(&self) -> i64 {
         let (mut transition, roll_probability) = (vec![vec![0.0; MARKOV_SIZE]; MARKOV_SIZE], 1.0 / (self.n * self.n) as f64);
 
@@ -150,7 +152,7 @@ impl Solver for Solver084 {
 
         // take the last column of the steady state, group consecutive rolls, sort and output
         let mut ordered = (0..BOARD_DIM).map(|target| (0..CONSECUTIVE_DOUBLES).map(|d| steady[target + d * BOARD_DIM][MARKOV_SIZE]).sum::<f64>()).enumerate().collect::<Vec<_>>();
-        ordered.sort_unstable_by(|&(_, i), &(_, j)| j.partial_cmp(&i).expect("Entries in the Markov matrix should be finite"));
+        ordered.sort_unstable_by(|&(_, i), &(_, j)| j.total_cmp(&i));
         ordered.iter().take(OUTPUT_SQUARES).fold(0, |acc, &(x, _)| if x == 0 { acc * 100 } else if x < 10 { concatenation(acc * 10, x.as_u64()) } else { concatenation(acc, x.as_u64()) }).as_i64()
     }
 }

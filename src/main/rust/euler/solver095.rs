@@ -28,6 +28,8 @@ impl Default for Solver095 {
 }
 
 impl Solver for Solver095 {
+    fn problem_name(&self) -> &str { "Amicable chains" }
+
     fn solve(&self) -> i64 {
         // use a kind of sieve to generate a cache for the sum of proper factors
         // it is sufficient to stop at sqrt(n) since to any factor above the root there is one below

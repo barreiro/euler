@@ -25,6 +25,8 @@ impl Default for Solver030 {
 }
 
 impl Solver for Solver030 {
+    fn problem_name(&self) -> &str { "Digit fifth powers" }
+
     fn solve(&self) -> i64 {
         let (lower, upper) = (pow(9, self.n / 2), self.n * pow(9, self.n));
         let equals_sum_of_digit_powers = |&n : &i64| n == Digits::from(n).into_iter().map(|digit| pow(digit.as_i64(), self.n)).sum();

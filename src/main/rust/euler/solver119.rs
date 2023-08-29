@@ -29,6 +29,8 @@ impl Default for Solver119 {
 }
 
 impl Solver for Solver119 {
+    fn problem_name(&self) -> &str { "Digit power sum" }
+
     fn solve(&self) -> i64 {
         // skip powers that contain a single digit
         powers().filter_map(|(base, power)| (digits_sum(power) == base).then_some(power)).nth(7 + self.n).as_i64()

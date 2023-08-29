@@ -29,6 +29,8 @@ impl Default for Solver112 {
 }
 
 impl Solver for Solver112 {
+    fn problem_name(&self) -> &str { "Bouncy numbers" }
+
     fn solve(&self) -> i64 {
         incrementing_digits().scan((0, 0), |(total, bouncy), digits| {
             (!digits.is_increasing() && !digits.is_decreasing()).then(|| bouncy.get_and_increment());

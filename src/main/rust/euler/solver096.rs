@@ -16,19 +16,19 @@ const SUDOKU_SQUARE_SIZE: usize = 3; // floor_sqrt_u64(SUDOKU_SIZE as u64) as us
 /// The objective of Su Doku puzzles, however, is to replace the blanks (or zeros) in a `9 by 9` grid in such that each row, column, and `3 by 3` box contains each of the digits `1 to 9`.
 ///
 /// Below is an example of a typical starting puzzle grid and its solution grid.
-///
-///  `0 0 3 | 0 2 0 | 6 0 0`   `4 8 3 | 9 2 1 | 6 5 7`
-///  `9 0 0 | 3 0 5 | 0 0 1`   `9 6 7 | 3 4 5 | 8 2 1`
-///  `0 0 1 | 8 0 6 | 4 0 0`   `2 5 1 | 8 7 6 | 4 9 3`
-///  `------+-------+------`   `------+-------+------`
-///  `0 0 8 | 1 0 2 | 9 0 0`   `5 4 8 | 1 3 2 | 9 7 6`
-///  `7 0 0 | 0 0 0 | 0 0 8`   `7 2 9 | 5 6 4 | 1 3 8`
-///  `0 0 6 | 7 0 8 | 2 0 0`   `1 3 6 | 7 9 8 | 2 4 5`
-///  `------+-------+------`   `------+-------+------`
-///  `0 0 2 | 6 0 9 | 5 0 0`   `3 7 2 | 6 8 9 | 5 1 4`
-///  `8 0 0 | 2 0 3 | 0 0 9`   `8 1 4 | 2 5 3 | 7 6 9`
-///  `0 0 5 | 0 1 0 | 3 0 0`   `6 9 5 | 4 1 7 | 3 8 2`
-///
+/// ```
+/// 0 0 3 | 0 2 0 | 6 0 0   4 8 3 | 9 2 1 | 6 5 7
+/// 9 0 0 | 3 0 5 | 0 0 1   9 6 7 | 3 4 5 | 8 2 1
+/// 0 0 1 | 8 0 6 | 4 0 0   2 5 1 | 8 7 6 | 4 9 3
+/// ------+-------+------   ------+-------+------
+/// 0 0 8 | 1 0 2 | 9 0 0   5 4 8 | 1 3 2 | 9 7 6
+/// 7 0 0 | 0 0 0 | 0 0 8   7 2 9 | 5 6 4 | 1 3 8
+/// 0 0 6 | 7 0 8 | 2 0 0   1 3 6 | 7 9 8 | 2 4 5
+/// ------+-------+------   ------+-------+------
+/// 0 0 2 | 6 0 9 | 5 0 0   3 7 2 | 6 8 9 | 5 1 4
+/// 8 0 0 | 2 0 3 | 0 0 9   8 1 4 | 2 5 3 | 7 6 9
+/// 0 0 5 | 0 1 0 | 3 0 0   6 9 5 | 4 1 7 | 3 8 2
+/// ```
 /// A well constructed Su Doku puzzle has a unique solution and can be solved by logic, although it may be necessary to employ "guess and test" methods in order to eliminate options (there is much contested opinion over this).
 /// The complexity of the search determines the difficulty of the puzzle; the example above is considered easy because it can be solved by straight forward direct deduction.
 ///
@@ -47,6 +47,8 @@ impl Default for Solver096 {
 }
 
 impl Solver for Solver096 {
+    fn problem_name(&self) -> &str { "Su Doku" }
+
     fn solve(&self) -> i64 {
         self.input.lines().map(|line| if line.starts_with("Grid") { "\n" } else { line }).collect::<String>().split_whitespace().take(self.n).map(|sudoku_str| {
             let mut sudoku = Sudoku::from(sudoku_str);
@@ -170,8 +172,8 @@ impl Sudoku {
         (0..self.sudoku.len()).all(|i| self.sudoku[i].is_assigned() || self.sudoku[i].candidates_len() > 0)
     }
 
-    fn find_hidden_restrictions(&mut self, indexes: impl Iterator<Item=usize>) -> Vec<(usize, Digit)> {
-        let positions = indexes.collect::<Vec<_>>();
+    fn find_hidden_restrictions(&mut self, indexes: impl IntoIterator<Item=usize>) -> Vec<(usize, Digit)> {
+        let positions = indexes.into_iter().collect::<Vec<_>>();
         (1..=Digit::try_from(SUDOKU_SIZE).expect("Sudoku size should be reasonable")).filter(|&value| positions.iter().filter(|&&i| self.sudoku[i].allows(value)).count() == 1).map(|single| positions.iter().find(|&&i| self.sudoku[i].allows(single)).map(|&i| (i, single)).expect("Hidden restriction should exist")).collect()
     }
 
