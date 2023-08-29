@@ -138,15 +138,15 @@ pub const fn is_palindrome(&value: &u64) -> bool {
     if size <= 1 {
         return true;
     }
-    let mut i = size / 2 - 1;
+    let mut i = 0;
     loop {
         if nth_digit(value, i) != nth_digit(value, size - i - 1) {
             return false;
         }
-        if i == 0 {
+        i += 1;
+        if i == size / 2 {
             return true;
         }
-        i -= 1;
     }
 }
 

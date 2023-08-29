@@ -34,65 +34,10 @@ impl Solver for Solver118 {
         let primes = primes_up_to(SEARCH_THRESHOLD).collect::<Vec<_>>();
         let prime_test = |value| if value < SEARCH_THRESHOLD { primes.binary_search(&value).is_ok() } else if value < SIEVE_THRESHOLD { prime_sieve(value, &primes) } else { miller_rabin(value) };
 
-        // verify if the sets are increasing to remove duplicates.
-        // let is_increasing = |elements: &Vec<_>| (1..elements.len()).all(|i| elements[i] < elements[i - 1]);
-
-        // permutations_of_digits_with(1, self.n, |p| p_prime_partitions(p, &prime_test)).flatten().filter(is_increasing).count().as_i64()
-        // permutations_of_digits_with(1, self.n, |p| _prime_partitions(p, 1, &prime_test)).flatten().count().as_i64()
-
         // calculate the number of primes that a partition generates by multiplying the number of primes in permutations of each partition element
-        let (mut cache, prime_permutations) = (HashMap::new(), |p: &Vec<Digit>| permutations_of_set_with(p.to_vec(), |permutation| prime_test(from_raw_digits(permutation)).then_some(())).count());
-        partitions_of_set(&(1..=self.n).collect::<Vec<_>>()).map(|partition| partition.iter().map(|p| cache.entry(from_raw_digits(p)).or_insert_with(|| prime_permutations(p)).as_i64()).product::<i64>()).sum()
-    }
-}
-
-// --- //
-
-// find prime partitions (if they exist, and there can be multiple) of a given permutation of digits
-// verifies some 'head' of the permutation is prime, and then append to the result of the same function applied to the 'tail'
-// fn p_prime_partitions(permutation: &[Digit], prime_test: &dyn Fn(u64) -> bool) -> Option<Vec<Vec<u64>>> {
-//     if permutation.is_empty() {
-//         Some(vec![])
-//     } else {
-//         let mut result = vec![];
-//         (1..=permutation.len()).fold(0, |mut candidate, i| {
-//             // speedup: check for multiples of 2, 3 and 5
-//             candidate = candidate * DEFAULT_RADIX.as_u64() + permutation[i - 1].as_u64();
-//             if candidate == 2 || candidate == 3 || candidate == 5 || candidate & 1 != 0 && candidate % 3 != 0 && candidate % 5 != 0 && prime_test(candidate) {
-//                 if i == permutation.len() {
-//                     result.push(vec![candidate]);
-//                 } else if let Some(mut next) = p_prime_partitions(&permutation[i..], prime_test) {
-//                     next.iter_mut().for_each(|n| n.push(candidate));
-//                     result.append(&mut next);
-//                 }
-//             }
-//             candidate
-//         });
-//         (!result.is_empty()).then_some(result)
-//     }
-// }
-
-// find prime partitions (if they exist, and there can be multiple) of a given permutation of digits
-// verifies some 'head' of the permutation is prime, and then append to the result of the same function applied to the 'tail'
-// do not report duplicate partitions by making sure that the list of the primes is always decreasing
-fn _prime_partitions(permutation: &[Digit], min_size: usize, prime_test: &dyn Fn(u64) -> bool) -> Option<Vec<Vec<u64>>> {
-    if permutation.is_empty() {
-        Some(vec![])
-    } else {
-        let mut result = vec![];
-        (min_size..=permutation.len()).for_each(|i| {
-            let candidate = from_raw_digits(&permutation[0..i]);
-            // speedup by not performing primality test for multiples of 2, 3 and 5
-            if candidate == 2 || candidate == 3 || candidate == 5 || candidate & 1 != 0 && candidate % 3 != 0 && candidate % 5 != 0 && prime_test(candidate) {
-                if i == permutation.len() {
-                    result.push(vec![candidate]);
-                } else if let Some(mut next) = _prime_partitions(&permutation[i..], i, prime_test) {
-                    next.retain(|n| n.last().iter().any(|&&last| last > candidate));
-                    next.iter_mut().for_each(|n| n.push(candidate));
-                    result.append(&mut next);
-                }
-            }
-        });
-        (!result.is_empty()).then_some(result)
+        let (mut cache, prime_permutations) = (HashMap::new(), |p: &Vec<Digit>| permutations_of_set_with(p.clone(), |permutation| prime_test(from_raw_digits(permutation)).then_some(())).count());
+        partitions_of_set(&(1..=self.n).collect::<Vec<_>>()).map(|partition| partition.iter().map(|p| {
+            if cache.contains_key(p) { cache[p] } else { cache.entry(p.clone()).or_insert_with(|| prime_permutations(p)).to_owned() }.as_i64()
+        }).product::<i64>()).sum()
     }
 }

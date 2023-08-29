@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::iter::from_fn;
+use std::iter::{from_fn, once};
 use std::ops::{Add, Sub};
 
 use algorithm::cast::Cast;
@@ -168,7 +168,7 @@ pub fn permutations_with_repetition_of_set<T>(elements: Vec<T>, size: usize) -> 
 pub fn partitions_of_set<T>(elements: &[T]) -> impl Iterator<Item=Vec<Vec<T>>> + '_ where T: Copy {
     // following the paper "Efficient Generation of Set Partitions" by Michael Orlov
     let (mut k, mut m) = (vec![0; elements.len()], vec![0; elements.len()]);
-    vec![vec![elements.to_vec()]].into_iter().chain(from_fn(move || {
+    once(vec![elements.to_vec()]).chain(from_fn(move || {
         (1..elements.len()).rev().find_map(|i| (k[i] <= m[i - 1]).then(|| {
             m[i] = m[i].max(k[i].increment_and_get());
             (i + 1..elements.len()).for_each(|j| (k[j], m[j]) = (k[0], m[i]));

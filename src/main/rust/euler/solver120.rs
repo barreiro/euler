@@ -22,10 +22,8 @@ impl Default for Solver120 {
 
 impl Solver for Solver120 {
     fn solve(&self) -> i64 {
-        // let r_max = |a| (1..=2 * a).filter(is_odd_u64).map(|n| (n, square_u64(a))).map(|(n, m)| (pow_mod(a - 1, n, m) + pow_mod(a + 1, n, m)) % m).max().expect("There should be a remainder");
-        // let r_max = |a| (0..=a).map(|n| (2 * a * (n + 1)) % square_u64(a)).max().expect("There should be a remainder");
-
-        // the expression simplifies to `2an * a^2` and is maximized by the greatest `n < a^2`, that is `n = (a - 1) / 2`, after which the modulo repeats
+        // when `n` is odd the expression simplifies to `2an * a^2 ≡ 2an mod a^2`, otherwise the remainder is always `2`
+        // that is maximized by the greatest `n < a^2`, that is `n = (a - 1) / 2`, after which the modulo repeats
         (3..=self.n).map(|a| 2 * a * ((a - 1) / 2)).map(to_i64).sum()
     }
 }

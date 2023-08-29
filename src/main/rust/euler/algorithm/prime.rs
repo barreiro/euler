@@ -3,12 +3,12 @@
 
 use std::collections::HashMap;
 use std::convert::TryFrom;
-use std::iter::from_fn;
+use std::iter::{from_fn, once};
 
 use algorithm::cast::Cast;
 use algorithm::filter::less_than_u64;
 use algorithm::long::{IncrementAndGet, pow_mod};
-use algorithm::root::{floor_sqrt_u64, pow_u64};
+use algorithm::root::{ceil_sqrt_u64, floor_sqrt_u64, pow_u64};
 use algorithm::vec::array_product_u64;
 
 // Bases for the Miller-Rabin test
@@ -20,13 +20,24 @@ const MR_BASE: &[u64] = &[2, 325, 9_375, 28_178, 450_775, 9_780_504, 1_795_265_0
 #[must_use]
 #[allow(clippy::cast_possible_truncation)]
 pub fn prime_factors(n: u64) -> HashMap<u64, u64> {
+    raw_prime_factors(n, generator_trial_division())
+}
+
+/// calculates the prime factors of a given number with a prime cache that should go up to the sqrt of the value. The result is a map where the keys are primes and the values are the occurrences
+#[must_use]
+pub fn prime_factors_with_cache(n: u64, primes: &[u64]) -> HashMap<u64, u64> {
+    raw_prime_factors(n, primes.iter().copied())
+}
+
+#[allow(clippy::cast_possible_truncation)]
+fn raw_prime_factors(n: u64, primes: impl IntoIterator<Item=u64>) -> HashMap<u64, u64> {
     let (mut factor_map, mut value, small) = (HashMap::new(), n, u32::try_from(n).is_ok());
-    for factor in primes_up_to(1 + floor_sqrt_u64(n)) { // to include `sqrt(n)` if `n` is a perfect square
+    for factor in primes {
         while if small { value as u32 % factor as u32 == 0 } else { value % factor == 0 } {
             value = if small { u64::from(value as u32 / factor as u32) } else { value / factor };
             factor_map.entry(factor).and_modify(|e| *e += 1).or_insert(1);
         }
-        if value == 1 {
+        if factor > value {
             break;
         }
     }
@@ -37,8 +48,20 @@ pub fn prime_factors(n: u64) -> HashMap<u64, u64> {
 }
 
 /// assemble from some prime factors
-pub fn from_prime_factors(factors: impl Iterator<Item=(u64, u64)>) -> u64 {
-    factors.filter(|&(_, exp)| exp != 0).map(|(base, exp)| pow_u64(base, exp)).sum()
+pub fn from_prime_factors(factors: impl IntoIterator<Item=(u64, u64)>) -> u64 {
+    factors.into_iter().filter(|&(_, exp)| exp != 0).map(|(base, exp)| pow_u64(base, exp)).sum()
+}
+
+// --- //
+
+/// iterator of the primes up to n (excluding n) using an half-sieve algorithm
+pub fn primes_up_to(value: u64) -> impl Iterator<Item=u64> {
+    // generator_trial_division().take_while(less_or_equal_than_u64(value))
+    let (mut sieve, ceil) = (vec![true; 1 + value.as_usize() / 2], if value < 1000 { value.as_usize() / 4 } else { ceil_sqrt_u64(value).as_usize() });
+    (1..ceil).for_each(|n| if sieve[n] {
+        (3 * n + 1..=value.as_usize() / 2).step_by(2 * n + 1).for_each(|multiple| sieve[multiple] = false);
+    });
+    once(2).chain((1..value / 2).filter(move |&n| sieve[n.as_usize()]).map(|n| (2 * n + 1).as_u64()))
 }
 
 // --- //
@@ -62,13 +85,8 @@ pub fn generator_trial_division() -> impl Iterator<Item=u64> {
 }
 
 /// iterator of the primes up to n (excluding n) using a sieve algorithm
-pub fn primes_up_to(value: u64) -> impl Iterator<Item=u64> {
-    // generator_trial_division().take_while(less_or_equal_than_u64(value))
-    let mut sieve = vec![true; 1 + value.as_usize()];
-    (2..=value.as_usize() / 2).for_each(|n| if sieve[n] {
-        (2..=value.as_usize() / n).map(|k| k * n).for_each(|multiple| sieve[multiple] = false);
-    });
-    (2..value.as_usize()).filter(move |&n| sieve[n]).map(|n| n.as_u64())
+pub fn primes_trial_division_up_to(value: u64) -> impl Iterator<Item=u64> {
+    generator_trial_division().take_while(less_than_u64(value))
 }
 
 /// finds if none of the values in the sieve is a factor of value

@@ -10,7 +10,7 @@ use algorithm::filter::{is_palindrome, is_pandigital};
 use algorithm::long::factorial;
 use algorithm::long::gcd;
 use algorithm::long::pow_mod;
-use algorithm::prime::descending_primes;
+use algorithm::prime::{descending_primes, primes_trial_division_up_to};
 use algorithm::prime::miller_rabin;
 use algorithm::prime::prime_factors;
 use algorithm::prime::primes_up_to;
@@ -96,9 +96,12 @@ fn sum_of_factors_test() {
 
 #[test]
 fn prime_iterator_test() {
-    assert_eq!(primes_up_to(10).collect::<Vec<_>>(), [2, 3, 5, 7]);
-    assert_eq!(primes_wheel_up_to(10).collect::<Vec<_>>(), [2, 3, 5, 7]);
-    assert_eq!(descending_primes(10).collect::<Vec<_>>(), [7, 5, 3, 2]);
+    let ascending = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+    let descending = ascending.iter().cloned().rev().collect::<Vec<_>>();
+    assert_eq!(primes_up_to(101).collect::<Vec<_>>(), ascending);
+    assert_eq!(primes_trial_division_up_to(101).collect::<Vec<_>>(), ascending);
+    assert_eq!(primes_wheel_up_to(101).collect::<Vec<_>>(), ascending);
+    assert_eq!(descending_primes(101).collect::<Vec<_>>(), descending);
 }
 
 #[test]
