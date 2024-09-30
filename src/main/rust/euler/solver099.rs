@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::io::load_default_data;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::io::load_default_data;
+use crate::Solver;
 
 /// Comparing two numbers written in index form like `2^11` and `3^7` is not difficult, as any calculator would confirm that `2^11 = 2048 < 3^7 = 2187`.
 ///

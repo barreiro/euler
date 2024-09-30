@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::digits::DEFAULT_RADIX;
+use crate::algorithm::digits::DEFAULT_RADIX;
 
 // table for fast lookup of powers of 10
 const POW_10: [u64; 20] = [

@@ -1,8 +1,8 @@
 // COPYRIGHT (C) 2023 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::Solver;
 
 const INPUT_117: &[u64] = &[2, 3, 4];
 

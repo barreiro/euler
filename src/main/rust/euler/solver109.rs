@@ -1,9 +1,10 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::long::GetAndIncrement;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::long::GetAndIncrement;
+use crate::algorithm::vec::array_max;
+use crate::Solver;
 
 const VALUES: &[u64] = &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 const BULLS: &[u64] = &[25]; // these values only have double, no treble
@@ -22,7 +23,7 @@ const BULLS: &[u64] = &[25]; // these values only have double, no treble
 ///
 /// When a player is able to finish on their current score it is called a "checkout" and the highest checkout is `170: T20 T20 D25` (two treble 20s and double bull).
 ///
-/// There are exactly eleven distinct ways to checkout on a score of 6:
+/// There are exactly eleven distinct ways to check out on a score of 6:
 /// ```
 /// D3
 /// D1 D2
@@ -38,7 +39,7 @@ const BULLS: &[u64] = &[25]; // these values only have double, no treble
 /// ```
 /// Note that `D1 D2` is considered different to `D2 D1` as they finish on different doubles. However, the combination `S1 T1 D1` is considered the same as `T1 S1 D1`.
 ///
-/// In addition we shall not include misses in considering combinations; for example, `D3` is the same as `0 D3` and `0 0 D3`.
+/// In addition, we shall not include misses in considering combinations; for example, `D3` is the same as `0 D3` and `0 0 D3`.
 ///
 /// Incredibly there are 42336 distinct ways of checking out in total.
 ///
@@ -59,9 +60,8 @@ impl Solver for Solver109 {
     fn solve(&self) -> i64 {
         let (doubles, trebles) = (VALUES.iter().chain(BULLS).map(|v| v * 2).collect::<Vec<_>>(), VALUES.iter().map(|v| v * 3).collect::<Vec<_>>());
         let all = VALUES.iter().chain(BULLS).chain(doubles.iter()).chain(trebles.iter()).copied().collect::<Vec<_>>();
-        let mut checkouts = vec![0; 1 + doubles.iter().max().copied().unwrap_or_default().as_usize() + 2 * trebles.iter().max().copied().unwrap_or_default().as_usize()];
-
-        // it's not clear on the description, but it's implicit that a play consists of throwing 3 darts
+        let mut checkouts = vec![0; 1 + array_max(&doubles).as_usize() + 2 * array_max(&trebles).as_usize()];
+        
         for d in doubles {
             checkouts[d.as_usize()].get_and_increment(); // single dart checkout
             (0..all.len()).for_each(|i| {
@@ -69,6 +69,6 @@ impl Solver for Solver109 {
                 (i..all.len()).for_each(|j| { checkouts[(d + all[i] + all[j]).as_usize()].get_and_increment(); }); // three dart checkout
             });
         }
-        checkouts.iter().take(self.n.as_usize()).sum()
+        checkouts.into_iter().take(self.n.as_usize()).sum()
     }
 }

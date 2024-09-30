@@ -5,11 +5,11 @@ use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::iter::{from_fn, once};
 
-use algorithm::cast::Cast;
-use algorithm::filter::less_than_u64;
-use algorithm::long::{IncrementAndGet, pow_mod};
-use algorithm::root::{ceil_sqrt_u64, floor_sqrt_u64, pow_u64};
-use algorithm::vec::array_product_u64;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::filter::less_than_u64;
+use crate::algorithm::long::{pow_mod, IncrementAndGet};
+use crate::algorithm::root::{ceil_sqrt_u64, floor_sqrt_u64, pow_10, pow_u64, square_u64};
+use crate::algorithm::vec::array_product_u64;
 
 // Bases for the Miller-Rabin test
 const MR_THRESHOLD: u64 = 4_759_123_141;
@@ -47,6 +47,21 @@ fn raw_prime_factors(n: u64, primes: impl IntoIterator<Item=u64>) -> HashMap<u64
     factor_map
 }
 
+/// calculates the product of distinct prime factors of the given number
+#[must_use]
+pub fn radical(n: u64) -> u64 {
+    prime_factors(n).keys().product()
+}
+
+/// the radical of n, rad(n), is the product of distinct prime factors of n
+#[must_use]
+pub fn radicals_up_to(ceil: u64) -> Vec<u64> {
+    // faster way to calculate radicals by sieving instead of multiplying the prime factors (from problem 124)
+    let mut radicals = vec![1; ceil.as_usize()];
+    (2..radicals.len()).for_each(|p| if radicals[p] == 1 { (p..ceil.as_usize()).step_by(p).for_each(|m| radicals[m] *= p.as_u64()) });
+    radicals
+}
+
 /// assemble from some prime factors
 pub fn from_prime_factors(factors: impl IntoIterator<Item=(u64, u64)>) -> u64 {
     factors.into_iter().filter(|&(_, exp)| exp != 0).map(|(base, exp)| pow_u64(base, exp)).sum()
@@ -54,7 +69,7 @@ pub fn from_prime_factors(factors: impl IntoIterator<Item=(u64, u64)>) -> u64 {
 
 // --- //
 
-/// iterator of the primes up to n (excluding n) using an half-sieve algorithm
+/// iterator of the primes up to n (excluding n) using a half-sieve algorithm
 pub fn primes_up_to(value: u64) -> impl Iterator<Item=u64> {
     // generator_trial_division().take_while(less_or_equal_than_u64(value))
     let (mut sieve, ceil) = (vec![true; 1 + value.as_usize() / 2], if value < 1000 { value.as_usize() / 4 } else { ceil_sqrt_u64(value).as_usize() });
@@ -62,6 +77,20 @@ pub fn primes_up_to(value: u64) -> impl Iterator<Item=u64> {
         (3 * n + 1..=value.as_usize() / 2).step_by(2 * n + 1).for_each(|multiple| sieve[multiple] = false);
     });
     once(2).chain((1..value / 2).filter(move |&n| sieve[n.as_usize()]).map(|n| (2 * n + 1).as_u64()))
+}
+
+/// iterator of the composites, numbers that are not primes
+pub fn odd_composites() -> impl Iterator<Item=u64> {
+    let (mut candidate, mut sieve, mut bound, mut bound_target) = (1, vec![], 1, 1);
+    from_fn(move || {
+        while {
+            candidate += 2;
+            prime_sieve_bound(candidate, &sieve, &mut bound, &mut bound_target)
+        } {
+            sieve.push(candidate);
+        }
+        Some(candidate)
+    })
 }
 
 // --- //
@@ -108,7 +137,7 @@ pub const fn prime_sieve(value: u64, sieve: &[u64]) -> bool {
 #[allow(clippy::cast_possible_truncation)]
 fn prime_sieve_bound(value: u64, sieve: &[u64], ceil: &mut u64, ceil_target: &mut u64) -> bool {
     if value > *ceil_target {
-        *ceil_target = ceil.increment_and_get() * *ceil;
+        *ceil_target = square_u64(ceil.increment_and_get());
     }
     sieve.iter().take_while(|&factor| factor <= ceil).all(|&f| if u32::try_from(value).is_ok() { value as u32 % f as u32 != 0 } else { value % f != 0 })
 }
@@ -230,4 +259,34 @@ const fn miller_rabin_pass(base: u64, value: u64) -> bool {
         a = pow_mod(a, 2, value);
     }
     a == value - 1
+}
+
+pub struct PrimeTestWithCache {
+    prime_cache: Vec<u64>,
+    search_threshold: u64,
+    sieve_threshold: u64,
+}
+
+impl Default for PrimeTestWithCache {
+    fn default() -> Self {
+        Self::new(pow_10(6)) // should take around 1ms to populate the prime cache
+    }
+}
+
+impl PrimeTestWithCache {
+    #[must_use]
+    pub fn new(ceil: u64) -> Self {
+        Self { prime_cache: primes_up_to(ceil).collect(), search_threshold: ceil, sieve_threshold: square_u64(ceil) }
+    }
+
+    #[must_use]
+    pub fn is_prime(&self, value: u64) -> bool {
+        if value < self.search_threshold {
+            self.prime_cache.binary_search(&value).is_ok()
+        } else if value < self.sieve_threshold {
+            prime_sieve(value, &self.prime_cache)
+        } else {
+            miller_rabin(value)
+        }
+    }
 }

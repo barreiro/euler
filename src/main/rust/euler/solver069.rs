@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::filter::less_or_equal_than_u64;
-use algorithm::prime::primorals;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::filter::less_or_equal_than_u64;
+use crate::algorithm::prime::primorals;
+use crate::Solver;
 
 /// Euler's Totient function, `φ(n)` (sometimes called the phi function), is used to determine the number of numbers less than `n` which are relatively prime to `n`.
 /// For example, as `1, 2, 4, 5, 7, and 8`, are all less than nine and relatively prime to nine, `φ(9)=6`.

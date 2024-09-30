@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::io::load_default_data;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::io::load_default_data;
+use crate::Solver;
 
 const KEY_SIZE: usize = 3;
 

@@ -1,12 +1,12 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::bit::BitSet;
-use algorithm::cast::Cast;
-use algorithm::filter::less_than_u64;
-use algorithm::prime::primes_up_to;
-use algorithm::root::{cube_u64, floor_sqrt_u64, fourth_u64, square_u64};
-use Solver;
+use crate::algorithm::bit::BitSet;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::filter::less_than_u64;
+use crate::algorithm::prime::primes_up_to;
+use crate::algorithm::root::{cube_u64, floor_sqrt_u64, fourth_u64, square_u64};
+use crate::Solver;
 
 /// The smallest number expressible as the sum of a prime square, prime cube, and prime fourth power is `28`.
 /// In fact, there are exactly four numbers below fifty that can be expressed in such a way:

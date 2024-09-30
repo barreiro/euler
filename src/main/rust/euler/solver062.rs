@@ -3,10 +3,10 @@
 
 use std::collections::HashMap;
 
-use algorithm::cast::Cast;
-use algorithm::digits::Digits;
-use algorithm::root::{cube_u64, pow_10};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::Digits;
+use crate::algorithm::root::{cube_u64, pow_10};
+use crate::Solver;
 
 /// The cube, `41063625 (345^3)`, can be permuted to produce two other cubes: `56623104 (384^3)` and `66430125 (405^3)`.
 /// In fact, `41063625` is the smallest cube which has exactly three permutations of its digits which are also cube.

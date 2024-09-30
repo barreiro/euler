@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::Solver;
 
 /// The Fibonacci sequence is defined by the recurrence relation: `Fn = Fn−1 + Fn−2`, where `F1 = 1` and `F2 = 1`.
-/// Hence the first `12` terms will be:
+/// Hence, the first `12` terms will be:
 /// ```
 /// F1 = 1
 /// F2 = 1

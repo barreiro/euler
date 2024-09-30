@@ -3,8 +3,8 @@
 
 use std::cmp::min;
 
-use algorithm::io::{load_default_data, str_to_matrix};
-use Solver;
+use crate::algorithm::io::{load_default_data, str_to_matrix};
+use crate::Solver;
 
 /// In the `5` by `5` matrix below, the minimal path sum from the top left to the bottom right, by only moving to the right and down, is indicated in bold red and is equal to `2427`.
 /// ```

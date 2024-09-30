@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::DEFAULT_RADIX;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::DEFAULT_RADIX;
+use crate::Solver;
 
 const BASE: u64 = DEFAULT_RADIX as u64;
 

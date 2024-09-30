@@ -4,12 +4,12 @@
 use std::iter::{from_fn, once};
 use std::ops::{Add, Sub};
 
-use algorithm::cast::Cast;
-use algorithm::digits::Digit;
-use algorithm::factor::sum_of_factors;
-use algorithm::filter::less_or_equal_than;
-use algorithm::long::{are_coprime, IncrementAndGet, pentagonal};
-use algorithm::root::ceil_sqrt_u64;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::Digit;
+use crate::algorithm::factor::sum_of_factors;
+use crate::algorithm::filter::less_or_equal_than;
+use crate::algorithm::long::{are_coprime, IncrementAndGet, pentagonal};
+use crate::algorithm::root::ceil_sqrt_u64;
 
 /// method for calculation the combinations of a certain number of elements in a total number of places.
 /// uses iteration instead of the formula with factorials.
@@ -77,7 +77,7 @@ pub fn partition_modulo_find(modulo: u64, predicate: u64) -> u64 {
     (2..).find(|&value| partition_modulo_memoize(value, modulo, &mut cache) == predicate).as_u64()
 }
 
-// the cache is assume to be initialized with [1,1] and is to be populated by calls with incrementing value
+// cache assumed to be initialized with [1,1] and is to be populated by calls with incrementing value
 #[allow(clippy::maybe_infinite_iter)]
 fn partition_modulo_memoize(value: u64, modulo: u64, cache: &mut Vec<u64>) -> u64 {
     if let Some(&partition_modulo) = cache.get(value.as_usize()) {
@@ -94,12 +94,12 @@ fn partition_modulo_memoize(value: u64, modulo: u64, cache: &mut Vec<u64>) -> u6
 
 // --- //
 
-/// provides an iterator of the permutations of the given elements. requires the elements to be sorted in order to provide all possible permutations
+/// provides an iterator of the permutations of the given elements. requires the elements to be sorted to provide all possible permutations
 pub fn permutations_of_set<T>(elements: Vec<T>) -> impl Iterator<Item=Vec<T>> where T: PartialOrd + Copy {
     permutations_of_set_with(elements, |p| Some(p.to_vec()))
 }
 
-/// provides an iterator of the permutations of the given elements that satisfy a given mapping predicate. requires the elements to be sorted in order to provide all possible permutations
+/// provides an iterator of the permutations of the given elements that satisfy a given mapping predicate. requires the elements to be sorted to provide all possible permutations
 pub fn permutations_of_set_with<T, F, R>(elements: Vec<T>, predicate: F) -> impl Iterator<Item=R> where T: PartialOrd, F: FnMut(&[T]) -> Option<R> {
     Permutations { elements, predicate }
 }
@@ -165,6 +165,8 @@ pub fn permutations_with_repetition_of_set<T>(elements: Vec<T>, size: usize) -> 
 // --- //
 
 /// provides an iterator of partitions of the elements
+/// # Panics
+/// Will panic if there are no partitions
 pub fn partitions_of_set<T>(elements: &[T]) -> impl Iterator<Item=Vec<Vec<T>>> + '_ where T: Copy {
     // following the paper "Efficient Generation of Set Partitions" by Michael Orlov
     let (mut k, mut m) = (vec![0; elements.len()], vec![0; elements.len()]);
@@ -207,7 +209,7 @@ pub fn combinations_with<T, F, R>(elements: Vec<T>, size: usize, predicate: F) -
 
     from_fn(move || {
         while !pattern.is_empty() {
-            let result = (predicate)(&pattern.iter().rev().map(|&i| elements[i]).collect::<Vec<_>>());
+            let result = predicate(&pattern.iter().rev().map(|&i| elements[i]).collect::<Vec<_>>());
             increase(&mut pattern);
             if result.is_some() {
                 return result;
@@ -230,14 +232,14 @@ pub fn pythagorean_triplets() -> impl Iterator<Item=(u64, u64, u64)> {
     let (mut m, mut n) = (1, 0);
     from_fn(move || {
         // a primitive Pythagorean triple additionally requires:
-        // m and n have opposite parity – i.e. if one is odd, the other must be even.
-        // m and n are coprime – i.e. they have no common integer factors greater than 1.
+        // m and n have opposite parity – i.e., if one is odd, the other must be even.
+        // m and n are coprime – i.e., they have no common integer factors greater than 1.
         while {
             n += 2;
             if n >= m {
                 n = if m.increment_and_get() % 2 == 0 { 1 } else { 2 };
             }
-            !are_coprime(m.as_i64(), n.as_i64())
+            !are_coprime(m, n)
         } {}
 
         // uses Euclides Formula --- a=m^2-n^2 --- b=2nm --- c=m^2+n^2 --- with m>n

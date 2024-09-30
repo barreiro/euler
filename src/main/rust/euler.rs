@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-pub use euler::*;
+pub use crate::euler::*;
 
 /// solves all the problems! (the Euler ones)
 #[allow(clippy::too_many_lines)]
@@ -136,6 +136,11 @@ pub fn main() {
     solve(123, &Solver123::default());
     solve(124, &Solver124::default());
     solve(125, &Solver125::default());
+    solve(126, &Solver126::default());
+    solve(127, &Solver127::default());
+    solve(128, &Solver128::default());
+    solve(129, &Solver129::default());
+    solve(130, &Solver130::default());
 }
 
 mod euler {
@@ -264,6 +269,11 @@ mod euler {
     pub use self::solver123::Solver123;
     pub use self::solver124::Solver124;
     pub use self::solver125::Solver125;
+    pub use self::solver126::Solver126;
+    pub use self::solver127::Solver127;
+    pub use self::solver128::Solver128;
+    pub use self::solver129::Solver129;
+    pub use self::solver130::Solver130;
 
     pub trait Solver {
         fn problem_name(&self) -> &str;
@@ -417,4 +427,9 @@ mod euler {
     pub mod solver123;
     pub mod solver124;
     pub mod solver125;
+    pub mod solver126;
+    pub mod solver127;
+    pub mod solver128;
+    pub mod solver129;
+    pub mod solver130;
 }

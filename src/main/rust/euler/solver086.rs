@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::factor::proper_factors_of;
-use algorithm::root::square;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::factor::proper_factors_of;
+use crate::algorithm::root::square;
+use crate::Solver;
 
 /// A spider, `S`, sits in one corner of a cuboid room, measuring `6` by `5` by `3`, and a fly, `F`, sits in the opposite corner.
 /// By travelling on the surfaces of the room the shortest "straight line" distance from `S` to `F` is `10` and the path is shown on the diagram.
@@ -30,20 +30,20 @@ impl Solver for Solver086 {
 
     #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
-        // for a cuboid a, b, c with a >= b >= c >= 1, the point of shortest path a_min (along the a side) is given by (b * a) / (c + b)
-        // the length of the path d is sqrt(a_min^2 + b^2) + sqrt((a - a_min)^2 + c^2), substituting it simplifies to sqrt(a^2 + (b+c)^2)
-        // we want to find the number of values s = (b + c) such that a^2 + s^2 is a square (with the constrain a >= b >= c >= 1)
+        // for a cuboid `a, b, c` with `a >= b >= c >= 1`, the point of shortest path `a_min` (along the `a` side) is given by `(b * a) / (c + b)`
+        // the length of the path `d` is `sqrt(a_min^2 + b^2) + sqrt((a - a_min)^2 + c^2)`, substituting it simplifies to `sqrt(a^2 + (b+c)^2)`
+        // we want to find the number of values `s = (b + c)` such that `a^2 + s^2` is a square (with the constraint `a >= b >= c >= 1`)
 
-        // we are after factor pairs of a^2 (because a^2 = d^2 - s^2 = (d + s)(d - s)) with parity (to generate integer solutions)
-        // given one of these pairs x and y, there are two solutions s = (y + x) / 2 and s = (y - x) / 2
-        // since d > s, the only that conform to the bounds is s = (y - x) / 2
+        // we are after factor pairs of `a^2` (because `a^2 = d^2 - s^2 = (d + s)(d - s)`) with parity (to generate integer solutions)
+        // given one of these pairs `x, y`, there are two solutions `s = (y + x) / 2` and `s = (y - x) / 2`
+        // since `d > s`, the only that conform to the bounds is `s = (y - x) / 2`
 
-        // there are s / 2 different ways for 2 numbers to add up to s and since a >= b >= c, s <= 2 * a
-        // we must subtract to that the ways where one of the terms is bigger than a
+        // there are `s / 2` different ways for 2 numbers to add up to `s` and since `a >= b >= c`, `s <= 2 * a`
+        // we must subtract to that the ways where one of the terms is bigger than `a`
 
         let (parity, average) = (|&(x, y): &(_, _)| x & 1 == y & 1, |(x, y)| (y - x) / 2);
 
-        // return the number of cuboids with integer minimum distance == d and longest side == a
+        // return the number of cuboids with integer minimum distance == `d` and longest side == `a`
         let cuboids = |a| -> i64 {
             let (a_square, bound) = (square(a), |&s: &_| s < a * 2);
             let factor_pair = |x| (x, a_square / x);

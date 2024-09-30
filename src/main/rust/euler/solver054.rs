@@ -6,9 +6,9 @@ use std::cmp::Ordering::{Equal, Greater, Less};
 use std::ops::Sub;
 use std::str::FromStr;
 
-use algorithm::cast::Cast;
-use algorithm::io::load_default_data;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::io::load_default_data;
+use crate::Solver;
 
 /// In the card game poker, a hand consists of five cards and are ranked, from lowest to highest, in the following way:
 ///

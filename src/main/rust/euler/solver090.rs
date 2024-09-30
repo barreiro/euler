@@ -4,12 +4,12 @@
 use std::collections::HashSet;
 use std::iter::from_fn;
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::{combinations, permutations_of_set};
-use algorithm::digits::digits_iter;
-use algorithm::filter::less_than_u64;
-use algorithm::root::{pow_10_usize, square_u64};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::{combinations, permutations_of_set};
+use crate::algorithm::digits::digits_iter;
+use crate::algorithm::filter::less_than_u64;
+use crate::algorithm::root::{pow_10_usize, square_u64};
+use crate::Solver;
 
 const DICE_SIZE: usize = 6;
 
@@ -18,7 +18,7 @@ const DICE_SIZE: usize = 6;
 ///
 /// For example, the square number `64` could be formed: `6` `4`
 ///
-/// In fact, by carefully choosing the digits on both cubes it is possible to display all of the square numbers below one-hundred: `01, 04, 09, 16, 25, 36, 49, 64, and 81`.
+/// In fact, by carefully choosing the digits on both cubes it is possible to display all the square numbers below one-hundred: `01, 04, 09, 16, 25, 36, 49, 64, and 81`.
 ///
 /// For example, one way this can be achieved is by placing `{0, 5, 6, 7, 8, 9}` on one cube and `{1, 2, 3, 4, 8, 9}` on the other cube.
 ///
@@ -31,7 +31,7 @@ const DICE_SIZE: usize = 6;
 ///
 /// But because we are allowing `6` and `9` to be reversed, the two distinct sets in the last example both represent the extended set `{1, 2, 3, 4, 5, 6, 9}` for the purpose of forming `2-digit` numbers.
 ///
-/// How many distinct arrangements of the two cubes allow for all of the square numbers to be displayed?
+/// How many distinct arrangements of the two cubes allow for all the square numbers to be displayed?
 pub struct Solver090 {
     pub n: usize,
 }
@@ -51,7 +51,7 @@ impl Solver for Solver090 {
         let squares = (1..).map(square_u64).take_while(less_than_u64(pow_10_usize(self.n))).map(|n| {
             let mut s = digits_iter(n).map(|d| if d == 9 { 6 } else { d }).collect::<Vec<_>>();
             s.resize(self.n, 0);
-            s.sort_unstable(); // needs to be sorted for `permutations_of_set_with()`
+            s.sort_unstable(); // needs to be sorted for `permutations_of_set()`
             s
         }).map(|s| permutations_of_set(s).collect::<Vec<_>>()).collect::<HashSet<_>>();
 
@@ -74,7 +74,7 @@ fn cartesian_with<F>(value: usize, dimensions: usize, predicate: F) -> impl Iter
                 indexes[i] -= 1;
                 if indexes[0] == 0 {
                     return None;
-                } else if (predicate)(&indexes) {
+                } else if predicate(&indexes) {
                     return Some(true);
                 }
                 break;

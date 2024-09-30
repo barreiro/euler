@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::first_digits;
-use algorithm::io::load_default_data;
-use euler::Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::first_digits;
+use crate::algorithm::io::load_default_data;
+use crate::euler::Solver;
 
 /// Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
 pub struct Solver013 {

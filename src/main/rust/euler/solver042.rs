@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, char_as_i64};
-use algorithm::io::load_default_data;
-use algorithm::long::is_triangle;
-use Solver;
+use crate::algorithm::cast::{Cast, char_as_i64};
+use crate::algorithm::io::load_default_data;
+use crate::algorithm::long::is_triangle;
+use crate::Solver;
 
 /// The `n-th` term of the sequence of triangle numbers is given by, `t(n) = 1/2 n (n+1)`; so the first ten triangle numbers are:
 /// `1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ...`

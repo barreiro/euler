@@ -3,13 +3,13 @@
 
 use std::collections::HashMap;
 
-use algorithm::cast::Cast;
-use algorithm::digits::concatenation;
-use algorithm::filter::is_prime;
-use algorithm::prime::{prime_sieve, primes_up_to};
-use algorithm::root::{pow_10, square_u64};
-use algorithm::vec::array_sum_u64;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::concatenation;
+use crate::algorithm::filter::is_prime;
+use crate::algorithm::prime::{prime_sieve, primes_up_to};
+use crate::algorithm::root::{pow_10, square_u64};
+use crate::algorithm::vec::array_sum_u64;
+use crate::Solver;
 
 /// The primes `3, 7, 109, and 673`, are quite remarkable. By taking any two primes and concatenating them in any order the result will always be prime.
 /// For example, taking `7` and `109`, both `7109` and `1097` are prime. The sum of these four primes, `792`, represents the lowest sum for a set of four primes with this property.

@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::digits::digits_sum;
-use algorithm::root::pow_10;
-use Solver;
+use crate::algorithm::digits::digits_sum_i64;
+use crate::algorithm::root::pow_10;
+use crate::Solver;
 
 const CELL_THRESHOLD: u64 = pow_10(12);
 
@@ -37,6 +37,6 @@ impl Solver for Solver020 {
             }
             carry.iter().for_each(|&c| factorial.push(c));
         });
-        factorial.into_iter().map(digits_sum).sum()
+        factorial.into_iter().map(digits_sum_i64).sum()
     }
 }

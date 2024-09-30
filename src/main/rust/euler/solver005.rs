@@ -1,12 +1,12 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::long::lcm;
-use Solver;
+use crate::algorithm::long::lcm;
+use crate::Solver;
 
 /// `2520` is the smallest number that can be divided by each of the numbers from `1` to `10` without any remainder.
 ///
-/// What is the smallest positive number that is evenly divisible by all of the numbers from `1` to `20`?
+/// What is the smallest positive number that is evenly divisible by all the numbers from `1` to `20`?
 pub struct Solver005 {
     pub n: i64
 }

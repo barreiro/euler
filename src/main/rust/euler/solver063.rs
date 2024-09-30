@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::filter::equals_u64;
-use algorithm::root::{int_log_10, pow_10};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::filter::equals_u64;
+use crate::algorithm::root::{int_log_10, pow_10};
+use crate::Solver;
 
 const THRESHOLD: u64 = 15;
 

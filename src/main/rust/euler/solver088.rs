@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::bit::BitSet;
-use algorithm::cast::Cast;
-use algorithm::long::div_ceil;
-use algorithm::root::ceil_sqrt;
-use Solver;
+use crate::algorithm::bit::BitSet;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::long::div_ceil;
+use crate::algorithm::root::ceil_sqrt;
+use crate::Solver;
 
 /// A natural number, `N`, that can be written as the sum and product of a given set of at least two natural numbers, `{a1, a2, ..., ak}` is called a product-sum number: `N = a1 + a2 + ... + ak = a1 × a2 × ... × ak`.
 ///
@@ -19,7 +19,7 @@ use Solver;
 /// k=5: 8 = 1 × 1 × 2 × 2 × 2 = 1 + 1 + 2 + 2 + 2
 /// k=6: 12 = 1 × 1 × 1 × 1 × 2 × 6 = 1 + 1 + 1 + 1 + 2 + 6
 /// ```
-/// Hence for `2 ≤ k ≤ 6`, the sum of all the minimal product-sum numbers is `4 + 6 + 8 + 12 = 30`; note that `8` is only counted once in the sum.
+/// Hence, for `2 ≤ k ≤ 6`, the sum of all the minimal product-sum numbers is `4 + 6 + 8 + 12 = 30`; note that `8` is only counted once in the sum.
 /// In fact, as the complete set of minimal product-sum numbers for `2 ≤ k ≤ 12` is `{4, 6, 8, 12, 15, 16}`, the sum is `61`.
 ///
 /// What is the sum of all the minimal product-sum numbers for `2 ≤ k ≤ 12000`?
@@ -47,7 +47,7 @@ impl Solver for Solver088 {
 // the idea is to have a product `p` and the corresponding sum `s` of size `len`
 // there is a product-sum for a set of size `len + (p - s)` with value `p = s + (p - s)`
 fn recursive_product_sum(p: i64, s: i64, len: usize, floor: i64, product_sum: &mut [i64]) {
-    let index = len + (p - s).as_u64().as_usize();
+    let index = len + (p - s).as_usize();
     product_sum[index] = product_sum[index].min(p);
 
     // recursively apply with `i >= floor` while maintaining `(p * i) - (s + i) + (len + 1) < product_sum.len()`

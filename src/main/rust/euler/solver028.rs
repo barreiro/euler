@@ -1,8 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::root::square;
-use Solver;
+use crate::algorithm::root::square;
+use crate::Solver;
 
 /// Starting with the number `1` and moving to the right in a clockwise direction a `5` by `5` spiral is formed as follows:
 /// ```

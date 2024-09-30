@@ -5,11 +5,11 @@
 use std::collections::btree_map::BTreeMap;
 use std::convert::identity;
 use std::ops::Range;
-use algorithm::cast::Cast;
-use algorithm::filter::less_than;
-use algorithm::long::{heptagonal, hexagonal, octagonal, pentagonal, triangle};
-use algorithm::root::{pow_10, square};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::filter::less_than;
+use crate::algorithm::long::{heptagonal, hexagonal, octagonal, pentagonal, triangle};
+use crate::algorithm::root::{pow_10, square};
+use crate::Solver;
 
 const INPUT_061: &[fn(i64) -> i64] = &[triangle, square, pentagonal, hexagonal, heptagonal, octagonal];
 
@@ -60,7 +60,7 @@ fn find(predicates: &BTreeMap<&fn(i64) -> i64, Vec<i64>>, range: Range<i64>, flo
     }
     for (p, v) in predicates {
         let (start, end) = (v.binary_search(&range.start).unwrap_or_else(identity), v.binary_search(&range.end).unwrap_or_else(identity));
-        for &candidate in v[start..end].iter() {
+        for &candidate in &v[start..end] {
             let (mut reduced_predicates, f) = (predicates.clone(), (candidate % scale) * scale);
             reduced_predicates.remove(p);
             set.push(candidate);

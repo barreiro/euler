@@ -3,11 +3,11 @@
 
 use std::collections::HashSet;
 
-use algorithm::cast::Cast;
-use algorithm::long::GetAndIncrement;
-use algorithm::prime::prime_factors;
-use algorithm::root::{int_sqrt, pow, square};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::long::GetAndIncrement;
+use crate::algorithm::prime::prime_factors;
+use crate::algorithm::root::{int_sqrt, pow, square};
+use crate::Solver;
 
 /// Consider all integer combinations of `a^b` for `2 ≤ a ≤ 5` and `2 ≤ b ≤ 5`:
 /// ```
@@ -34,18 +34,18 @@ impl Solver for Solver029 {
 
     fn solve(&self) -> i64 {
         // the strategy is to find the combinations that generate duplicate powers and subtract it from the total number of combinations
-        // a given number 2≤a≤N can only produce duplicates if 'a^n' can be expressed as '(b^i)^j' with n=i∗j and 2≤n,i,j≤N
+        // a given number `2≤a≤N` can only produce duplicates if 'a^n' can be expressed as `(b^i)^j` with `n=i∗j` and `2≤n,i,j≤N`
         let (bound, mut unique) = (int_sqrt(self.n), HashSet::new());
 
         let factored_power = |base: i64, power| {
             let factors = prime_factors(base.as_u64());
-            (factors.keys().product::<u64>().as_i64(), factors.values().product::<u64>().as_i64() * power / factors.len() as i64)
+            (factors.keys().product::<u64>().as_i64(), factors.values().product::<u64>().as_i64() * power / factors.len().as_i64())
         };
 
         square(self.n - 1) - (2..=bound).map(|b| (2..=bound).map(|i| (pow(b, i), i)).filter(|&(a, _)| a <= self.n && unique.insert(a)).map(|(a, i)| {
             let mut duplicates = (self.n / i) - 1;
 
-            // the trivial duplicates that have i*j<=N are accounted. there may be an equivalent of the factorization that still satisfies the relation
+            // the trivial duplicates that have `i*j<=N` are accounted. there may be an equivalent of the factorization that still satisfies the relation
             for j in 1 + self.n / i..self.n {
                 let (factored_base, factored_exp) = factored_power(a, j);
                 let (mut base, mut exp, mut k) = (factored_base, factored_exp, 2);

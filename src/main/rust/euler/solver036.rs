@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::to_i64;
-use algorithm::digits::{Digits, palindromes};
-use algorithm::filter::less_than_u64;
-use Solver;
+use crate::algorithm::cast::to_i64;
+use crate::algorithm::digits::{Digits, palindromes};
+use crate::algorithm::filter::less_than_u64;
+use crate::Solver;
 
 /// The decimal number, `585 = 1001001001 (binary)`, is palindromic in both bases.
 ///

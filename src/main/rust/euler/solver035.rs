@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::Digits;
-use algorithm::prime::{miller_rabin, primes_up_to};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::Digits;
+use crate::algorithm::prime::{miller_rabin, primes_up_to};
+use crate::Solver;
 
 /// The number `197` is called a circular prime because all rotations of the digits: `197, 971, and 719` are themselves prime.
 ///

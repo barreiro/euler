@@ -3,10 +3,10 @@
 
 use std::collections::HashSet;
 
-use algorithm::cast::to_i64;
-use algorithm::filter::{is_palindrome, less_than_u64};
-use algorithm::root::{pow_10, square_u64};
-use Solver;
+use crate::algorithm::cast::to_i64;
+use crate::algorithm::filter::{is_palindrome, less_than_u64};
+use crate::algorithm::root::{ceil_sqrt_u64, pow_10, square_u64};
+use crate::Solver;
 
 /// The palindromic number `595` is interesting because it can be written as the sum of consecutive squares: `6^2 + 7^2 + 8^2 + 9^2 + 10^2 + 11^2 + 12^2`.
 ///
@@ -27,23 +27,8 @@ impl Default for Solver125 {
 impl Solver for Solver125 {
     fn problem_name(&self) -> &str { "Palindromic sums" }
 
-    #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
-        // let squares = (1..).map(square_u64).take_while(less_than_u64(pow_10(self.n) / 2)).collect::<Vec<_>>();
-        // palindromes().take_while(less_than_u64(pow_10(self.n))).filter(|&p| {
-        //     (2..=squares.len()).any(|w| squares.windows(w).map(array_sum_u64).take_while(less_or_equal_than_u64(p)).any(|sum| sum == p))
-        // }).map(to_i64).sum()
-
-        // let _palindromes = palindromes().take_while(less_than_u64(pow_10(self.n))).collect::<Vec<_>>();
-        // (2..=squares.len())
-        //     .flat_map(|w| squares.windows(w).map(array_sum_u64).take_while(less_than_u64(pow_10(self.n))))
-        //     .filter(|candidate| _palindromes.binary_search(candidate).is_ok())
-        //     .collect::<HashSet<_>>()
-        //     .into_iter()
-        //     .map(to_i64)
-        //     .sum()
-
-        let squares = (1..).map(square_u64).take_while(less_than_u64(pow_10(self.n) / 2)).collect::<Vec<_>>();
+        let squares = (1..ceil_sqrt_u64(pow_10(self.n) / 2)).map(square_u64).collect::<Vec<_>>();
         (0..squares.len()).flat_map(|i| squares[i + 1..].iter().scan(squares[i], |state, &j| {
             *state += j;
             Some(*state).filter(less_than_u64(pow_10(self.n)))

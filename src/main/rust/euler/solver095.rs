@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::root::floor_sqrt_u64;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::root::floor_sqrt_u64;
+use crate::Solver;
 
 /// The proper divisors of a number are all the divisors excluding the number itself.
 /// For example, the proper divisors of `28` are `1, 2, 4, 7, and 14`.
@@ -56,7 +56,7 @@ impl Solver for Solver095 {
             Some(lambda).filter(|_| slow == fast)
         };
 
-        // even numbers usually provide the longest chains. it's safe do do it in the context of this problem
+        // even numbers usually provide the longest chains. it's safe do it in the context of this problem
         (0..self.n).step_by(2).max_by_key(amicable_chain_len).as_i64()
     }
 }

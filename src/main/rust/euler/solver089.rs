@@ -3,10 +3,10 @@
 
 use std::str::FromStr;
 
-use algorithm::cast::Cast;
-use algorithm::digits::digits_iter;
-use algorithm::io::load_default_data;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::digits_iter;
+use crate::algorithm::io::load_default_data;
+use crate::Solver;
 
 const MINIMAL_FORM: &[usize] = &[0, 1, 2, 3, 2, 1, 2, 3, 4, 2];
 

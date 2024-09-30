@@ -3,8 +3,8 @@
 
 use std::cmp::Ordering::{Equal, Greater, Less};
 
-use algorithm::cast::{Cast, to_i64};
-use Solver;
+use crate::algorithm::cast::{Cast, to_i64};
+use crate::Solver;
 
 const INPUT_116: &[u64] = &[2, 3, 4];
 

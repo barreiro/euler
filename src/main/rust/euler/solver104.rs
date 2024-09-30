@@ -3,10 +3,10 @@
 
 use std::iter::from_fn;
 
-use algorithm::cast::Cast;
-use algorithm::filter::is_pandigital;
-use algorithm::root::pow_10_usize;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::filter::is_pandigital;
+use crate::algorithm::root::pow_10_usize;
+use crate::Solver;
 
 /// The Fibonacci sequence is defined by the recurrence relation: `Fn = Fn−1 + Fn−2`, where `F1 = 1` and `F2 = 1`.
 ///
@@ -39,7 +39,7 @@ impl Solver for Solver104 {
 #[allow(clippy::cast_possible_truncation)]
 fn head_binet(n: usize, len: usize) -> u64 {
     let (log_root_5, log_phi) = (5_f64.log10() / 2.0, ((1.0 + 5_f64.sqrt()) / 2.0).log10());
-    10.0_f64.powf(f64::from((len - 1) as u32) + (f64::from(n as u32) * log_phi - log_root_5).fract()).as_u64()
+    10.0_f64.powf(f64::from((len - 1) as u32) + f64::from(n as u32).mul_add(log_phi, -log_root_5).fract()).as_u64()
 }
 
 fn fibonacci_tail(len: usize) -> impl Iterator<Item=u64> {

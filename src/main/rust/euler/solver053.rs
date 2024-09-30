@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::to_i64;
-use algorithm::combinatorics::choose;
-use Solver;
+use crate::algorithm::cast::to_i64;
+use crate::algorithm::combinatorics::choose;
+use crate::Solver;
 
 const LIMIT: u64 = 1_000_000;
 

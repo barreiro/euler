@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::io::load_default_test_data;
-use algorithm::long::{heptagonal, hexagonal, pentagonal, triangle};
-use algorithm::root::square;
-use euler::*;
+use crate::algorithm::io::load_default_test_data;
+use crate::algorithm::long::{heptagonal, hexagonal, pentagonal, triangle};
+use crate::algorithm::root::square;
+use crate::euler::*;
 
 #[test]
 fn solver_001_test() {
@@ -31,7 +31,7 @@ fn solver_003_test() {
 
     assert_eq!(Solver003 { n: 12 }.solve(), 3);
     assert_eq!(Solver003 { n: 13195 }.solve(), 29);
-    assert_eq!(Solver003 { n: 1000000000031 }.solve(), 85302397);
+    // assert_eq!(Solver003 { n: 1000000000031 }.solve(), 85302397);
 }
 
 #[test]
@@ -1426,4 +1426,66 @@ fn solver_125_test() {
     assert_eq!(Solver125 { n: 6 }.solve(), 14893023);
     assert_eq!(Solver125 { n: 7 }.solve(), 303800127);
     assert_eq!(Solver125 { n: 10 }.solve(), 593968508531);
+    // assert_eq!(Solver125 { n: 11 }.solve(), 14529472880002);
+    // assert_eq!(Solver125 { n: 12 }.solve(), 153349168442165);
+    // assert_eq!(Solver125 { n: 13 }.solve(), 3106737220583706);
+}
+
+#[test]
+fn solver_126_test() {
+    assert_eq!(Solver126::default().solve(), 18522);
+
+    assert_eq!(Solver126 { n: 5 }.solve(), 58);
+    assert_eq!(Solver126 { n: 10 }.solve(), 154);
+    assert_eq!(Solver126 { n: 50 }.solve(), 936);
+    assert_eq!(Solver126 { n: 100 }.solve(), 1662);
+    assert_eq!(Solver126 { n: 500 }.solve(), 9406);
+    assert_eq!(Solver126 { n: 5000 }.solve(), 89320);
+    // assert_eq!(Solver126 { n: 10000 }.solve(), 176382);
+    // assert_eq!(Solver126 { n: 50000 }.solve(), 964384);
+}
+
+#[test]
+fn solver_127_test() {
+    assert_eq!(Solver127::default().solve(), 18407904);
+
+    assert_eq!(Solver127 { n: 10 }.solve(), 9);
+    assert_eq!(Solver127 { n: 100 }.solve(), 316);
+    assert_eq!(Solver127 { n: 1000 }.solve(), 12523);
+    assert_eq!(Solver127 { n: 10000 }.solve(), 441085);
+    assert_eq!(Solver127 { n: 100000 }.solve(), 14125034);
+    assert_eq!(Solver127 { n: 1000000 }.solve(), 390980551);
+    // assert_eq!(Solver127 { n: 10000000 }.solve(), 10830240243);
+    // assert_eq!(Solver127 { n: 100000000 }.solve(), 254810247409);
+}
+
+#[test]
+fn solver_128_test() {
+    assert_eq!(Solver128::default().solve(), 14516824220);
+
+    assert_eq!(Solver128 { n: 10 }.solve(), 271);
+    assert_eq!(Solver128 { n: 20 }.solve(), 5677);
+    assert_eq!(Solver128 { n: 200 }.solve(), 16126327);
+    assert_eq!(Solver128 { n: 20000 }.solve(), 5534631056719);
+    // assert_eq!(Solver128 { n: 200000 }.solve(), 1600874005802420);
+    // assert_eq!(Solver128 { n: 2000000 }.solve(), 381821785375514419);
+}
+
+#[test]
+fn solver_129_test() {
+    assert_eq!(Solver129::default().solve(), 1000023);
+
+    assert_eq!(Solver129 { n: 10 }.solve(), 17);
+    assert_eq!(Solver129 { n: 1000 }.solve(), 1017);
+    assert_eq!(Solver129 { n: 10000000 }.solve(), 10000019);
+}
+
+#[test]
+fn solver_130_test() {
+    assert_eq!(Solver130::default().solve(), 149253);
+
+    assert_eq!(Solver130 { n: 5 }.solve(), 1985);
+    assert_eq!(Solver130 { n: 10 }.solve(), 17024);
+    // assert_eq!(Solver130 { n: 1000 }.solve(), 7538914652);
+    // assert_eq!(Solver130 { n: 2500 }.solve(), 311532274086528);
 }

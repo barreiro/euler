@@ -3,11 +3,11 @@
 
 use std::convert::identity;
 
-use algorithm::cast::Cast;
-use algorithm::digits::is_permutation;
-use algorithm::prime::primes_up_to;
-use algorithm::root::{floor_sqrt_u64, pow_10};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::is_permutation;
+use crate::algorithm::prime::primes_up_to;
+use crate::algorithm::root::{floor_sqrt_u64, pow_10};
+use crate::Solver;
 
 /// Euler's Totient function, `φ(n)` (sometimes called the phi function), is used to determine the number of positive numbers less than or equal to `n` which are relatively prime to `n`.
 /// For example, as `1, 2, 4, 5, 7, and 8`, are all less than nine and relatively prime to nine, `φ(9)=6`.

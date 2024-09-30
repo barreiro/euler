@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::filter::is_abundant_usize;
-use algorithm::long::arithmetic_sum;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::filter::is_abundant_usize;
+use crate::algorithm::long::arithmetic_sum;
+use crate::Solver;
 
 /// A perfect number is a number for which the sum of its proper divisors is exactly equal to the number.
 ///

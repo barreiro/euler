@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::io::load_default_data;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::io::load_default_data;
+use crate::Solver;
 
 /// The following undirected network consists of seven vertices and twelve edges with a total weight of `243`.
 ///

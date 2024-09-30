@@ -3,13 +3,13 @@
 
 use std::collections::HashMap;
 
-use algorithm::cast::Cast;
-use algorithm::digits::{Digits, from_raw_digits};
-use algorithm::filter::is_unique_digits;
-use algorithm::io::load_default_data;
-use algorithm::root::{floor_sqrt_u64, pow_10, square_u64};
-use algorithm::vec::cluster_by;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::{Digits, from_raw_digits};
+use crate::algorithm::filter::is_unique_digits;
+use crate::algorithm::io::load_default_data;
+use crate::algorithm::root::{floor_sqrt_u64, pow_10, square_u64};
+use crate::algorithm::vec::cluster_by;
+use crate::Solver;
 
 /// By replacing each of the letters in the word `CARE` with `1, 2, 9, and 6` respectively, we form a square number: `1296 = 36^2`.
 /// What is remarkable is that, by using the same digital substitutions, the anagram, `RACE`, also forms a square number: `9216 = 96^2`.
@@ -51,7 +51,7 @@ impl Solver for Solver098 {
         let mut anagrams = cluster_by(&words, word_norm);
         anagrams.retain(|a| a.len() > 1);
         anagrams.sort_unstable_by_key(|pair| pair[0].len());
-        anagrams.iter().rev().find_map(|pair| {
+        anagrams.into_iter().rev().find_map(|pair| {
             let dim = pair[0].len();
             let mapping_indexes = pair[1].chars().map(|c| dim - 1 - pair[0].char_indices().find(|&(_, d)| d == c).expect("There should be a matching word").0).collect::<Vec<_>>();
             let remap = |value| {

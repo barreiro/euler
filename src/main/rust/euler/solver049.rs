@@ -3,13 +3,13 @@
 
 use std::collections::HashMap;
 
-use algorithm::cast::Cast;
-use algorithm::digits::Digits;
-use algorithm::filter::less_than_u64;
-use algorithm::prime::primes_up_to;
-use algorithm::root::pow_10;
-use algorithm::vec::array_concatenation;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::Digits;
+use crate::algorithm::filter::less_than_u64;
+use crate::algorithm::prime::primes_up_to;
+use crate::algorithm::root::pow_10;
+use crate::algorithm::vec::array_concatenation;
+use crate::Solver;
 
 const SEQ: usize = 1;
 
@@ -43,7 +43,7 @@ impl Solver for Solver049 {
         let mut permutations = grouped_primes.values().filter(|&p| p.len() >= 3).collect::<Vec<_>>();
         permutations.sort_unstable();
 
-        // given a list of primes, finds if the average of two others is in the list as well, then convert to digits an concatenate
+        // given a list of primes, finds if the average of two others is in the list as well, then convert to the concatenation
         let predicate = |&p: &&Vec<_>| (0..p.len() - 2).find_map(|i| (i + 2..p.len()).find_map(|j| p.binary_search(&((p[i] + p[j]) / 2)).ok().map(|k| array_concatenation(&[p[j], p[k], p[i]]))));
 
         permutations.iter().filter_map(predicate).nth(SEQ).as_i64()

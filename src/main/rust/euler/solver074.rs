@@ -3,9 +3,9 @@
 
 use std::collections::HashSet;
 
-use algorithm::cast::Cast;
-use algorithm::digits::{Digits, digits_iter, from_raw_digits};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::{Digits, digits_iter, from_raw_digits};
+use crate::Solver;
 
 const TARGET: usize = 60;
 const FACTORIAL_CACHE: &[usize] = &[1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880];

@@ -1,12 +1,12 @@
 // COPYRIGHT (C) 2023 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::prime::generator_wheel;
-use algorithm::root::pow_10;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::prime::generator_wheel;
+use crate::algorithm::root::pow_10;
+use crate::Solver;
 
-/// Let `p_n` be the `n`th prime: `2, 3, 5, 7, 11, ...`, and let `r` be the remainder when `(p_n - 1)^n + (p_n + 1)^n` is divided by `p_n^2`.
+/// Let `p_n` be the `n`th prime: `2, 3, 5, 7, 11, …`, and let `r` be the remainder when `(p_n - 1)^n + (p_n + 1)^n` is divided by `p_n^2`.
 ///
 /// For example, when `n = 3`, `p_3 = 5`, and `4^3 + 6^3 = 280 ≡ 5 mod 25`.
 ///

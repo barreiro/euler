@@ -3,8 +3,8 @@
 
 use std::mem::swap;
 
-use algorithm::long::GetAndIncrement;
-use algorithm::root::{exact_sqrt, floor_sqrt, pow_10, square};
+use crate::algorithm::long::GetAndIncrement;
+use crate::algorithm::root::{exact_sqrt, floor_sqrt, pow_10, square};
 
 // multiplier / (√n - fractional) => a + (√n - b) / c
 const fn transform(n: i64, floor: i64, multiplier: i64, fractional: i64) -> (i64, i64, i64) {
@@ -49,7 +49,7 @@ pub fn continued_expansion_sqrt(n: i64) -> Vec<i64> {
     }
 }
 
-/// continued fraction expansion of rational `n/d`, by applying Eucledean algorithm
+/// continued fraction expansion of rational `n/d`, by applying Euclidean algorithm
 #[must_use]
 pub fn continued_expansion_rational(mut n: u64, mut d: u64) -> Vec<u64> {
     let mut expansion = vec![];

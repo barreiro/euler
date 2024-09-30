@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::digits::digits_sum;
-use algorithm::root::pow_10;
-use Solver;
+use crate::algorithm::digits::digits_sum_i64;
+use crate::algorithm::root::pow_10;
+use crate::Solver;
 
 const DEFAULT_BASE: u64 = 2;
 const CELL_THRESHOLD: u64 = pow_10(15);
@@ -29,16 +29,16 @@ impl Solver for Solver016 {
         // each element is a digit. Each iteration we double every digit and adjust
         let mut values = vec![1];
 
-        // since carry never ripples we can iterate backwards, using less memory
+        // since a carry never ripples we can iterate backwards, using less memory
         (0..self.n).for_each(|_| (0..values.len()).rev().for_each(|j| {
-            values[j] *= self.n;
+            values[j] *= self.base;
             if values[j] >= CELL_THRESHOLD {
-                // with radix > 2 can use increment and subtract instead of divide and take the remainder
+                // with a radix > 2 can use increment and subtract instead of divide and take the remainder
                 values[j] -= CELL_THRESHOLD;
                 if j == values.len() - 1 { values.push(1) } else { values[j + 1] += 1 }
             }
         }));
 
-        values.into_iter().map(digits_sum).sum()
+        values.into_iter().map(digits_sum_i64).sum()
     }
 }

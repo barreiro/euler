@@ -1,23 +1,23 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::combinatorics::{choose, partition};
-use algorithm::combinatorics::partition_with_constrains;
-use algorithm::combinatorics::permutations_of_digits_with;
-use algorithm::digits::Digits;
-use algorithm::factor::sum_of_factors;
-use algorithm::filter::{is_palindrome, is_pandigital};
-use algorithm::long::factorial;
-use algorithm::long::gcd;
-use algorithm::long::pow_mod;
-use algorithm::prime::{descending_primes, primes_trial_division_up_to};
-use algorithm::prime::miller_rabin;
-use algorithm::prime::prime_factors;
-use algorithm::prime::primes_up_to;
-use algorithm::prime::primes_wheel_up_to;
-use algorithm::root::exact_root;
-use algorithm::root::floor_sqrt;
-use algorithm::root::int_sqrt;
+use crate::algorithm::combinatorics::{choose, partition};
+use crate::algorithm::combinatorics::partition_with_constrains;
+use crate::algorithm::combinatorics::permutations_of_digits_with;
+use crate::algorithm::digits::Digits;
+use crate::algorithm::factor::sum_of_factors;
+use crate::algorithm::filter::{is_palindrome, is_pandigital};
+use crate::algorithm::long::factorial;
+use crate::algorithm::long::gcd;
+use crate::algorithm::long::pow_mod;
+use crate::algorithm::prime::{descending_primes, primes_trial_division_up_to};
+use crate::algorithm::prime::miller_rabin;
+use crate::algorithm::prime::prime_factors;
+use crate::algorithm::prime::primes_up_to;
+use crate::algorithm::prime::primes_wheel_up_to;
+use crate::algorithm::root::exact_root;
+use crate::algorithm::root::floor_sqrt;
+use crate::algorithm::root::int_sqrt;
 
 #[test]
 fn gcd_test() {

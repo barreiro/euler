@@ -8,12 +8,16 @@ const DEFAULT_DATA_BASE_PATH: &str = "src/main/resources/net/projecteuler/barrei
 const DEFAULT_TEST_DATA_BASE_PATH: &str = "src/test/resources/net/projecteuler/barreiro/problem/";
 
 /// loads the default data for a given problem
+/// # Panics
+/// Will panic if there is no default data for the given problem
 #[must_use]
 pub fn load_default_data(problem: u64) -> String {
     read_to_string(Path::new(&format!("{DEFAULT_DATA_BASE_PATH}problem{problem:03?}-data.txt"))).expect("Unable to read file")
 }
 
 /// loads the default test data for a given problem
+/// # Panics
+/// Will panic if there is no default data for the given problem
 #[must_use]
 pub fn load_default_test_data(problem: u64) -> String {
     read_to_string(Path::new(&format!("{DEFAULT_TEST_DATA_BASE_PATH}problem{problem:03?}-test-data.txt"))).expect("Unable to read file")

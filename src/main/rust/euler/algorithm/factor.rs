@@ -3,8 +3,8 @@
 
 use std::convert::TryFrom;
 
-use algorithm::cast::Cast;
-use algorithm::root::{floor_sqrt, square};
+use crate::algorithm::cast::Cast;
+use crate::algorithm::root::{floor_sqrt, square};
 
 /// test if a given value has a factor pair where both factors are below a given bound
 #[must_use]

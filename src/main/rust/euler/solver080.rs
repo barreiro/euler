@@ -1,13 +1,13 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, to_u64};
-use algorithm::digits::digits_sum;
-use algorithm::long::GetAndIncrement;
-use algorithm::root::{floor_sqrt, int_log_10, is_square, pow_10};
-use Solver;
+use crate::algorithm::cast::{Cast, to_u64};
+use crate::algorithm::digits::digits_sum_i64;
+use crate::algorithm::long::GetAndIncrement;
+use crate::algorithm::root::{floor_sqrt, int_log_10, is_square, pow_10};
+use crate::Solver;
 
-const DIM: u64 = 100;
+const DIGITS: u64 = 100;
 
 #[allow(clippy::cast_possible_wrap)]
 const THRESHOLD: i64 = pow_10(15) as i64;
@@ -15,7 +15,7 @@ const THRESHOLD: i64 = pow_10(15) as i64;
 /// It is well known that if the square root of a natural number is not an integer, then it is irrational.
 /// The decimal expansion of such square roots is infinite without any repeating pattern at all.
 ///
-/// The square root of two is `1.41421356237309504880...`, and the digital sum of the first one hundred decimal digits is `475`.
+/// The square root of two is `1.41421356237309504880…`, and the digital sum of the first one hundred decimal digits is `475`.
 ///
 /// For the first one hundred natural numbers, find the total of the digital sums of the first one hundred decimal digits for all the irrational square roots.
 pub struct Solver080 {
@@ -32,9 +32,9 @@ impl Solver for Solver080 {
     fn problem_name(&self) -> &str { "Square root digital expansion" }
 
     fn solve(&self) -> i64 {
-        // "Square roots by subtraction" by Frazer Jarvis ( http://www.afjarvis.staff.shef.ac.uk/maths/jarvisspec02.pdf )
+        // "Square roots by subtraction" by Frazer Jarvis (http://www.afjarvis.staff.shef.ac.uk/maths/jarvisspec02.pdf)
         (2..=self.n).filter(|&n| !is_square(n)).map(|n| {
-            let (mut a, mut b, mut i) = (vec![5 * n], vec![5], DIM - int_log_10(floor_sqrt(n).as_u64()));
+            let (mut a, mut b, mut i) = (vec![5 * n], vec![5], DIGITS - int_log_10(floor_sqrt(n).as_u64()));
             loop {
                 if less(&a, &b) { // first branch fixes a digit of the root in b
                     if i == 0 { break; }
@@ -46,7 +46,7 @@ impl Solver for Solver080 {
                     add_scalar(&mut b, 10);
                 }
             }
-            b.into_iter().map(to_u64).map(digits_sum).sum::<i64>() - 5 // b ends with an extra '5'
+            b.into_iter().map(to_u64).map(digits_sum_i64).sum::<i64>() - 5 // b ends with an extra '5'
         }).sum()
     }
 }
@@ -56,7 +56,7 @@ impl Solver for Solver080 {
 // convenience function that compares two vector numbers
 fn less(a: &[i64], b: &[i64]) -> bool {
     if a.len() == b.len() {
-        (0..a.len()).rev().find(|&i| a[i] != b[i]).map(|i| a[i] < b[i]).unwrap_or_default()
+        (0..a.len()).rev().find(|&i| a[i] != b[i]).is_some_and(|i| a[i] < b[i])
     } else {
         a.len() < b.len()
     }
@@ -94,7 +94,7 @@ fn sub(a: &mut Vec<i64>, b: &[i64]) {
             a[i] %= THRESHOLD;
         }
     }
-    // need to normalize in order to be able to compare based on length
+    // need to normalize to be able to compare based on length
     while a.last() == Some(&0) {
         a.pop();
     }

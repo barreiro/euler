@@ -1,17 +1,17 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::bit::BitSet;
-use algorithm::cast::to_i64;
-use algorithm::digits::DEFAULT_RADIX;
-use algorithm::prime::generator_wheel;
-use Solver;
+use crate::algorithm::bit::BitSet;
+use crate::algorithm::cast::to_i64;
+use crate::algorithm::digits::DEFAULT_RADIX;
+use crate::algorithm::prime::generator_wheel;
+use crate::Solver;
 
 const BASE: u64 = DEFAULT_RADIX as u64;
 
 /// The number `3797` has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, and remain prime at each stage: `3797, 797, 97, and 7`.
 ///
-/// Similarly we can work from right to left: `3797, 379, 37, and 3`.
+/// Similarly, we can work from right to left: `3797, 379, 37, and 3`.
 ///
 /// Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
 ///

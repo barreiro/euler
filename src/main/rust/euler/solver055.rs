@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::{Digits, incrementing_digits_from};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::{Digits, incrementing_digits_from};
+use crate::Solver;
 
 const THRESHOLD: usize = 50;
 
@@ -21,7 +21,7 @@ const THRESHOLD: usize = 50;
 ///
 /// Due to the theoretical nature of these numbers, and for the purpose of this problem, we shall assume that a number is Lychrel until proven otherwise.
 ///
-/// In addition you are given that for every number below ten-thousand, it will either (i) become a palindrome in less than fifty iterations, or, (ii) no one, with all the computing power that exists, has managed so far to map it to a palindrome.
+/// In addition, you are given that for every number below ten-thousand, it will either (i) become a palindrome in less than fifty iterations, or, (ii) no one, with all the computing power that exists, has managed so far to map it to a palindrome.
 ///
 /// In fact, `10677` is the first number to be shown to require over fifty iterations before producing a palindrome: `4668731596684224866951378664` (`53` iterations, `28-digits`).
 ///
@@ -44,7 +44,7 @@ impl Solver for Solver055 {
     fn problem_name(&self) -> &str { "Lychrel Numbers" }
 
     fn solve(&self) -> i64 {
-        // sums a number in digit representation with it's reverse in a loop
+        // sums a number in digit representation with its reverse in a loop
         let is_lychrel = |mut value: Digits| {
             (0..THRESHOLD).all(|_| {
                 let mut reverse = value.clone();

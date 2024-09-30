@@ -3,9 +3,9 @@
 
 use std::iter::from_fn;
 
-use algorithm::cast::Cast;
-use algorithm::root::{pow_10, square_u64};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::root::{pow_10, square_u64};
+use crate::Solver;
 
 /// If a box contains twenty-one coloured discs, composed of fifteen blue discs and six red discs, and two discs were taken at random, it can be seen that the probability of taking two blue discs, `P(BB) = (15/21)×(14/20) = 1/2`.
 ///

@@ -1,8 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::Solver;
 
 const LOWER: (u64, u64) = (1, 3);
 const UPPER: (u64, u64) = (1, 2);

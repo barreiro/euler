@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::long::{pow_mod, mul_mod};
-use algorithm::root::pow_10;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::long::{pow_mod, mul_mod};
+use crate::algorithm::root::pow_10;
+use crate::Solver;
 
 const FACTOR: u64 = 28_433;
 const EXP: u64 = 7_830_457;

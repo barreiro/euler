@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, to_i64};
-use algorithm::digits::digits_square_sum;
-use algorithm::filter::less_or_equal_than_u64;
-use algorithm::root::square_u64;
-use Solver;
+use crate::algorithm::cast::{Cast, to_i64};
+use crate::algorithm::digits::digits_square_sum;
+use crate::algorithm::filter::less_or_equal_than_u64;
+use crate::algorithm::root::square_u64;
+use crate::Solver;
 
 // numbers that converge to 1 are known as "happy numbers"
 const HAPPY: u64 = 1;
@@ -18,7 +18,7 @@ const UNHAPPY: u64 = 89;
 /// 44 → 32 → 13 → 10 → 1 → 1
 /// 85 → 89 → 145 → 42 → 20 → 4 → 16 → 37 → 58 → 89
 /// ```
-/// Therefore any chain that arrives at `1` or `89` will become stuck in an endless loop. What is most amazing is that *EVERY* starting number will eventually arrive at `1` or `89`.
+/// Therefore, any chain that arrives at `1` or `89` will become stuck in an endless loop. What is most amazing is that *EVERY* starting number will eventually arrive at `1` or `89`.
 /// How many starting numbers below ten million will arrive at `89`?
 pub struct Solver092 {
     pub n: u64,

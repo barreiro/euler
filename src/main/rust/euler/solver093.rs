@@ -2,12 +2,12 @@
 // Rust solvers for Project Euler problems
 
 use std::ops::{Add, Div, Mul, Sub};
-use algorithm::cast::Cast;
+use crate::algorithm::cast::Cast;
 
-use algorithm::combinatorics::{combinations, combinations_with};
-use algorithm::digits::{Digit, from_raw_digits};
-use algorithm::filter::greater_than;
-use Solver;
+use crate::algorithm::combinatorics::{combinations, combinations_with};
+use crate::algorithm::digits::{Digit, from_raw_digits};
+use crate::algorithm::filter::greater_than;
+use crate::Solver;
 
 /// By using each of the digits from the set, `{1, 2, 3, 4}`, exactly once, and making use of the four arithmetic operations `(+, −, *, /)` and brackets/parentheses, it is possible to form different positive integer targets.
 /// For example:

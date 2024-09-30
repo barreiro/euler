@@ -1,16 +1,16 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::long::factorial;
-use algorithm::root::pow_10;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::long::factorial;
+use crate::algorithm::root::pow_10;
+use crate::Solver;
 
 const DEFAULT_BASE: &[i64] = &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 /// A permutation is an ordered arrangement of objects. For example, `3124` is one possible permutation of the digits `1, 2, 3` and `4`.
 ///
-/// If all of the permutations are listed numerically or alphabetically, we call it lexicographic order.
+/// If all the permutations are listed numerically or alphabetically, we call it lexicographic order.
 ///
 /// The lexicographic permutations of `0, 1` and `2` are: `012, 021, 102, 120, 201, 210`
 ///

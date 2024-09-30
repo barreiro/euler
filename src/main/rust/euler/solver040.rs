@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::{DEFAULT_RADIX, nth_digit};
-use algorithm::long::GetAndIncrement;
-use algorithm::root::{pow_10, pow_u64};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::{DEFAULT_RADIX, nth_digit};
+use crate::algorithm::long::GetAndIncrement;
+use crate::algorithm::root::{pow_10, pow_u64};
+use crate::Solver;
 
 const RADIX: u64 = DEFAULT_RADIX as u64;
 

@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2023 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use Solver;
-use solver114::multipart;
+use crate::algorithm::cast::Cast;
+use crate::Solver;
+use crate::solver114::multipart;
 
 const THRESHOLD: u64 = 1_000_000;
 

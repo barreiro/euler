@@ -3,9 +3,9 @@
 
 use std::cmp::min;
 
-use algorithm::cast::Cast;
-use algorithm::io::{load_default_data, str_to_matrix};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::io::{load_default_data, str_to_matrix};
+use crate::Solver;
 
 /// NOTE: This problem is a more challenging version of *Problem 081*.
 ///

@@ -1,8 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::long::arithmetic_sum;
-use Solver;
+use crate::algorithm::long::arithmetic_sum;
+use crate::Solver;
 
 // keep sorted
 const INPUT_001: &[i64] = &[3, 5];

@@ -1,8 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use euler::Solver;
+use crate::algorithm::cast::Cast;
+use crate::euler::Solver;
 
 // 1900 started on a monday, 1901 on a tuesday
 const REFERENCE: i64 = 1901;

@@ -6,9 +6,9 @@ use std::iter::{FromIterator, Map};
 use std::num::TryFromIntError;
 use std::ops::AddAssign;
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::permutations_of_set_with;
-use algorithm::root::{int_log_10, pow_10, pow_u64};
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::permutations_of_set_with;
+use crate::algorithm::root::{int_log_10, pow_10, pow_u64};
 
 /// constant that defines the default base for conversions to and from digits
 pub const DEFAULT_RADIX: Digit = 10;
@@ -125,7 +125,7 @@ impl Digits {
     #[must_use]
     #[allow(clippy::naive_bytecount)]
     pub fn find_repeated(&self, repetitions: usize) -> Option<Digit> {
-        (0..DEFAULT_RADIX).find(|&i| self.digits.iter().filter(|&&d| d == i).count() >= repetitions)
+        (0..self.radix).find(|&i| self.digits.iter().filter(|&&d| d == i).count() >= repetitions)
     }
 
     /// an iterator of permutations that match a given predicate
@@ -310,13 +310,20 @@ pub fn is_permutation(a: u64, b: u64) -> bool {
 /// calculates the sum of the digits of a given value
 #[must_use]
 #[allow(clippy::cast_possible_wrap)]
-pub const fn digits_sum(value: u64) -> i64 {
+pub const fn digits_sum(value: u64) -> u64 {
     let (mut sum, mut v, radix) = (0, value, DEFAULT_RADIX as u64);
     while v >= radix {
         sum += v % radix;
         v /= radix;
     }
-    (sum + v) as i64
+    sum + v
+}
+
+/// calculates the sum of the digits of a given value
+#[must_use]
+#[allow(clippy::cast_possible_wrap)]
+pub const fn digits_sum_i64(value: u64) -> i64 {
+    digits_sum(value) as i64
 }
 
 /// calculates the sum of the squares digits of a given value

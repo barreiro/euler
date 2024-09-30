@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::prime::prime_sieve;
-use algorithm::root::is_square;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::prime::prime_sieve;
+use crate::algorithm::root::is_square;
+use crate::Solver;
 
 /// It was proposed by Christian Goldbach that every odd composite number can be written as the sum of a prime and twice a square.
 /// ```

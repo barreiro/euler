@@ -3,17 +3,17 @@
 
 use std::mem::swap;
 
-use algorithm::cast::Cast;
-use algorithm::continued_fraction::add_mul;
-use algorithm::digits::digits_sum;
-use algorithm::root::pow_10;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::continued_fraction::add_mul;
+use crate::algorithm::digits::digits_sum_i64;
+use crate::algorithm::root::pow_10;
+use crate::Solver;
 
 /// The square root of `2` can be written as an infinite continued fraction.
 /// ```
 ///`√2 = 1 + 1 / ( 2 + ( 1 / 2 + ( 1 / ( 2 + ( 1 / 2 + ...
 /// ```
-/// The infinite continued fraction can be written, `√2 = [ 1; (2) ]`, `(2)` indicates that `2` repeats ad infinitum. In a similar way, `√23 = [ 4; ( 1, 3, 1, 8 ) ]`.
+/// The infinite continued fraction can be written, `√2 = [ 1; (2) ]`, `(2)` indicates that `2` repeats *ad infinitum*. In a similar way, `√23 = [ 4; ( 1, 3, 1, 8 ) ]`.
 ///
 /// It turns out that the sequence of partial values of continued fractions for square roots provide the best rational approximations. Let us consider the convergents for `√2`.
 /// ```
@@ -22,7 +22,7 @@ use Solver;
 /// 1 + 1 / { 2 + ( 1 / ( 2 + ( 1 / 2 ) ) ) ) = 17 / 12
 /// 1 + 1 / ( 2 + ( 1 / ( 2 + ( 1 / ( 2 + ( 1 / 2 ) ) ) ) ) ) = 41 / 29
 /// ```
-/// Hence the sequence of the first ten convergents for `√2` are:
+/// Hence, the sequence of the first ten convergents for `√2` are:
 /// `1, 3/2, 7/5, 17/12, 41/29, 99/70, 239/169, 577/408, 1393/985, 3363/2378, ...`
 ///
 /// What is most surprising is that the important mathematical constant,
@@ -58,6 +58,6 @@ impl Solver for Solver065 {
         };
 
         let e_expansion = |n: usize| if n == 0 { 2 } else if n % 3 == 2 { (n.as_u64() + 2) * 2 / 3 } else { 1 };
-        convergent_numerator(e_expansion, self.n).into_iter().map(digits_sum).sum()
+        convergent_numerator(e_expansion, self.n).into_iter().map(digits_sum_i64).sum()
     }
 }

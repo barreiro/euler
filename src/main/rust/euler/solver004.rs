@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::factor::has_factor_pair_below;
-use algorithm::filter::is_palindrome;
-use algorithm::root::pow_10;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::factor::has_factor_pair_below;
+use crate::algorithm::filter::is_palindrome;
+use crate::algorithm::root::pow_10;
+use crate::Solver;
 
 /// A palindromic number reads the same both ways.
 ///

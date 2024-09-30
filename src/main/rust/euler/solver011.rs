@@ -1,8 +1,8 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::io::load_default_data;
-use Solver;
+use crate::algorithm::io::load_default_data;
+use crate::Solver;
 
 /// In the 20×20 grid below, four numbers along a diagonal line have been marked in red.
 ///

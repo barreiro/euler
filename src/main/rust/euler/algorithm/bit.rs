@@ -2,7 +2,7 @@
 // Rust solvers for Project Euler problems
 
 use std::iter::FromIterator;
-use algorithm::long::{GetAndIncrement, IncrementAndGet};
+use crate::algorithm::long::{GetAndIncrement, IncrementAndGet};
 
 #[derive(Default)]
 #[must_use]
@@ -92,6 +92,13 @@ impl<'a> FromIterator<&'a u64> for BitSet {
 
 // --- //
 
+impl<'a> BitSet {
+    #[must_use]
+    pub fn iter(&'a self) -> BitSetIterator<'a> {
+        self.into_iter()
+    }
+}
+
 impl<'a> IntoIterator for &'a BitSet {
     type Item = u64;
     type IntoIter = BitSetIterator<'a>;
@@ -111,7 +118,7 @@ impl<'a> Iterator for BitSetIterator<'a> {
     type Item = u64;
 
     fn next(&mut self) -> Option<Self::Item> {
-        (self.seen.get_and_increment() < self.set.len()).then(||{
+        (self.seen.get_and_increment() < self.set.len()).then(|| {
             while {
                 !self.set.contains(self.index.increment_and_get())
             } {}

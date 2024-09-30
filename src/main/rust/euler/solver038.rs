@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::{concatenation, Digits};
-use algorithm::root::{ceil_sqrt_u64, int_log_10, pow_10};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::{concatenation, Digits};
+use crate::algorithm::root::{ceil_sqrt_u64, int_log_10, pow_10};
+use crate::Solver;
 
 /// Take the number `192` and multiply it by each of `1, 2, and 3`:
 /// ```
@@ -49,7 +49,7 @@ impl Solver for Solver038 {
 
 // --- //
 
-/// creates an iterator that returns elements ordered by most significant digit: 999 ... 900 -> 99 ... 90 -> 9 -> 899 ... 800 -> 89 .. 80 -> 8 -> 799
+/// creates an iterator that returns elements ordered by most significant digit: 999 ... 900 -> 99 ... 90 -> 9 -> 899 ... 800 -> 89 ... 80 -> 8 -> 799
 fn decrementing_by_most_significant(value: u64, scale: u64) -> impl Iterator<Item=u64> {
     DecrementingByMostSignificant { range: Box::new(0..0), size: 0, value: value + 1, scale }
 }

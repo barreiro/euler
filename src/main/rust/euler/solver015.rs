@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::choose;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::choose;
+use crate::Solver;
 
 /// Starting in the top left corner of a `2x2` grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner.
 ///

@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::factor::sum_of_factors;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::factor::sum_of_factors;
+use crate::Solver;
 
 /// Let `d(n)` be defined as the sum of proper divisors of `n` (numbers less than `n` which divide evenly into `n`).
 ///

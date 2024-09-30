@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::prime::prime_factors;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::prime::prime_factors;
+use crate::Solver;
 
 /// The prime factors of `13195` are `5, 7, 13` and `29`.
 ///

@@ -2,9 +2,10 @@
 // Rust solvers for Project Euler problems
 
 use std::cmp::min;
+use std::mem::take;
 
-use algorithm::io::{load_default_data, str_to_matrix};
-use Solver;
+use crate::algorithm::io::{load_default_data, str_to_matrix};
+use crate::Solver;
 
 /// In the `5` by `5` matrix below, the minimal path sum from the top left to the bottom right, by moving left, right, up, and down, is indicated in bold red and is equal to `2297`.
 /// ```
@@ -51,7 +52,7 @@ impl Solver for Solver083 {
                     changes.push((a, b));
                 }
             }
-            modified = changes.drain(..).collect();
+            modified = take(&mut changes);
         }
         sum[last][last]
     }

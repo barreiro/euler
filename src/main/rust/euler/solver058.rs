@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::filter::is_prime;
-use algorithm::root::square_u64;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::filter::is_prime;
+use crate::algorithm::root::square_u64;
+use crate::Solver;
 
 /// Starting with `1` and spiralling anticlockwise in the following way, a square spiral with side length `7` is formed.
 /// ```

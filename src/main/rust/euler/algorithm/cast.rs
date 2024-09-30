@@ -3,7 +3,7 @@
 
 use std::convert::TryFrom;
 
-use algorithm::digits::{DEFAULT_RADIX, Digit, Digits};
+use crate::algorithm::digits::{DEFAULT_RADIX, Digit, Digits};
 
 pub trait Cast {
     fn as_i64(&self) -> i64;
@@ -85,7 +85,7 @@ impl Cast for usize {
 
 /// safe and easy cast from Digit
 impl Cast for Digit {
-    fn as_i64(&self) -> i64 { i64::try_from(*self).unwrap() }
+    fn as_i64(&self) -> i64 { i64::from(*self) }
     fn as_u64(&self) -> u64 { u64::from(*self) }
     fn as_usize(&self) -> usize { *self as usize }
 }

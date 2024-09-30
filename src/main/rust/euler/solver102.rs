@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::io::load_default_data;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::io::load_default_data;
+use crate::Solver;
 
 /// Three distinct points are plotted at random on a Cartesian plane, for which `-1000 ≤ x, y ≤ 1000`, such that a triangle is formed.
 ///

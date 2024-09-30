@@ -1,8 +1,8 @@
 // COPYRIGHT (C) 2023 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::to_i64;
-use Solver;
+use crate::algorithm::cast::to_i64;
+use crate::Solver;
 
 /// Let `r` be the remainder when `(a - 1)^n + (a + 1)^n` is divided by `a^2`.
 ///

@@ -1,14 +1,13 @@
 // COPYRIGHT (C) 2023 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use std::iter::once;
-
-use algorithm::cast::Cast;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::prime::radicals_up_to;
+use crate::Solver;
 
 /// The radical of `n`, `rad(n)`, is the product of the distinct prime factors of `n`.
 ///
-/// For example, `504 = 2^3 * 3^2 * 7`, so `rad(504) = 2 * 3 *7 = 42`.
+/// For example, `504 = 2^3 * 3^2 * 7`, so `rad(504) = 2 * 3 * 7 = 42`.
 ///
 /// If we calculate `rad(n)` for `1 ≤ n ≤ 10`, then sort them on `rad(n)`, and sorting on `n` if the radical values are equal, we get:
 ///```
@@ -43,13 +42,6 @@ impl Solver for Solver124 {
     fn problem_name(&self) -> &str { "Ordered radicals" }
 
     fn solve(&self) -> i64 {
-        // let primes = primes_up_to(ceil_sqrt_u64(self.ceil)).collect::<Vec<_>>();
-        // let mut radicals = (1..=self.ceil).map(|n| (prime_factors_with_cache(n, &primes).keys().product::<u64>(), n)).collect::<Vec<_>>();
-        // radicals.select_nth_unstable(self.n.as_usize() - 1).1.1.as_i64()
-
-        // faster way to calculate radicals by sieving instead of multiplying the prime factors
-        let mut radicals = (once(1).cycle()).zip(0u64..).take(self.ceil + 1).collect::<Vec<_>>();
-        (2..radicals.len()).for_each(|p| if radicals[p].0 == 1 { (p..=self.ceil).step_by(p).for_each(|m| radicals[m].0 *= p) });
-        radicals.select_nth_unstable(self.n).1.1.as_i64()
+        radicals_up_to(self.ceil.as_u64() + 1).into_iter().enumerate().collect::<Vec<_>>().select_nth_unstable_by_key(self.n, |r| (r.1, r.0)).1.0.as_i64()
     }
 }

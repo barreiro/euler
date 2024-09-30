@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::permutations_of_digits_with;
-use algorithm::digits::{Digit, from_raw_digits};
-use algorithm::filter::is_prime;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::permutations_of_digits_with;
+use crate::algorithm::digits::{Digit, from_raw_digits};
+use crate::algorithm::filter::is_prime;
+use crate::Solver;
 
 /// We shall say that an `n-digit` number is pandigital if it makes use of all the digits `1` to `n` exactly once.
 ///

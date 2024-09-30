@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::to_i64;
-use algorithm::prime::primes_up_to;
-use Solver;
+use crate::algorithm::cast::to_i64;
+use crate::algorithm::prime::primes_up_to;
+use crate::Solver;
 
 /// The sum of the primes below 10 is `2 + 3 + 5 + 7 = 17`.
 ///

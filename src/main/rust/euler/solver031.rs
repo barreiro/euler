@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::partition_with_constrains;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::partition_with_constrains;
+use crate::Solver;
 
 const DEFAULT_CURRENCY: &[u64] = &[1, 2, 5, 10, 20, 50, 100, 200];
 

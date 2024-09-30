@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::partition_with_constrains;
-use algorithm::prime::primes_up_to;
-use algorithm::root::floor_sqrt_u64;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::partition_with_constrains;
+use crate::algorithm::prime::primes_up_to;
+use crate::algorithm::root::floor_sqrt_u64;
+use crate::Solver;
 
 /// It is possible to write ten as the sum of primes in exactly five different ways:
 /// ```

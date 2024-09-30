@@ -3,9 +3,9 @@
 
 use std::iter::from_fn;
 
-use algorithm::cast::Cast;
-use algorithm::root::{int_log_10, pow_10};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::root::{int_log_10, pow_10};
+use crate::Solver;
 
 // truncate the continuous fraction to this value (16 digits prevents overflows)
 const THRESHOLD: u64 = pow_10(16);
@@ -38,14 +38,14 @@ impl Solver for Solver057 {
     fn problem_name(&self) -> &str { "Square root convergents" }
 
     fn solve(&self) -> i64 {
-        continued_sqroot_two().take(self.n).filter(|&(n, d)| int_log_10(n) > int_log_10(d)).count().as_i64()
+        continued_sqrt_two().take(self.n).filter(|&(n, d)| int_log_10(n) > int_log_10(d)).count().as_i64()
     }
 }
 
 // --- //
 
 /// iterator for continued fractions that approach `sqrt(2)`
-fn continued_sqroot_two() -> impl Iterator<Item=(u64, u64)> {
+fn continued_sqrt_two() -> impl Iterator<Item=(u64, u64)> {
     let (mut n, mut d) = (1, 1);
     from_fn(move || {
         if n > THRESHOLD {

@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::partition_modulo_find;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::partition_modulo_find;
+use crate::Solver;
 
 /// Let `p(n)` represent the number of different ways in which `n` coins can be separated into piles.
 /// For example, five coins can be separated into piles in exactly seven different ways, so `p(5)=7`.

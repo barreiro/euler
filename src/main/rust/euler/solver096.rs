@@ -3,10 +3,10 @@
 
 use std::convert::TryFrom;
 
-use algorithm::cast::{char_as_i64, to_i64};
-use algorithm::digits::{Digit, Digits};
-use algorithm::io::load_default_data;
-use Solver;
+use crate::algorithm::cast::{char_as_i64, to_i64};
+use crate::algorithm::digits::{Digit, Digits};
+use crate::algorithm::io::load_default_data;
+use crate::Solver;
 
 const SUDOKU_SIZE: usize = 9;
 const SUDOKU_SQUARE_SIZE: usize = 3; // floor_sqrt_u64(SUDOKU_SIZE as u64) as usize;
@@ -61,7 +61,7 @@ impl Solver for Solver096 {
 
 // --- //
 
-// holds a Digit or a set of candidates encoded in a u64
+// holds a Digit or a set of candidates encoded in an u64
 #[derive(Clone)]
 struct SudokuDigit {
     value: Digit,
@@ -88,7 +88,7 @@ impl SudokuDigit {
         self.candidates = 0;
     }
 
-    fn single_candidate(&mut self) -> Option<Digit> {
+    fn single_candidate(&self) -> Option<Digit> {
         (self.candidates_len() == 1).then(|| Digit::try_from(u64::BITS - self.candidates.leading_zeros() - 1).expect("Unexpected number of bits"))
     }
 
@@ -139,7 +139,7 @@ impl Sudoku {
 
     fn square(square: usize) -> impl Iterator<Item=usize> {
         let position = square % SUDOKU_SQUARE_SIZE * SUDOKU_SQUARE_SIZE + square / SUDOKU_SQUARE_SIZE * SUDOKU_SQUARE_SIZE * SUDOKU_SIZE;
-        (0..SUDOKU_SQUARE_SIZE).flat_map(move |index| (position + index * SUDOKU_SIZE..position + SUDOKU_SQUARE_SIZE + index * SUDOKU_SIZE))
+        (0..SUDOKU_SQUARE_SIZE).flat_map(move |index| position + index * SUDOKU_SIZE..position + SUDOKU_SQUARE_SIZE + index * SUDOKU_SIZE)
     }
 
     fn restrict(&mut self, index: usize, value: Digit) {
@@ -172,12 +172,12 @@ impl Sudoku {
         (0..self.sudoku.len()).all(|i| self.sudoku[i].is_assigned() || self.sudoku[i].candidates_len() > 0)
     }
 
-    fn find_hidden_restrictions(&mut self, indexes: impl IntoIterator<Item=usize>) -> Vec<(usize, Digit)> {
+    fn find_hidden_restrictions(&self, indexes: impl IntoIterator<Item=usize>) -> Vec<(usize, Digit)> {
         let positions = indexes.into_iter().collect::<Vec<_>>();
         (1..=Digit::try_from(SUDOKU_SIZE).expect("Sudoku size should be reasonable")).filter(|&value| positions.iter().filter(|&&i| self.sudoku[i].allows(value)).count() == 1).map(|single| positions.iter().find(|&&i| self.sudoku[i].allows(single)).map(|&i| (i, single)).expect("Hidden restriction should exist")).collect()
     }
 
-    fn guess(&mut self) -> Option<(usize, Vec<Digit>)> {
+    fn guess(&self) -> Option<(usize, Vec<Digit>)> {
         (0..self.sudoku.len()).filter(|&i| !self.sudoku[i].is_assigned()).min_by_key(|&i| self.sudoku[i].candidates_len()).map(|lowest| (lowest, self.sudoku[lowest].candidates()))
     }
 

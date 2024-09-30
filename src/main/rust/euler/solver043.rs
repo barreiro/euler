@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, to_i64};
-use algorithm::combinatorics::permutations_of_digits_with;
-use algorithm::digits::{Digit, from_raw_digits};
-use algorithm::prime::generator_trial_division;
-use Solver;
+use crate::algorithm::cast::{Cast, to_i64};
+use crate::algorithm::combinatorics::permutations_of_digits_with;
+use crate::algorithm::digits::{Digit, from_raw_digits};
+use crate::algorithm::prime::generator_trial_division;
+use crate::Solver;
 
 const DIM: usize = 3;
 

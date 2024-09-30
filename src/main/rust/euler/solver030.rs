@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::Digits;
-use algorithm::root::pow;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::Digits;
+use crate::algorithm::root::pow;
+use crate::Solver;
 
 /// Surprisingly there are only three numbers that can be written as the sum of fourth powers of their digits:
 /// `1634 = 1^4 + 6^4 + 3^4 + 4^4`

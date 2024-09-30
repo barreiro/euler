@@ -3,12 +3,11 @@
 
 use std::iter::from_fn;
 
-use algorithm::cast::Cast;
-use algorithm::digits::digits_sum;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::digits_sum;
+use crate::Solver;
 
-// enough for all `a_n` within 64 bit
-const BASES: u64 = 100;
+const BASES: u64 = 100; // enough for all `a_n` within 64 bit
 
 /// The number `512` is interesting because it is equal to the sum of its digits raised to some power: `5 + 1 + 2 = 8`, and `8^3 = 512`.
 /// Another example of a number with this property is `614656 = 28^4`.
@@ -40,12 +39,12 @@ impl Solver for Solver119 {
 // --- //
 
 // iterate over increasingly values that are powers in some base
-fn powers() -> impl Iterator<Item=(i64, u64)> {
+fn powers() -> impl Iterator<Item=(u64, u64)> {
     let mut powers = (0..BASES).collect::<Vec<_>>();
     from_fn(move || {
         let min = (2..powers.len()).min_by_key(|&i| powers[i]).expect("There should be powers");
         let power = powers[min];
         powers[min] *= min.as_u64();
-        Some((min.as_i64(), power))
+        Some((min.as_u64(), power))
     })
 }

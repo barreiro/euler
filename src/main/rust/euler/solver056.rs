@@ -3,10 +3,10 @@
 
 use std::iter::from_fn;
 
-use algorithm::cast::Cast;
-use algorithm::digits::digits_sum;
-use algorithm::root::pow_10;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::digits_sum_i64;
+use crate::algorithm::root::pow_10;
+use crate::Solver;
 
 /// A googol `(10^100)` is a massive number: one followed by one-hundred zeros; `100^100` is almost unimaginably large: one followed by two-hundred zeros.
 /// Despite their size, the sum of the digits in each number is only `1`.
@@ -28,7 +28,7 @@ impl Solver for Solver056 {
     fn solve(&self) -> i64 {
         // only test a fraction of the space, just the 10% biggest numbers!
         let (floor, ceil) = (9 * self.n / 10, self.n);
-        (floor..ceil).filter_map(|a| vectorized_power(a.as_u64()).skip(floor - 1).take(ceil - floor).map(|power| power.into_iter().map(digits_sum).sum::<i64>()).max()).max().as_i64()
+        (floor..ceil).filter_map(|a| vectorized_power(a.as_u64()).skip(floor - 1).take(ceil - floor).map(|power| power.into_iter().map(digits_sum_i64).sum::<i64>()).max()).max().as_i64()
     }
 }
 

@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::{DEFAULT_RADIX, Digits, digits_iter, nth_digit};
-use algorithm::factor::sum_of_factors;
-use algorithm::prime::miller_rabin;
-use algorithm::root::int_log_10;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::{DEFAULT_RADIX, Digits, digits_iter, nth_digit};
+use crate::algorithm::factor::sum_of_factors;
+use crate::algorithm::prime::miller_rabin;
+use crate::algorithm::root::int_log_10;
 
 /// verifies if a given value is even
 #[must_use]
@@ -33,7 +33,7 @@ pub fn is_odd_u64(value: &u64) -> bool {
 
 /// verifies if a given value is positive
 #[must_use]
-pub fn is_positive(&value: &i64) -> bool {
+pub const fn is_positive(&value: &i64) -> bool {
     value >= 0
 }
 
@@ -96,6 +96,12 @@ pub fn greater_than(other: i64) -> Box<dyn FnMut(&i64) -> bool> {
     Box::new(move |&value| value > other)
 }
 
+/// creates a closure to filter values greater than
+#[must_use]
+pub fn greater_than_u64(other: u64) -> Box<dyn FnMut(&u64) -> bool> {
+    Box::new(move |&value| value > other)
+}
+
 /// creates a closure to filter values greater or equal than
 #[must_use]
 pub fn greater_or_equal_than(other: i64) -> Box<dyn FnMut(&i64) -> bool> {
@@ -106,7 +112,7 @@ pub fn greater_or_equal_than(other: i64) -> Box<dyn FnMut(&i64) -> bool> {
 
 /// quick test to find out if an arbitrary value is prime
 #[must_use]
-pub fn is_prime(&value: &u64) -> bool {
+pub const fn is_prime(&value: &u64) -> bool {
     value == 2 || value & 1 != 0 && miller_rabin(value)
 }
 
@@ -134,18 +140,16 @@ pub fn is_unique_digits(&value: &u64) -> bool {
 #[must_use]
 pub const fn is_palindrome(&value: &u64) -> bool {
     // changed to const: (0..size / 2).all(|i| nth_digit(value, i) == nth_digit(value, size - i - 1))
-    let size = int_log_10(value);
-    if size <= 1 {
-        return true;
-    }
-    let mut i = 0;
-    loop {
-        if nth_digit(value, i) != nth_digit(value, size - i - 1) {
-            return false;
-        }
-        i += 1;
-        if i == size / 2 {
-            return true;
+    value < 10 || {
+        let (size, mut i) = (int_log_10(value), 0);
+        loop {
+            if nth_digit(value, i) != nth_digit(value, size - i - 1) {
+                break false;
+            }
+            i += 1;
+            if i == size / 2 {
+                break true;
+            }
         }
     }
 }
@@ -154,8 +158,6 @@ pub const fn is_palindrome(&value: &u64) -> bool {
 #[must_use]
 pub fn is_pandigital(&value: &u64) -> bool {
     let mut seen = vec![false; DEFAULT_RADIX as usize];
-    seen[0] = true;
-
     digits_iter(value).map(|d| d.as_usize()).try_for_each(|d| (!seen[d]).then(|| seen[d] = true));
-    seen.iter().take(1 + int_log_10(value).as_usize()).all(|&seen| seen)
+    (1..=int_log_10(value).as_usize()).all(|i| seen[i])
 }

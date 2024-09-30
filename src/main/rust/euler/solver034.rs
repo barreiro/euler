@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::{Digits, incrementing_digits};
-use algorithm::long::factorial;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::{Digits, incrementing_digits};
+use crate::algorithm::long::factorial;
+use crate::Solver;
 
 const FACTORIAL_CACHE: &[usize] = &[1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880];
 

@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::permutations_of_set_with;
-use algorithm::digits::concatenation;
-use algorithm::vec::{all_unique_by, array_sum_u64};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::permutations_of_set_with;
+use crate::algorithm::digits::concatenation;
+use crate::algorithm::vec::{all_unique, array_sum_u64};
+use crate::Solver;
 
 /// Let `S(A)` represent the sum of elements in set `A` of size `n`. We shall call it a special sum set if for any two non-empty disjoint subsets, `B` and `C`, the following properties are true:
 ///
@@ -42,7 +42,7 @@ impl Solver for Solver103 {
     fn problem_name(&self) -> &str { "Special subset sums: optimum" }
 
     fn solve(&self) -> i64 {
-        set_from_enhanced_formula(self.n).iter().fold(0, |a, &b| concatenation(a, b)).as_i64()
+        set_from_enhanced_formula(self.n).into_iter().fold(0, concatenation).as_i64()
     }
 }
 
@@ -72,10 +72,10 @@ fn set_from_enhanced_formula(size: usize) -> Vec<u64> {
                     *state += diff;
                     Some(*state)
                 }).collect());
-                is_special_sum(&new_set).then_some(new_set)
+                Some(new_set).filter(|set| is_special_sum(set))
             }).next().expect("Permutation should exist") // because the way permutations_of_set works, the first permutation found has the least sum
         } else {
-            previous.iter().for_each(|p| set.push(set[0] + p));
+            previous.into_iter().for_each(|p| set.push(set[0] + p));
             set
         }
     }
@@ -83,19 +83,18 @@ fn set_from_enhanced_formula(size: usize) -> Vec<u64> {
 
 /// checks that a given set (in ascending order) has all subsets with different sums and any smaller subset has a smaller sum
 #[must_use]
-pub fn is_special_sum(set: &Vec<u64>) -> bool {
+pub fn is_special_sum(set: &[u64]) -> bool {
     // checks condition `B > C => S(B) > S(C)` by checking that the sum of the first half is bigger than the second half
     let by_size = || array_sum_u64(&set[0..(1 + set.len()) / 2]) > array_sum_u64(&set[1 + set.len() / 2..]);
 
-    // checks that a sum does not exists in subsets
+    // checks that a sum does not exist in subsets
     let by_subset = || {
         let sums = set.iter().fold(Vec::with_capacity(1 << set.len()), |mut sums, &s| {
-            let current_capacity = sums.len();
-            (0..current_capacity).for_each(|i| sums.push(sums[i] + s));
+            (0..sums.len()).for_each(|i| sums.push(sums[i] + s));
             sums.push(s);
             sums
         });
-        all_unique_by(&sums, |&s| s)
+        all_unique(&sums)
     };
 
     by_size() && by_subset()

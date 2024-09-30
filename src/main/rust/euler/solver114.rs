@@ -3,8 +3,8 @@
 
 use std::cmp::Ordering::{Equal, Greater, Less};
 
-use algorithm::cast::Cast;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::Solver;
 
 const MIN_BLOCK_SIZE: u64 = 3;
 
@@ -65,7 +65,7 @@ fn multipart_memoize(total: u64, min_size: u64, cache: &mut [Option<u64>]) -> u6
         Equal => { 1 }
         Greater => {
             if cache[total.as_usize()].is_none() {
-                cache[total.as_usize()] = Some((min_size..=total).map(|size| (0..=total - size).map(|i| 1 + multipart_memoize((i).max(1) - 1, min_size, cache)).sum::<u64>()).sum::<u64>());
+                cache[total.as_usize()] = Some((min_size..=total).map(|size| (0..=total - size).map(|i| 1 + multipart_memoize(i.max(1) - 1, min_size, cache)).sum::<u64>()).sum());
             }
             cache[total.as_usize()].expect("Cache should be populated")
         }

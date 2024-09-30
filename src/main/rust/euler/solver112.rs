@@ -1,14 +1,14 @@
 // COPYRIGHT (C) 2023 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::incrementing_digits;
-use algorithm::long::GetAndIncrement;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::incrementing_digits;
+use crate::algorithm::long::GetAndIncrement;
+use crate::Solver;
 
 /// Working from left-to-right if no digit is exceeded by the digit to its left it is called an increasing number; for example, `134468`.
 ///
-/// Similarly if no digit is exceeded by the digit to its right it is called a decreasing number; for example, `66420`.
+/// Similarly, if no digit is exceeded by the digit to its right it is called a decreasing number; for example, `66420`.
 ///
 /// We shall call a positive integer that is neither increasing nor decreasing a "bouncy" number; for example, `155349`.
 ///

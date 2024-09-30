@@ -1,12 +1,12 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::pythagorean_triplets;
-use algorithm::filter::less_or_equal_than_u64;
-use algorithm::prime::primorals;
-use algorithm::root::cube_u64;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::pythagorean_triplets;
+use crate::algorithm::filter::less_or_equal_than_u64;
+use crate::algorithm::prime::primorals;
+use crate::algorithm::root::cube_u64;
+use crate::Solver;
 
 /// If p is the perimeter of a right angle triangle with integral length sides, `{a,b,c}`, there are exactly three solutions for `p = 120`.
 /// ```

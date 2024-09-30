@@ -2,9 +2,9 @@
 // Rust solvers for Project Euler problems
 
 
-use algorithm::cast::Cast;
-use algorithm::continued_fraction::{continued_expansion_rational, convergent_with_expansion};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::continued_fraction::{continued_expansion_rational, convergent_with_expansion};
+use crate::Solver;
 
 const BASE: (u64, u64) = (3, 7);
 

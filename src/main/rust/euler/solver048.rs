@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::digits::last_digits;
-use algorithm::long::pow_mod;
-use algorithm::root::pow_10_usize;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::digits::last_digits;
+use crate::algorithm::long::pow_mod;
+use crate::algorithm::root::pow_10_usize;
+use crate::Solver;
 
 const DIGITS: usize = 10;
 

@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::{Cast, to_i64, to_u64};
-use algorithm::filter::{is_odd, is_prime};
-use algorithm::prime::descending_primes;
-use algorithm::root::square;
-use Solver;
+use crate::algorithm::cast::{Cast, to_i64, to_u64};
+use crate::algorithm::filter::{greater_than_u64, is_odd, is_prime};
+use crate::algorithm::prime::descending_primes;
+use crate::algorithm::root::square;
+use crate::Solver;
 
 const HEEGNER: i64 = -163;
 
@@ -37,11 +37,12 @@ impl Solver for Solver027 {
 
     #[allow(clippy::maybe_infinite_iter)]
     fn solve(&self) -> i64 {
-        // conjecture: a is odd negative and b is one of the 10% highest primes
-        // the discriminant must be an Heegner number, in particular -163
-        let primes = descending_primes(self.n).take_while(|&p| p > self.n - self.n / 10).map(to_i64).collect::<Vec<_>>();
+        // conjecture: `a` is odd negative and `b` is one of the 10% highest primes
+        // the discriminant must be a Heegner number, in particular -163
+        let primes = descending_primes(self.n).take_while(greater_than_u64(self.n - self.n / 10)).map(to_i64).collect::<Vec<_>>();
+        let primes_contains_b = |(_, b): &(_, i64)| primes.binary_search_by(|other| b.cmp(other)).is_ok(); // reverse compare as primes are descending
         let prime_count = |(a, b): &(i64, i64)| (0..).map(|n| square(n) + a * n + b).map(to_u64).take_while(is_prime).count();
 
-        (-self.n.as_i64()..0).filter(is_odd).map(|a| (a, (square(a) - HEEGNER) / 4)).filter(|(_, b)| primes.contains(b)).max_by_key(prime_count).map(|(a, b)| a * b).as_i64()
+        (-self.n.as_i64()..0).filter(is_odd).map(|a| (a, (square(a) - HEEGNER) / 4)).filter(primes_contains_b).max_by_key(prime_count).map(|(a, b)| a * b).as_i64()
     }
 }

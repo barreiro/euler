@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::prime::generator_wheel;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::prime::generator_wheel;
+use crate::Solver;
 
 /// By listing the first six prime numbers: `2, 3, 5, 7, 11` and `13`, we can see that the `6`th prime is `13`.
 ///

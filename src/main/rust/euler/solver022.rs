@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::char_as_i64;
-use algorithm::io::load_default_data;
+use crate::algorithm::cast::char_as_i64;
+use crate::algorithm::io::load_default_data;
 
-use euler::Solver;
+use crate::euler::Solver;
 
 /// Using `names.txt` (right click and 'Save Link/Target As...'), a 46K text file containing over five-thousand first names, begin by sorting it into alphabetical order.
 ///

@@ -3,10 +3,10 @@
 
 use std::iter::from_fn;
 
-use algorithm::cast::to_i64;
-use algorithm::filter::{is_odd_u64, less_than_u64};
-use algorithm::root::square_u64;
-use Solver;
+use crate::algorithm::cast::to_i64;
+use crate::algorithm::filter::{is_odd_u64, less_than_u64};
+use crate::algorithm::root::square_u64;
+use crate::Solver;
 
 /// It is easily proved that no equilateral triangle exists with integral length sides and integral area.
 /// However, the almost equilateral triangle `5-5-6` has an area of `12` square units.

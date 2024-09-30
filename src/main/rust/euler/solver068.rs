@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::permutations_of_digits_with;
-use algorithm::digits::{concatenation, Digit};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::permutations_of_digits_with;
+use crate::algorithm::digits::{concatenation, Digit};
+use crate::Solver;
 
 /// Consider the following "magic" `3-gon` ring, filled with the numbers `1` to `6`, and each line adding to nine.
 /// ```
@@ -65,7 +65,7 @@ impl Solver for Solver068 {
             (target_sum - inners[0] - inners[1] == self.n + 1).then(|| { // the first outer must be self.n + 1 for the solution to be 'canonical'
                 let mut outers = inners.windows(2).map(|i| target_sum - i[0] - i[1]).collect::<Vec<_>>();
                 outers.push(target_sum - inners[0] - inners[inners.len() - 1]);
-                ((2..=self.n).all(|n| outers.contains(&(self.n + n)))).then(||
+                (2..=self.n).all(|n| outers.contains(&(self.n + n))).then(||
                     outers.iter().enumerate().flat_map(|(i, &o)| [o.as_u64(), inners[i].as_u64(), inners[(i + 1) % inners.len()].as_u64()]).collect::<Vec<_>>()
                 )
             })

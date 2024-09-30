@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2022 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::to_i64;
-use algorithm::io::load_default_data;
-use algorithm::vec::array_sum_u64;
-use Solver;
-use solver103::is_special_sum;
+use crate::algorithm::cast::to_i64;
+use crate::algorithm::io::load_default_data;
+use crate::algorithm::vec::array_sum_u64;
+use crate::Solver;
+use crate::solver103::is_special_sum;
 
 /// Let `S(A)` represent the sum of elements in set `A` of size `n`. We shall call it a special sum set if for any two non-empty disjoint subsets, `B` and `C`, the following properties are true:
 ///
@@ -38,6 +38,6 @@ impl Solver for Solver105 {
             set
         };
 
-        self.input.lines().take(self.n).map(as_sorted).filter(is_special_sum).map(|s| array_sum_u64(&s)).map(to_i64).sum()
+        self.input.lines().take(self.n).map(as_sorted).filter(|s| is_special_sum(s)).map(|s| array_sum_u64(&s)).map(to_i64).sum()
     }
 }

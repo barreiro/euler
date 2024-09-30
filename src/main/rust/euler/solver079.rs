@@ -4,18 +4,18 @@
 use std::collections::{HashMap, HashSet};
 use std::convert::TryFrom;
 
-use algorithm::cast::char_as_i64;
-use algorithm::digits::{Digit, from_raw_digits};
-use algorithm::io::load_default_data;
-use euler::algorithm::cast::Cast;
-use euler::Solver;
+use crate::algorithm::cast::char_as_i64;
+use crate::algorithm::digits::{Digit, from_raw_digits};
+use crate::algorithm::io::load_default_data;
+use crate::euler::algorithm::cast::Cast;
+use crate::euler::Solver;
 
 /// A common security method used for online banking is to ask the user for three random characters from a passcode.
 /// For example, if the passcode was `531278`, they may ask for the `2nd`, `3rd`, and `5th` characters; the expected reply would be: `317`.
 ///
 /// The text file, `keylog.txt`, contains fifty successful login attempts.
 ///
-/// Given that the three characters are always asked for in order, analyse the file so as to determine the shortest possible secret passcode of unknown length.
+/// Given that the three characters are always asked for in order, analyse the file to determine the shortest possible secret passcode of unknown length.
 pub struct Solver079 {
     pub n: usize,
     pub input: String,

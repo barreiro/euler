@@ -3,9 +3,9 @@
 
 use std::convert::TryFrom;
 
-use algorithm::cast::Cast;
-use algorithm::root::floor_sqrt_u64;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::root::floor_sqrt_u64;
+use crate::Solver;
 
 /// The first two consecutive numbers to have two distinct prime factors are:
 /// ```

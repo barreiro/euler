@@ -1,7 +1,7 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use Solver;
+use crate::Solver;
 
 // number of letters for zero (0), one, two [...] nineteen
 const LOOKUP_ONES: &[i64] = &[0, 3, 3, 5, 4, 4, 3, 5, 5, 4, 3, 6, 6, 8, 8, 7, 7, 9, 8, 8];

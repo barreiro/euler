@@ -3,15 +3,12 @@
 
 use std::iter::from_fn;
 
-use algorithm::cast::to_i64;
-use algorithm::combinatorics::{combinations, permutations_with_repetition_of_set};
-use algorithm::digits::{DEFAULT_RADIX, Digit, from_raw_digits};
-use algorithm::filter::is_prime;
-use algorithm::prime::{prime_sieve, primes_up_to};
-use algorithm::root::{ceil_sqrt_u64, pow_10_usize};
-use Solver;
-
-const SIEVE_THRESHOLD: usize = 10;
+use crate::algorithm::cast::to_i64;
+use crate::algorithm::combinatorics::{combinations, permutations_with_repetition_of_set};
+use crate::algorithm::digits::{from_raw_digits, Digit, DEFAULT_RADIX};
+use crate::algorithm::prime::PrimeTestWithCache;
+use crate::algorithm::root::pow_10_usize;
+use crate::Solver;
 
 /// Considering `4-digit` primes containing repeated digits it is clear that they cannot all be the same: `1111` is divisible by `11`, `2222` is divisible by `22`, and so on.
 /// But there are nine `4-digit` primes containing three ones: `1117, 1151, 1171, 1181, 1511, 1811, 2111, 4111, 8111`
@@ -42,7 +39,7 @@ pub struct Solver111 {
     pub n: usize,
 }
 
-impl Default for Solver111 {
+impl Default for Solver111 { 
     fn default() -> Self {
         Self { n: 10 }
     }
@@ -52,14 +49,11 @@ impl Solver for Solver111 {
     fn problem_name(&self) -> &str { "Primes with runs" }
 
     fn solve(&self) -> i64 {
-        // hybrid approach of using a sieve for smaller search spaces and miller-rabin for larger
-        let sieve = primes_up_to(if self.n > SIEVE_THRESHOLD { 0 } else { ceil_sqrt_u64(pow_10_usize(self.n)) }).collect::<Vec<_>>();
-        let primality_test = |&candidate: &u64| if self.n > SIEVE_THRESHOLD { is_prime(&candidate) } else { prime_sieve(candidate, &sieve) };
-        let sum_or_primes = |m, d| candidates(d, self.n, m).filter(primality_test).map(to_i64).reduce(|sum, value| sum + value);
-        let max_m = |d| if d == 0 { self.n - 1 } else { self.n };
+        let tester = PrimeTestWithCache::new(pow_10_usize(self.n / 2)); // cache can be smaller than default
+        let sum_or_primes = |m, d| candidates(d, self.n, m).filter(|&candidate| tester.is_prime(candidate)).map(to_i64).reduce(|sum, value| sum + value);
 
         // attempt to find primes at decrementing values of `M(n,d)` (starting at `n - 1` or `n - 2` for `d == 0`)
-        (0..DEFAULT_RADIX).filter_map(|d| (1..max_m(d)).rev().find_map(|m| sum_or_primes(m, d))).sum()
+        (0..DEFAULT_RADIX).filter_map(|d| (1..=self.n - if d != 0 { 1 } else { 2 }).rev().find_map(|m| sum_or_primes(m, d))).sum()
     }
 }
 

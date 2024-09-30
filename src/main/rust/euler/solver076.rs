@@ -1,9 +1,9 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::partition;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::partition;
+use crate::Solver;
 
 /// It is possible to write five as a sum in exactly six different ways:
 /// ```

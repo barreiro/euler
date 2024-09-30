@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::combinatorics::pythagorean_triplets;
-use algorithm::root::cube_u64;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::combinatorics::pythagorean_triplets;
+use crate::algorithm::root::cube_u64;
+use crate::Solver;
 
 /// A Pythagorean triplet is a set of three natural numbers, `a < b < c`, for which, `a^2 + b^2 = c^2`
 ///

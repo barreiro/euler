@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2023 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::root::pow;
-use algorithm::vec::array_sum;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::root::pow;
+use crate::algorithm::vec::array_sum;
+use crate::Solver;
 
 const INPUT_101: &[i64] = &[1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1];
 
@@ -14,7 +14,7 @@ const INPUT_101: &[i64] = &[1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1];
 ///
 /// We shall define `OP(k, n)` to be the `nth` term of the optimum polynomial generating function for the first `k` terms of a sequence. It should be clear that `OP(k, n)` will accurately generate the terms of the sequence for `n ≤ k`, and potentially the first incorrect term (`FIT`) will be `OP(k, k+1)`; in which case we shall call it a bad OP (`BOP`).
 /// As a basis, if we were only given the first term of sequence, it would be most sensible to assume constancy; that is, for `n ≥ 2`, `OP(1, n) = u1`.
-/// Hence we obtain the following `OP`s for the cubic sequence:
+/// Hence, we obtain the following `OP`s for the cubic sequence:
 /// ```
 /// OP(1, n) = 1         1, *1*, 1, 1, ...
 /// OP(2, n) = 7n−6      1, 8, *15*, ...

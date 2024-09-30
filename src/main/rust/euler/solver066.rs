@@ -1,11 +1,11 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::continued_fraction::add_mul;
-use algorithm::prime::primes_up_to;
-use algorithm::root::{floor_sqrt_u64, pow_10};
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::continued_fraction::add_mul;
+use crate::algorithm::prime::primes_up_to;
+use crate::algorithm::root::{floor_sqrt_u64, pow_10};
+use crate::Solver;
 
 /// Consider quadratic Diophantine equations of the form:
 ///

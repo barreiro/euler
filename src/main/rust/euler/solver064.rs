@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::continued_fraction::continued_expansion_sqrt_cycle_len;
-use algorithm::filter::is_odd;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::continued_fraction::continued_expansion_sqrt_cycle_len;
+use crate::algorithm::filter::is_odd;
+use crate::Solver;
 
 /// All square roots are periodic when written as continued fractions and can be written in the form:
 /// ```

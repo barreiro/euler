@@ -1,10 +1,10 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::cast::Cast;
-use algorithm::long::arithmetic_sum;
-use algorithm::root::int_sqrt;
-use Solver;
+use crate::algorithm::cast::Cast;
+use crate::algorithm::long::arithmetic_sum;
+use crate::algorithm::root::int_sqrt;
+use crate::Solver;
 
 /// By counting carefully it can be seen that a rectangular grid measuring `3` by `2` contains eighteen rectangles.
 ///
@@ -23,7 +23,7 @@ impl Solver for Solver085 {
     fn problem_name(&self) -> &str { "Counting rectangles" }
 
     fn solve(&self) -> i64 {
-        // number of rectangles in a n * m grid = arithmetic_sum(n) * arithmetic_sum(m)
+        // number of rectangles in an `n * m` grid is `arithmetic_sum(n) * arithmetic_sum(m)`
         (1..=int_sqrt(int_sqrt(self.n * 4))).map(|n| {
             let (m, diff) = (int_sqrt((self.n * 2) / arithmetic_sum(n)), |y| (self.n - arithmetic_sum(n) * arithmetic_sum(y)).abs());
             if diff(m) < diff(m - 1) { (n, m, diff(m)) } else { (n, m - 1, diff(m - 1)) }

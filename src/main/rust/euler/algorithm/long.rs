@@ -1,8 +1,36 @@
 // COPYRIGHT (C) 2017 barreiro. All Rights Reserved.
 // Rust solvers for Project Euler problems
 
-use algorithm::digits::Digit;
-use algorithm::root::{int_sqrt, is_square};
+use crate::algorithm::digits::Digit;
+use crate::algorithm::root::{int_sqrt, is_square};
+
+pub trait Increment {
+    fn increment(&mut self);
+}
+
+impl Increment for i32 {
+    fn increment(&mut self){
+        *self += 1;
+    }
+}
+
+impl Increment for Digit {
+    fn increment(&mut self){
+        *self += 1;
+    }
+}
+
+impl Increment for u64 {
+    fn increment(&mut self){
+        *self += 1;
+    }
+}
+
+impl Increment for usize {
+    fn increment(&mut self){
+        *self += 1;
+    }
+}
 
 pub trait IncrementAndGet {
     #[allow(clippy::return_self_not_must_use)]
@@ -98,8 +126,9 @@ pub const fn gcd(mut a: i64, mut b: i64) -> i64 {
 
 /// checks that two values are coprime, i.e. don't have common factors except for 1
 #[must_use]
-pub const fn are_coprime(a: i64, b: i64) -> bool {
-    gcd(a, b) == 1
+#[allow(clippy::cast_possible_wrap)]
+pub const fn are_coprime(a: u64, b: u64) -> bool {
+    gcd(a as i64, b as i64) == 1
 }
 
 /// calculates the Least Common Multiple
@@ -179,6 +208,11 @@ pub const fn heptagonal(value: i64) -> i64 {
 #[must_use]
 pub const fn octagonal(value: i64) -> i64 {
     value * (3 * value - 2)
+}
+
+#[must_use]
+pub const fn pyramidal(value: i64) -> i64 {
+    value * (value + 1) * (2 * value + 1) / 6
 }
 
 // --- //
